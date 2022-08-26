@@ -1,0 +1,33 @@
+{
+    "name": "input-device-handler",
+    "homepage": "https://github.com/electrovir/input-device-handler",
+    "bugs": {
+        "url": "https://github.com/electrovir/input-device-handler/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/electrovir/input-device-handler"
+    },
+    "license": "MIT",
+    "author": {
+        "name": "electrovir",
+        "url": "https://github.com/electrovir"
+    },
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "build": "virmator frontend build",
+        "compile": "rm -rf dist && tsc --project tsconfig.json",
+        "docs:update": "virmator code-in-markdown",
+        "format": "virmator format write",
+        "prepublishOnly": "npm run compile && npm run test:full",
+        "spellcheck": "virmator spellcheck",
+        "start": "npm install && vite --force --config .virmator/vite/vite.config.ts",
+        "test": "virmator test",
+        "test:full": "npm run test:types && npm test && npm run spellcheck && virmator format check",
+        "test:types": "tsc --noEmit"
+    },
+    "devDependencies": {
+        "virmator": "3.0.6"
+    }
+}
