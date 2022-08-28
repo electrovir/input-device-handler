@@ -89,19 +89,6 @@ export class InputDeviceHandler extends TypedEventTarget<AllEventTypes> {
         });
     }
 
-    public startPollingLoop() {
-        this.loopIsRunning = true;
-        this.currentLoopIndex++;
-
-        requestAnimationFrame((timestamp) => {
-            this.runPollingLoop(this.currentLoopIndex, timestamp);
-        });
-    }
-
-    public pausePollingLoop() {
-        this.loopIsRunning = false;
-    }
-
     private runPollingLoop(loopIndex: number, timestamp: number) {
         if (this.loopIsRunning && this.currentLoopIndex === loopIndex) {
             this.updateInputDevices(timestamp);
@@ -148,7 +135,25 @@ export class InputDeviceHandler extends TypedEventTarget<AllEventTypes> {
         return allDevices;
     }
 
-    public getLastUpdatedInputDevicesWithoutTriggeringUpdate() {
+    public startPollingLoop() {
+        this.loopIsRunning = true;
+        this.currentLoopIndex++;
+
+        requestAnimationFrame((timestamp) => {
+            this.runPollingLoop(this.currentLoopIndex, timestamp);
+        });
+    }
+
+    public pausePollingLoop() {
+        this.loopIsRunning = false;
+    }
+
+    /**
+     * This does not trigger a new poll of devices. Thus, the value retrieved here might be out of
+     * date. For example, if you previously paused polling, the returned value here would be from
+     * right before polling was paused.
+     */
+    public getLastPollResults() {
         return this.lastReadInputDevices;
     }
 

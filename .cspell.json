@@ -1,4 +1,7 @@
 {
     "import": ".virmator/.cspell-base.json",
-    "words": []
+    "words": [
+        "gamepad",
+        "gamepads"
+    ]
 }
