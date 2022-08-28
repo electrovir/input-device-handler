@@ -1,6 +1,6 @@
 {
     "name": "input-device-handler",
-    "version": "0.0.0",
+    "version": "0.0.1",
     "homepage": "https://github.com/electrovir/input-device-handler",
     "bugs": {
         "url": "https://github.com/electrovir/input-device-handler/issues"
@@ -30,7 +30,7 @@
     },
     "dependencies": {
         "augment-vir": "2.5.1",
-        "typed-event-target": "file:../typed-event-target/typed-event-target-1.1.1.tgz"
+        "typed-event-target": "1.1.1"
     },
     "devDependencies": {
         "@open-wc/testing": "3.1.6",
