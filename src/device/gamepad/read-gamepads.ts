@@ -2,6 +2,7 @@ import {typedHasOwnProperty} from 'augment-vir';
 import {DeviceInputValue, GamepadInputType, GamepadInputValue} from '../device-input';
 import {InputDeviceType} from '../input-device-type';
 import {GamepadDeadZoneSettings} from './dead-zone-settings';
+import {createAxeName, createButtonName} from './gamepad-input-names';
 import {getNavigator} from './navigator';
 import {GamepadInputs, GamepadMap, SerializedGamepad, serializeGamepad} from './serialized-gamepad';
 
@@ -27,13 +28,6 @@ export function readCurrentGamepads(gamepadDeadZoneSettings: GamepadDeadZoneSett
     }, {} as GamepadMap);
 
     return gamepadMap;
-}
-
-export function createButtonName(buttonIndex: number): string {
-    return `button-${buttonIndex}`;
-}
-export function createAxeName(axeIndex: number): string {
-    return `axe-${axeIndex}`;
 }
 
 export function gamepadToCurrentInputs(

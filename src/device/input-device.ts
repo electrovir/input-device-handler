@@ -25,7 +25,7 @@ type InputDeviceDefiner<
     name: IdTypeGeneric;
     index: IndexGeneric;
     deviceDetails: DeviceDetailsGeneric;
-    currentInputs: Record<DeviceInputValue['inputName'], InputValueTypeGeneric>;
+    currentInputs: Readonly<Record<DeviceInputValue['inputName'], InputValueTypeGeneric>>;
 }>;
 
 export type GamepadInputDevice = InputDeviceDefiner<

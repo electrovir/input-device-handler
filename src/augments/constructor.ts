@@ -3,4 +3,4 @@ export type Constructed<ConstructorFunction extends Readonly<new (...args: any[]
         ? ConstructorReturnType
         : never;
 
-export type AnyConstructor<ConstructedType> = new (...args: any[]) => ConstructedType;
+export type Constructor<ConstructedType> = new (...args: any[]) => ConstructedType;

@@ -22,16 +22,18 @@
         "format": "virmator format write",
         "prepublishOnly": "npm run compile && npm run test:full",
         "spellcheck": "virmator spellcheck",
-        "start": "npm install && vite --force --config .virmator/vite/vite.config.ts",
-        "test": "virmator test",
+        "start": "npm install && virmator frontend",
+        "test": "virmator test-web",
         "test:full": "npm run test:types && npm test && npm run spellcheck && virmator format check",
         "test:types": "tsc --noEmit"
     },
-    "devDependencies": {
-        "virmator": "3.0.6"
-    },
     "dependencies": {
         "augment-vir": "2.5.1",
-        "typed-event-target": "1.1.0"
+        "typed-event-target": "file:../typed-event-target/typed-event-target-1.1.1.tgz"
+    },
+    "devDependencies": {
+        "@open-wc/testing": "3.1.6",
+        "@web/test-runner-commands": "0.6.4",
+        "virmator": "3.0.6"
     }
 }

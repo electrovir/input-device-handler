@@ -1,3 +1,4 @@
+import {Writeable} from 'augment-vir';
 import {TypedEventTarget} from 'typed-event-target';
 import {AllInputDevices, gamepadMapToInputDevices} from '../device/all-input-devices';
 import {keyboardDeviceIdSymbol, mouseDeviceIdSymbol} from '../device/device-id';
@@ -18,34 +19,48 @@ export type InputDeviceHandlerOptions = Partial<{
      * Set to true to prevent the loop from starting which will continuously read inputs. If this is
      * set to true, you can trigger your own reads by calling .readInputDevices().
      */
-    bypassLoopStart: boolean;
+    skipLoopStart: boolean;
     gamepadDeadZoneSettings: GamepadDeadZoneSettings;
 }>;
 
 export class InputDeviceHandler extends TypedEventTarget<AllEventTypes> {
-    private lastReadInputDevices: AllInputDevices = this.readAllInputDevices();
-    private currentKeyboardInputs: KeyboardInputDevice['currentInputs'] = {};
-    private currentMouseInputs: MouseInputDevice['currentInputs'] = {};
+    private currentKeyboardInputs: Writeable<KeyboardInputDevice['currentInputs']> = {};
+    private currentMouseInputs: Writeable<MouseInputDevice['currentInputs']> = {};
     private gamepadDeadZoneSettings: GamepadDeadZoneSettings = {};
 
-    constructor(options: InputDeviceHandlerOptions) {
+    // make sure this is set after the other member variables
+    private lastReadInputDevices: AllInputDevices | undefined;
+    private loopIsRunning = false;
+    // prevents multiple polling loops from running
+    private currentLoopIndex = -1;
+
+    constructor(options: InputDeviceHandlerOptions = {}) {
         super();
-        if (!options.bypassLoopStart) {
+        if (!options.skipLoopStart) {
             this.startPollingLoop();
+        }
+        if (options.gamepadDeadZoneSettings) {
+            this.updateGamepadDeadZoneSettings(options.gamepadDeadZoneSettings);
         }
         this.attachWindowListeners();
     }
 
     private attachWindowListeners() {
         window.addEventListener('keydown', (event) => {
-            this.currentKeyboardInputs[event.key] = {
+            const eventKey = event.key;
+            // ignore keydown repeated events
+            if (this.currentKeyboardInputs.hasOwnProperty(eventKey)) {
+                return;
+            }
+
+            this.currentKeyboardInputs[eventKey] = {
                 deviceType: InputDeviceType.Keyboard,
                 details: {
                     keyboardEvent: event,
                 },
                 deviceName: keyboardDeviceIdSymbol,
                 deviceIndex: -1,
-                inputName: event.key,
+                inputName: eventKey,
                 value: 1,
             };
         });
@@ -53,14 +68,19 @@ export class InputDeviceHandler extends TypedEventTarget<AllEventTypes> {
             delete this.currentKeyboardInputs[event.key];
         });
         window.addEventListener('mousedown', (event) => {
-            this.currentMouseInputs[event.button] = {
+            const eventButton = event.button;
+            if (this.currentMouseInputs.hasOwnProperty(eventButton)) {
+                return;
+            }
+
+            this.currentMouseInputs[eventButton] = {
                 deviceType: InputDeviceType.Mouse,
                 details: {
                     mouseEvent: event,
                 },
                 deviceName: mouseDeviceIdSymbol,
                 deviceIndex: -1,
-                inputName: event.button,
+                inputName: eventButton,
                 value: 1,
             };
         });
@@ -69,17 +89,26 @@ export class InputDeviceHandler extends TypedEventTarget<AllEventTypes> {
         });
     }
 
-    private startPollingLoop() {
+    public startPollingLoop() {
+        this.loopIsRunning = true;
+        this.currentLoopIndex++;
+
         requestAnimationFrame((timestamp) => {
-            this.runPollingLoop(timestamp);
+            this.runPollingLoop(this.currentLoopIndex, timestamp);
         });
     }
 
-    private runPollingLoop(timestamp: number) {
-        this.readInputDevices(timestamp);
-        requestAnimationFrame((timestamp) => {
-            this.runPollingLoop(timestamp);
-        });
+    public pausePollingLoop() {
+        this.loopIsRunning = false;
+    }
+
+    private runPollingLoop(loopIndex: number, timestamp: number) {
+        if (this.loopIsRunning && this.currentLoopIndex === loopIndex) {
+            this.updateInputDevices(timestamp);
+            requestAnimationFrame((timestamp) => {
+                this.runPollingLoop(loopIndex, timestamp);
+            });
+        }
     }
 
     private fireEvents(timestamp: number, newValues: AllInputDevices) {
@@ -100,24 +129,34 @@ export class InputDeviceHandler extends TypedEventTarget<AllEventTypes> {
         const gamepadInputDevices: Record<number, GamepadInputDevice> =
             gamepadMapToInputDevices(gamepadMap);
 
-        return {
+        const allDevices: AllInputDevices = {
             [keyboardDeviceIdSymbol]: {
                 ...keyboardBaseDevice,
-                currentInputs: this.currentKeyboardInputs,
+                currentInputs: {
+                    ...this.currentKeyboardInputs,
+                },
             },
             [mouseDeviceIdSymbol]: {
                 ...mouseBaseDevice,
-                currentInputs: this.currentMouseInputs,
+                currentInputs: {
+                    ...this.currentMouseInputs,
+                },
             },
             ...gamepadInputDevices,
         };
+
+        return allDevices;
+    }
+
+    public getLastUpdatedInputDevicesWithoutTriggeringUpdate() {
+        return this.lastReadInputDevices;
     }
 
     /**
      * Use this if method if you're hooking up polling to your own system. For example, if you
      * already have a render loop, call this method to update all inputs.
      */
-    public readInputDevices(timestamp = Date.now()): AllInputDevices {
+    public updateInputDevices(timestamp = Date.now()): AllInputDevices {
         const newValues = this.readAllInputDevices();
         this.fireEvents(timestamp, newValues);
         this.lastReadInputDevices = newValues;

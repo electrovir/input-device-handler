@@ -1,4 +1,4 @@
-import {assert} from 'chai';
+import {assert} from '@open-wc/testing';
 import {GamepadInputDevice, InputDevice, isOfInputDeviceType} from './input-device';
 import {InputDeviceType} from './input-device-type';
 

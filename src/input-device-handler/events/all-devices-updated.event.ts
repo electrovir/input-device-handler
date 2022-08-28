@@ -3,9 +3,13 @@ import {EventDataCheckCallback, InputDeviceHandlerEventTypeEnum} from '../event-
 import {defineTimedEvent} from '../event-util/timed.event';
 
 function allDevicesUpdatedDataCheckCallback(
-    ...inputs: Parameters<EventDataCheckCallback<AllInputDevices>>
+    ...[
+        previousInputDevices,
+        newInputDevices,
+    ]: Parameters<EventDataCheckCallback<AllInputDevices>>
 ): ReturnType<EventDataCheckCallback<AllInputDevices>> {
-    return undefined;
+    // this input gets triggered every time
+    return newInputDevices;
 }
 
 export class AllDevicesUpdatedEvent extends defineTimedEvent<AllInputDevices>()(

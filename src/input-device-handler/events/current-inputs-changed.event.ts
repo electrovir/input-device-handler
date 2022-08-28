@@ -10,13 +10,17 @@ function currentInputsChangedDataCheckCallback(
         newInputDevices,
     ]: Parameters<EventDataCheckCallback<DeviceInputValue[]>>
 ): ReturnType<EventDataCheckCallback<DeviceInputValue[]>> {
-    const allPreviousInputs = allInputDevicesToAllInputs(previousInputDevices);
     const allNewInputs = allInputDevicesToAllInputs(newInputDevices);
 
-    if (areJsonEqual(allPreviousInputs, allNewInputs)) {
+    if (!previousInputDevices) {
         return allNewInputs;
-    } else {
+    }
+    const allPreviousInputs = allInputDevicesToAllInputs(previousInputDevices);
+
+    if (areJsonEqual(allPreviousInputs, allNewInputs)) {
         return undefined;
+    } else {
+        return allNewInputs;
     }
 }
 
