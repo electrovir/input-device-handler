@@ -2,6 +2,8 @@
 
 Handles keyboard, mouse, and [gamepad inputs](https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API) with a single API that treats inputs from all those devices identically so they can be used interchangeably. Also optionally converts the Gamepad API's polling paradigm into an event based paradigm.
 
+[Click here to see this package in action.](https://electrovir.github.io/input-device-handler/)
+
 # Usage
 
 This details the most commonly used parts of teh API. For full API details, use the TypeScript types included in this package and in [the GitHub repo](https://github.com/electrovir/input-device-handler).
