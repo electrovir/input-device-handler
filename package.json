@@ -29,5 +29,9 @@
     },
     "devDependencies": {
         "virmator": "3.0.6"
+    },
+    "dependencies": {
+        "augment-vir": "2.5.1",
+        "typed-event-target": "1.1.0"
     }
 }
