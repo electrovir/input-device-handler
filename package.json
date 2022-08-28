@@ -1,6 +1,6 @@
 {
     "name": "input-device-handler",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "homepage": "https://github.com/electrovir/input-device-handler",
     "bugs": {
         "url": "https://github.com/electrovir/input-device-handler/issues"

@@ -1,16 +1,16 @@
 import {getObjectTypedValues, mapObject} from 'augment-vir';
-import {keyboardDeviceIdSymbol, mouseDeviceIdSymbol} from './device-id';
-import {DeviceInputValue} from './device-input';
+import {keyboardDeviceKeySymbol, mouseDeviceKeySymbol} from './device-id';
 import {gamepadToCurrentInputs} from './gamepad/read-gamepads';
 import {GamepadMap} from './gamepad/serialized-gamepad';
 import {GamepadInputDevice, KeyboardInputDevice, MouseInputDevice} from './input-device';
 import {InputDeviceType} from './input-device-type';
+import {DeviceInputValue} from './input-value';
 
 export type GamepadInputDevices = Record<number, GamepadInputDevice>;
 
 export type AllInputDevices = {
-    [keyboardDeviceIdSymbol]: KeyboardInputDevice;
-    [mouseDeviceIdSymbol]: MouseInputDevice;
+    [keyboardDeviceKeySymbol]: KeyboardInputDevice;
+    [mouseDeviceKeySymbol]: MouseInputDevice;
 } & GamepadInputDevices;
 
 export function gamepadMapToInputDevices(gamepadMap: GamepadMap): GamepadInputDevices {
@@ -18,9 +18,9 @@ export function gamepadMapToInputDevices(gamepadMap: GamepadMap): GamepadInputDe
         return {
             currentInputs: gamepadToCurrentInputs(gamepad),
             deviceDetails: gamepad,
-            name: gamepad.id,
-            index: gamepad.index,
-            type: InputDeviceType.Gamepad,
+            deviceName: gamepad.id,
+            deviceKey: gamepad.index,
+            deviceType: InputDeviceType.Gamepad,
         };
     });
 }

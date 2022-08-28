@@ -1,4 +1,4 @@
-import {keyboardDeviceIdSymbol, mouseDeviceIdSymbol, PotentialDeviceIds} from './device-id';
+import {keyboardDeviceKeySymbol, mouseDeviceKeySymbol, PotentialDeviceKeys} from './device-id';
 import {SerializedGamepadButton} from './gamepad/serialized-gamepad';
 import {InputDeviceType} from './input-device-type';
 
@@ -31,24 +31,23 @@ type DeviceInputDetails = KeyboardInputDetails | MouseInputDetails | GamepadInpu
 export type DeviceInputValue = KeyboardInputValue | MouseInputValue | GamepadInputValue;
 
 type InputValueDefiner<
-    DeviceIdGeneric extends PotentialDeviceIds,
-    DeviceIndexGeneric extends number,
+    DeviceKeyGeneric extends PotentialDeviceKeys,
     InputDetailsGeneric extends DeviceInputDetails,
-> = {
-    deviceName: DeviceIdGeneric;
-    deviceIndex: DeviceIndexGeneric;
+> = Readonly<{
+    deviceName: string;
+    deviceKey: DeviceKeyGeneric;
     deviceType: InputDeviceType;
+    // number is needed here for mouse buttons which are numbers
     inputName: string | number;
-    value: number;
-    details: InputDetailsGeneric;
-};
+    inputValue: number;
+    details: Readonly<InputDetailsGeneric>;
+}>;
 
 export type KeyboardInputValue = InputValueDefiner<
-    typeof keyboardDeviceIdSymbol,
-    -1,
+    typeof keyboardDeviceKeySymbol,
     KeyboardInputDetails
 >;
 
-export type MouseInputValue = InputValueDefiner<typeof mouseDeviceIdSymbol, -1, MouseInputDetails>;
+export type MouseInputValue = InputValueDefiner<typeof mouseDeviceKeySymbol, MouseInputDetails>;
 
-export type GamepadInputValue = InputValueDefiner<string, number, GamepadInputDetails>;
+export type GamepadInputValue = InputValueDefiner<number, GamepadInputDetails>;

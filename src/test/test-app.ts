@@ -13,7 +13,7 @@ instance.addEventListener(InputDeviceHandlerEventTypeEnum.DevicesRemoved, (event
     console.info('devices removed:', event.detail.data);
     event.detail.data.forEach((inputDevice) => {
         deviceNamesDiv.innerHTML = deviceNamesDiv.innerHTML.replace(
-            String(inputDevice.name) + '<br>',
+            String(inputDevice.deviceName) + '<br>',
             '',
         );
     });
@@ -22,7 +22,7 @@ instance.addEventListener(InputDeviceHandlerEventTypeEnum.DevicesRemoved, (event
 instance.addEventListener(InputDeviceHandlerEventTypeEnum.NewDevicesAdded, (event) => {
     console.info('new devices:', event.detail.data);
     event.detail.data.forEach((inputDevice) => {
-        deviceNamesDiv.innerHTML += String(inputDevice.name) + '<br>';
+        deviceNamesDiv.innerHTML += String(inputDevice.deviceName) + '<br>';
     });
 });
 

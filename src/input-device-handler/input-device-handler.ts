@@ -1,7 +1,7 @@
 import {Writeable} from 'augment-vir';
 import {TypedEventTarget} from 'typed-event-target';
 import {AllInputDevices, gamepadMapToInputDevices} from '../device/all-input-devices';
-import {keyboardDeviceIdSymbol, mouseDeviceIdSymbol} from '../device/device-id';
+import {keyboardDeviceKeySymbol, mouseDeviceKeySymbol} from '../device/device-id';
 import {GamepadDeadZoneSettings} from '../device/gamepad/dead-zone-settings';
 import {readCurrentGamepads} from '../device/gamepad/read-gamepads';
 import {
@@ -58,10 +58,10 @@ export class InputDeviceHandler extends TypedEventTarget<AllEventTypes> {
                 details: {
                     keyboardEvent: event,
                 },
-                deviceName: keyboardDeviceIdSymbol,
-                deviceIndex: -1,
+                deviceKey: keyboardDeviceKeySymbol,
+                deviceName: keyboardBaseDevice.deviceName,
                 inputName: eventKey,
-                value: 1,
+                inputValue: 1,
             };
         });
         window.addEventListener('keyup', (event) => {
@@ -78,10 +78,10 @@ export class InputDeviceHandler extends TypedEventTarget<AllEventTypes> {
                 details: {
                     mouseEvent: event,
                 },
-                deviceName: mouseDeviceIdSymbol,
-                deviceIndex: -1,
+                deviceName: mouseBaseDevice.deviceName,
+                deviceKey: mouseDeviceKeySymbol,
                 inputName: eventButton,
-                value: 1,
+                inputValue: 1,
             };
         });
         window.addEventListener('mouseup', (event) => {
@@ -117,13 +117,13 @@ export class InputDeviceHandler extends TypedEventTarget<AllEventTypes> {
             gamepadMapToInputDevices(gamepadMap);
 
         const allDevices: AllInputDevices = {
-            [keyboardDeviceIdSymbol]: {
+            [keyboardDeviceKeySymbol]: {
                 ...keyboardBaseDevice,
                 currentInputs: {
                     ...this.currentKeyboardInputs,
                 },
             },
-            [mouseDeviceIdSymbol]: {
+            [mouseDeviceKeySymbol]: {
                 ...mouseBaseDevice,
                 currentInputs: {
                     ...this.currentMouseInputs,

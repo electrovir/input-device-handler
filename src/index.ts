@@ -1,7 +1,6 @@
 export * from './augments/constructor';
 export * from './device/all-input-devices';
 export * from './device/device-id';
-export * from './device/device-input';
 export * from './device/gamepad/dead-zone-settings';
 export * from './device/gamepad/gamepad-input-names';
 export * from './device/gamepad/navigator';
@@ -9,6 +8,7 @@ export * from './device/gamepad/read-gamepads';
 export * from './device/gamepad/serialized-gamepad';
 export * from './device/input-device';
 export * from './device/input-device-type';
+export * from './device/input-value';
 export * from './input-device-handler/event-util/all-events';
 export * from './input-device-handler/event-util/event-types';
 export * from './input-device-handler/event-util/timed.event';

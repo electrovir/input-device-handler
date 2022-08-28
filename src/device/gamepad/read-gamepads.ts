@@ -1,6 +1,6 @@
 import {typedHasOwnProperty} from 'augment-vir';
-import {DeviceInputValue, GamepadInputType, GamepadInputValue} from '../device-input';
 import {InputDeviceType} from '../input-device-type';
+import {DeviceInputValue, GamepadInputType, GamepadInputValue} from '../input-value';
 import {GamepadDeadZoneSettings} from './dead-zone-settings';
 import {createAxeName, createButtonName} from './gamepad-input-names';
 import {getNavigator} from './navigator';
@@ -35,8 +35,8 @@ export function gamepadToCurrentInputs(
 ): Record<DeviceInputValue['inputName'], GamepadInputValue> {
     const currentInputs: Record<DeviceInputValue['inputName'], GamepadInputValue> = {};
 
-    const gamepadDetails = {
-        deviceIndex: gamepad.index,
+    const gamepadDetails: Pick<GamepadInputValue, 'deviceKey' | 'deviceName' | 'deviceType'> = {
+        deviceKey: gamepad.index,
         deviceName: gamepad.id,
         deviceType: InputDeviceType.Gamepad,
     } as const;
@@ -50,7 +50,7 @@ export function gamepadToCurrentInputs(
                     buttonDetails: button,
                 },
                 inputName: buttonName,
-                value: button.value,
+                inputValue: button.value,
             };
         }
     });
@@ -62,9 +62,8 @@ export function gamepadToCurrentInputs(
                 details: {
                     inputType: GamepadInputType.Axe,
                 },
-                deviceIndex: gamepad.index,
                 inputName: axeName,
-                value: axe,
+                inputValue: axe,
             };
         }
     });

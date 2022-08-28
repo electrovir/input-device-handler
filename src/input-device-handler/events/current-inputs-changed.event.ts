@@ -1,6 +1,6 @@
 import {areJsonEqual} from 'augment-vir';
 import {allInputDevicesToAllInputs} from '../../device/all-input-devices';
-import {DeviceInputValue} from '../../device/device-input';
+import {DeviceInputValue} from '../../device/input-value';
 import {EventDataCheckCallback, InputDeviceHandlerEventTypeEnum} from '../event-util/event-types';
 import {defineTimedEvent} from '../event-util/timed.event';
 

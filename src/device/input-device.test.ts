@@ -5,7 +5,9 @@ import {InputDeviceType} from './input-device-type';
 describe('InputDevice types', () => {
     it('should allow generic types as well as specific types', () => {
         const genericInputDevice: InputDevice = {
-            type: InputDeviceType.Gamepad,
+            deviceType: InputDeviceType.Gamepad,
+            deviceKey: 0,
+            deviceName: 'test device name',
             currentInputs: {},
             deviceDetails: {
                 connected: false,
@@ -14,9 +16,10 @@ describe('InputDevice types', () => {
                 mapping: '',
                 serialized: true,
                 timestamp: 0,
+                axes: [],
+                buttons: [],
             },
-            id: 'gamepad id',
-        } as any as InputDevice;
+        };
 
         if (isOfInputDeviceType(genericInputDevice, InputDeviceType.Gamepad)) {
             const shouldBeGamepadType: GamepadInputDevice = genericInputDevice;
@@ -25,7 +28,8 @@ describe('InputDevice types', () => {
         } else {
             const shouldBeOtherType: InputDevice = genericInputDevice;
             // @ts-expect-error
-            const shouldNotBeGamepadType: GamepadInputDevice = genericInputDevice;
+            const genericInputDeviceShouldNotWorkHere: GamepadInputDevice =
+                genericInputDevice as InputDevice;
             assert.isFalse(true, 'the type guard should have been true');
         }
     });
