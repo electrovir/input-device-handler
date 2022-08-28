@@ -26,4 +26,9 @@ instance.addEventListener(InputDeviceHandlerEventTypeEnum.NewDevicesAdded, (even
     });
 });
 
+// // this one spams the console, only uncomment for debugging
+// instance.addEventListener(InputDeviceHandlerEventTypeEnum.AllDevicesUpdated, (event) => {
+//     console.info('all devices:', event.detail.data);
+// });
+
 console.info({instance});

@@ -4,27 +4,47 @@ import {DeviceInputValue} from '../../device/device-input';
 import {EventDataCheckCallback, InputDeviceHandlerEventTypeEnum} from '../event-util/event-types';
 import {defineTimedEvent} from '../event-util/timed.event';
 
+export type CurrentInputsChangedOutput = {
+    newInputs: DeviceInputValue[];
+    removedInputs: DeviceInputValue[];
+    allCurrentInputs: DeviceInputValue[];
+};
+
 function currentInputsChangedDataCheckCallback(
     ...[
         previousInputDevices,
-        newInputDevices,
-    ]: Parameters<EventDataCheckCallback<DeviceInputValue[]>>
-): ReturnType<EventDataCheckCallback<DeviceInputValue[]>> {
-    const allNewInputs = allInputDevicesToAllInputs(newInputDevices);
+        latestInputDevices,
+    ]: Parameters<EventDataCheckCallback<CurrentInputsChangedOutput>>
+): ReturnType<EventDataCheckCallback<CurrentInputsChangedOutput>> {
+    const allLatestInputs = allInputDevicesToAllInputs(latestInputDevices);
 
-    if (!previousInputDevices) {
-        return allNewInputs;
-    }
-    const allPreviousInputs = allInputDevicesToAllInputs(previousInputDevices);
+    const allPreviousInputs = previousInputDevices
+        ? allInputDevicesToAllInputs(previousInputDevices)
+        : [];
 
-    if (areJsonEqual(allPreviousInputs, allNewInputs)) {
+    if (areJsonEqual(allPreviousInputs, allLatestInputs)) {
         return undefined;
     } else {
-        return allNewInputs;
+        const newInputs = allLatestInputs.filter((latestInput) => {
+            return !allPreviousInputs.find((previousInput) => {
+                previousInput.inputName === latestInput.inputName;
+            });
+        });
+        const removedInputs = allPreviousInputs.filter((latestInput) => {
+            return !allLatestInputs.find((previousInput) => {
+                previousInput.inputName === latestInput.inputName;
+            });
+        });
+
+        return {
+            newInputs,
+            removedInputs,
+            allCurrentInputs: allLatestInputs,
+        };
     }
 }
 
-export class CurrentInputsChangedEvent extends defineTimedEvent<DeviceInputValue[]>()(
+export class CurrentInputsChangedEvent extends defineTimedEvent<CurrentInputsChangedOutput>()(
     InputDeviceHandlerEventTypeEnum.CurrentInputsChanged,
     currentInputsChangedDataCheckCallback,
 ) {}

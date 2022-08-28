@@ -1,4 +1,5 @@
 import {ArrayElement, wrapNarrowTypeWithTypeCheck} from 'augment-vir';
+import {ExtractEventByType} from 'typed-event-target';
 import {Constructed} from '../../augments/constructor';
 import {AllDevicesUpdatedEvent} from '../events/all-devices-updated.event';
 import {CurrentInputsChangedEvent} from '../events/current-inputs-changed.event';
@@ -15,7 +16,15 @@ export const allEvents = [
     CurrentInputsChangedEvent,
 ] as const;
 
-type EventMap = {[PropKey in InputDeviceHandlerEventTypeEnum]: TimedEventConstructor<any, PropKey>};
+export type AllEventTypes = Constructed<ArrayElement<typeof allEvents>>;
+
+export type EventMap = {
+    [PropKey in InputDeviceHandlerEventTypeEnum]: ExtractEventByType<AllEventTypes, PropKey>;
+};
+
+export type EventsMap = {
+    [PropKey in InputDeviceHandlerEventTypeEnum]: ExtractEventByType<AllEventTypes, PropKey>[];
+};
 
 const allEventsMap = allEvents.reduce((accum, currentEntry) => {
     accum[currentEntry.type] = currentEntry as TimedEventConstructor<
@@ -23,8 +32,6 @@ const allEventsMap = allEvents.reduce((accum, currentEntry) => {
         typeof currentEntry['type']
     > as any;
     return accum;
-}, {} as {[PropKey in ArrayElement<typeof allEvents>['type']]: TimedEventConstructor<any, PropKey>});
+}, {} as EventMap);
 
 export const inputHandlerEventMap = wrapNarrowTypeWithTypeCheck<EventMap>()(allEventsMap);
-
-export type AllEventTypes = Constructed<ArrayElement<typeof allEvents>>;
