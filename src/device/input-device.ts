@@ -1,22 +1,19 @@
-import {keyboardDeviceKeySymbol, mouseDeviceKeySymbol, PotentialDeviceKeys} from './device-id';
 import {SerializedGamepad} from './gamepad/serialized-gamepad';
-import {InputDeviceType} from './input-device-type';
+import {AnyInputDeviceKey, GamepadInputDeviceKey, inputDeviceKey} from './input-device-key';
+import {InputDeviceTypeEnum} from './input-device-type';
 import {
     DeviceInputValue,
     GamepadInputValue,
     KeyboardInputValue,
     MouseInputValue,
 } from './input-value';
-
-export type MouseDetails = undefined;
-export type KeyboardDetails = undefined;
 export type GamepadDetails = SerializedGamepad;
 
-type DeviceDetails = MouseDetails | KeyboardDetails | GamepadDetails;
+type DeviceDetails = undefined | GamepadDetails;
 
-type InputDeviceDefiner<
-    DeviceTypeGeneric extends InputDeviceType,
-    KeyTypeGeneric extends PotentialDeviceKeys,
+type DeviceWrapper<
+    DeviceTypeGeneric extends InputDeviceTypeEnum,
+    KeyTypeGeneric extends AnyInputDeviceKey,
     DeviceDetailsGeneric extends DeviceDetails,
     InputValueTypeGeneric extends DeviceInputValue,
 > = Readonly<{
@@ -27,52 +24,52 @@ type InputDeviceDefiner<
     currentInputs: Readonly<Record<DeviceInputValue['inputName'], InputValueTypeGeneric>>;
 }>;
 
-export type GamepadInputDevice = InputDeviceDefiner<
-    InputDeviceType.Gamepad,
-    number,
+export type GamepadDevice = DeviceWrapper<
+    InputDeviceTypeEnum.Gamepad,
+    GamepadInputDeviceKey,
     GamepadDetails,
     GamepadInputValue
 >;
 
-export type KeyboardInputDevice = InputDeviceDefiner<
-    InputDeviceType.Keyboard,
-    typeof keyboardDeviceKeySymbol,
-    KeyboardDetails,
+export type KeyboardDevice = DeviceWrapper<
+    InputDeviceTypeEnum.Keyboard,
+    typeof inputDeviceKey.keyboard,
+    undefined,
     KeyboardInputValue
 >;
 
-export type MouseInputDevice = InputDeviceDefiner<
-    InputDeviceType.Mouse,
-    typeof mouseDeviceKeySymbol,
-    MouseDetails,
+export type MouseDevice = DeviceWrapper<
+    InputDeviceTypeEnum.Mouse,
+    typeof inputDeviceKey.mouse,
+    undefined,
     MouseInputValue
 >;
 
-export type InputDevice = GamepadInputDevice | KeyboardInputDevice | MouseInputDevice;
+export type InputDevice = GamepadDevice | KeyboardDevice | MouseDevice;
 
 type DeviceTypeEnumToDeviceTypeObjectMapping = {
-    [InputDeviceType.Gamepad]: GamepadInputDevice;
-    [InputDeviceType.Keyboard]: KeyboardInputDevice;
-    [InputDeviceType.Mouse]: MouseInputDevice;
+    [InputDeviceTypeEnum.Gamepad]: GamepadDevice;
+    [InputDeviceTypeEnum.Keyboard]: KeyboardDevice;
+    [InputDeviceTypeEnum.Mouse]: MouseDevice;
 };
 
-export function isOfInputDeviceType<DeviceTypeGeneric extends InputDeviceType>(
+export function isOfInputDeviceType<DeviceTypeGeneric extends InputDeviceTypeEnum>(
     inputDevice: InputDevice,
     inputType: DeviceTypeGeneric,
 ): inputDevice is DeviceTypeEnumToDeviceTypeObjectMapping[DeviceTypeGeneric] {
     return inputDevice.deviceType === inputType;
 }
 
-export const keyboardBaseDevice: Readonly<Omit<KeyboardInputDevice, 'currentInputs'>> = {
+export const keyboardBaseDevice: Readonly<Omit<KeyboardDevice, 'currentInputs'>> = {
     deviceDetails: undefined,
-    deviceKey: keyboardDeviceKeySymbol,
+    deviceKey: inputDeviceKey.keyboard,
     deviceName: 'keyboard',
-    deviceType: InputDeviceType.Keyboard,
+    deviceType: InputDeviceTypeEnum.Keyboard,
 };
 
-export const mouseBaseDevice: Readonly<Omit<MouseInputDevice, 'currentInputs'>> = {
+export const mouseBaseDevice: Readonly<Omit<MouseDevice, 'currentInputs'>> = {
     deviceDetails: undefined,
-    deviceKey: mouseDeviceKeySymbol,
+    deviceKey: inputDeviceKey.mouse,
     deviceName: 'mouse',
-    deviceType: InputDeviceType.Mouse,
+    deviceType: InputDeviceTypeEnum.Mouse,
 };

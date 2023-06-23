@@ -1,4 +1,4 @@
-import {areJsonEqual} from 'augment-vir';
+import {areJsonEqual} from '@augment-vir/common';
 import {allInputDevicesToAllInputs} from '../../device/all-input-devices';
 import {DeviceInputValue} from '../../device/input-value';
 import {EventDataCheckCallback, InputDeviceHandlerEventTypeEnum} from '../event-util/event-types';

@@ -1,4 +1,9 @@
-import {getObjectTypedKeys, getObjectTypedValues, isTruthy, typedHasOwnProperty} from 'augment-vir';
+import {
+    getObjectTypedKeys,
+    getObjectTypedValues,
+    isTruthy,
+    typedHasProperty,
+} from '@augment-vir/common';
 import {InputDevice} from '../../device/input-device';
 import {EventDataCheckCallback, InputDeviceHandlerEventTypeEnum} from '../event-util/event-types';
 import {defineTimedEvent} from '../event-util/timed.event';
@@ -16,7 +21,7 @@ function newDevicesAddedDataCheckCallback(
     }
 
     const newDeviceKeys = getObjectTypedKeys(newInputDevices).filter((newKey) => {
-        return !typedHasOwnProperty(previousInputDevices, newKey);
+        return !typedHasProperty(previousInputDevices, newKey);
     });
 
     if (newDeviceKeys.length) {

@@ -1,10 +1,12 @@
+import {GamepadInputDeviceKey, isGamepadDeviceKey} from '../input-device-key';
+
 export type SerializedGamepadButton = Readonly<{
     pressed: boolean;
     value: number;
     touched: boolean;
 }>;
 
-export type GamepadInputs = Readonly<{
+export type SerializedGamepadInputs = Readonly<{
     axes: readonly number[];
     buttons: readonly SerializedGamepadButton[];
 }>;
@@ -12,12 +14,12 @@ export type GamepadInputs = Readonly<{
 export type SerializedGamepad = Readonly<{
     connected: boolean;
     id: string;
-    index: number;
+    index: GamepadInputDeviceKey;
     mapping: string;
     serialized: true;
     timestamp: number;
 }> &
-    GamepadInputs;
+    SerializedGamepadInputs;
 
 export function serializeGamepadButton(gamepadButton: GamepadButton): SerializedGamepadButton {
     return {
@@ -27,10 +29,18 @@ export function serializeGamepadButton(gamepadButton: GamepadButton): Serialized
     };
 }
 
-export type GamepadMap = Record<number, SerializedGamepad>;
+export type GamepadMap = Record<GamepadInputDeviceKey, SerializedGamepad>;
 
 export function serializeGamepad(gamepad: Gamepad): SerializedGamepad {
-    // basically include everything but the haptic stuff since those include functions
+    /**
+     * Basically this includes everything but the haptic interfaces since those include methods
+     * (which are not serializable).
+     */
+
+    if (!isGamepadDeviceKey(gamepad.index)) {
+        throw new Error(`Tried to serialize gamepad with out-of-bounds index: '${gamepad.index}'`);
+    }
+
     return {
         axes: gamepad.axes,
         buttons: gamepad.buttons.map(serializeGamepadButton),

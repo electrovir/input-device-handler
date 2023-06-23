@@ -70,11 +70,11 @@ const deviceHandler = new InputDeviceHandler({
     skipLoopStart: true,
 });
 
-function renderLoop() {
+function myRenderLoop() {
     const currentDevices = deviceHandler.updateInputDevices();
     // do something with the current devices and their inputs...
-    requestAnimationFrame(renderLoop);
+    requestAnimationFrame(myRenderLoop);
 }
 
-renderLoop();
+myRenderLoop();
 ```

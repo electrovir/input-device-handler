@@ -1,6 +1,7 @@
-import {keyboardDeviceKeySymbol, mouseDeviceKeySymbol, PotentialDeviceKeys} from './device-id';
+import {InputName} from './gamepad/gamepad-input-names';
 import {SerializedGamepadButton} from './gamepad/serialized-gamepad';
-import {InputDeviceType} from './input-device-type';
+import {AnyInputDeviceKey, GamepadInputDeviceKey, inputDeviceKey} from './input-device-key';
+import {InputDeviceTypeEnum} from './input-device-type';
 
 export type MouseInputDetails = {
     mouseEvent: MouseEvent;
@@ -28,26 +29,26 @@ export type GamepadInputDetails = GamepadAxeInputDetails | GamepadButtonInputDet
 
 type DeviceInputDetails = KeyboardInputDetails | MouseInputDetails | GamepadInputDetails;
 
-export type DeviceInputValue = KeyboardInputValue | MouseInputValue | GamepadInputValue;
-
-type InputValueDefiner<
-    DeviceKeyGeneric extends PotentialDeviceKeys,
-    InputDetailsGeneric extends DeviceInputDetails,
+/** A helper for creating values for each input device. */
+type InputValueWrapper<
+    SpecificDeviceKey extends AnyInputDeviceKey,
+    SpecificInputDetails extends DeviceInputDetails,
 > = Readonly<{
     deviceName: string;
-    deviceKey: DeviceKeyGeneric;
-    deviceType: InputDeviceType;
-    // number is needed here for mouse buttons which are numbers
-    inputName: string | number;
+    deviceKey: SpecificDeviceKey;
+    deviceType: InputDeviceTypeEnum;
+    inputName: InputName;
     inputValue: number;
-    details: Readonly<InputDetailsGeneric>;
+    details: Readonly<SpecificInputDetails>;
 }>;
 
-export type KeyboardInputValue = InputValueDefiner<
-    typeof keyboardDeviceKeySymbol,
+export type KeyboardInputValue = InputValueWrapper<
+    typeof inputDeviceKey.keyboard,
     KeyboardInputDetails
 >;
 
-export type MouseInputValue = InputValueDefiner<typeof mouseDeviceKeySymbol, MouseInputDetails>;
+export type MouseInputValue = InputValueWrapper<typeof inputDeviceKey.mouse, MouseInputDetails>;
 
-export type GamepadInputValue = InputValueDefiner<number, GamepadInputDetails>;
+export type GamepadInputValue = InputValueWrapper<GamepadInputDeviceKey, GamepadInputDetails>;
+
+export type DeviceInputValue = KeyboardInputValue | MouseInputValue | GamepadInputValue;

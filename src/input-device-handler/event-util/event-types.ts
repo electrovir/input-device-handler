@@ -1,4 +1,4 @@
-import {AllInputDevices} from '../../device/all-input-devices';
+import {AllDevices} from '../../device/all-input-devices';
 
 export enum InputDeviceHandlerEventTypeEnum {
     NewDevicesAdded = 'new-devices-added',
@@ -8,6 +8,6 @@ export enum InputDeviceHandlerEventTypeEnum {
 }
 
 export type EventDataCheckCallback<EventDataGeneric> = (
-    previousValues: AllInputDevices | undefined,
-    latestValues: AllInputDevices,
+    previousValues: AllDevices | undefined,
+    latestValues: AllDevices,
 ) => EventDataGeneric | undefined;

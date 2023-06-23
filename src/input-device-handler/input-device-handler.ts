@@ -1,18 +1,23 @@
-import {Writeable} from 'augment-vir';
+import {Writeable} from '@augment-vir/common';
 import {TypedEventTarget} from 'typed-event-target';
-import {AllInputDevices, gamepadMapToInputDevices} from '../device/all-input-devices';
-import {keyboardDeviceKeySymbol, mouseDeviceKeySymbol} from '../device/device-id';
+import {
+    AllDevices,
+    GamepadInputDevices,
+    gamepadMapToInputDevices,
+} from '../device/all-input-devices';
 import {GamepadDeadZoneSettings} from '../device/gamepad/dead-zone-settings';
+import {createButtonName} from '../device/gamepad/gamepad-input-names';
 import {readCurrentGamepads} from '../device/gamepad/read-gamepads';
 import {
-    GamepadInputDevice,
+    KeyboardDevice,
+    MouseDevice,
     keyboardBaseDevice,
-    KeyboardInputDevice,
     mouseBaseDevice,
-    MouseInputDevice,
 } from '../device/input-device';
-import {InputDeviceType} from '../device/input-device-type';
-import {allEvents, AllEventTypes} from './event-util/all-events';
+import {inputDeviceKey} from '../device/input-device-key';
+import {InputDeviceTypeEnum} from '../device/input-device-type';
+import {KeyboardInputValue} from '../device/input-value';
+import {AllEventTypes, allEvents} from './event-util/all-events';
 
 export type InputDeviceHandlerOptions = Partial<{
     /**
@@ -24,12 +29,12 @@ export type InputDeviceHandlerOptions = Partial<{
 }>;
 
 export class InputDeviceHandler extends TypedEventTarget<AllEventTypes> {
-    private currentKeyboardInputs: Writeable<KeyboardInputDevice['currentInputs']> = {};
-    private currentMouseInputs: Writeable<MouseInputDevice['currentInputs']> = {};
+    private currentKeyboardInputs: Writeable<KeyboardDevice['currentInputs']> = {};
+    private currentMouseInputs: Writeable<MouseDevice['currentInputs']> = {};
     private gamepadDeadZoneSettings: GamepadDeadZoneSettings = {};
 
     // make sure this is set after the other member variables
-    private lastReadInputDevices: AllInputDevices | undefined;
+    private lastReadInputDevices: AllDevices | undefined;
     private loopIsRunning = false;
     // prevents multiple polling loops from running
     private currentLoopIndex = -1;
@@ -47,45 +52,47 @@ export class InputDeviceHandler extends TypedEventTarget<AllEventTypes> {
 
     private attachWindowListeners() {
         window.addEventListener('keydown', (event) => {
-            const eventKey = event.key;
+            const eventKey = createButtonName(event.key);
             // ignore keydown repeated events
             if (this.currentKeyboardInputs.hasOwnProperty(eventKey)) {
                 return;
             }
 
-            this.currentKeyboardInputs[eventKey] = {
-                deviceType: InputDeviceType.Keyboard,
+            const newKeyboardInput: KeyboardInputValue = {
+                deviceType: InputDeviceTypeEnum.Keyboard,
                 details: {
                     keyboardEvent: event,
                 },
-                deviceKey: keyboardDeviceKeySymbol,
+                deviceKey: inputDeviceKey.keyboard,
                 deviceName: keyboardBaseDevice.deviceName,
                 inputName: eventKey,
                 inputValue: 1,
             };
+
+            this.currentKeyboardInputs[eventKey] = newKeyboardInput;
         });
         window.addEventListener('keyup', (event) => {
-            delete this.currentKeyboardInputs[event.key];
+            delete this.currentKeyboardInputs[createButtonName(event.key)];
         });
         window.addEventListener('mousedown', (event) => {
-            const eventButton = event.button;
+            const eventButton = createButtonName(event.button);
             if (this.currentMouseInputs.hasOwnProperty(eventButton)) {
                 return;
             }
 
             this.currentMouseInputs[eventButton] = {
-                deviceType: InputDeviceType.Mouse,
+                deviceType: InputDeviceTypeEnum.Mouse,
                 details: {
                     mouseEvent: event,
                 },
                 deviceName: mouseBaseDevice.deviceName,
-                deviceKey: mouseDeviceKeySymbol,
+                deviceKey: inputDeviceKey.mouse,
                 inputName: eventButton,
                 inputValue: 1,
             };
         });
         window.addEventListener('mouseup', (event) => {
-            delete this.currentMouseInputs[event.button];
+            delete this.currentMouseInputs[createButtonName(event.button)];
         });
     }
 
@@ -98,7 +105,7 @@ export class InputDeviceHandler extends TypedEventTarget<AllEventTypes> {
         }
     }
 
-    private fireEvents(timestamp: number, newValues: AllInputDevices) {
+    private fireEvents(timestamp: number, newValues: AllDevices) {
         allEvents.forEach((currentEventConstructor) => {
             const maybeEventInstance = currentEventConstructor.constructIfDataDataCheckPasses(
                 timestamp,
@@ -111,19 +118,18 @@ export class InputDeviceHandler extends TypedEventTarget<AllEventTypes> {
         });
     }
 
-    private readAllInputDevices(): AllInputDevices {
+    private readAllInputDevices(): AllDevices {
         const gamepadMap = readCurrentGamepads(this.gamepadDeadZoneSettings);
-        const gamepadInputDevices: Record<number, GamepadInputDevice> =
-            gamepadMapToInputDevices(gamepadMap);
+        const gamepadInputDevices: GamepadInputDevices = gamepadMapToInputDevices(gamepadMap);
 
-        const allDevices: AllInputDevices = {
-            [keyboardDeviceKeySymbol]: {
+        const allDevices: AllDevices = {
+            [inputDeviceKey.keyboard]: {
                 ...keyboardBaseDevice,
                 currentInputs: {
                     ...this.currentKeyboardInputs,
                 },
             },
-            [mouseDeviceKeySymbol]: {
+            [inputDeviceKey.mouse]: {
                 ...mouseBaseDevice,
                 currentInputs: {
                     ...this.currentMouseInputs,
@@ -133,6 +139,12 @@ export class InputDeviceHandler extends TypedEventTarget<AllEventTypes> {
         };
 
         return allDevices;
+    }
+
+    public addEventListenerAndFireRightAway(
+        ...inputs: Parameters<InputDeviceHandler['addEventListener']>
+    ) {
+        this.addEventListener(...inputs);
     }
 
     public startPollingLoop() {
@@ -161,7 +173,7 @@ export class InputDeviceHandler extends TypedEventTarget<AllEventTypes> {
      * Use this if method if you're hooking up polling to your own system. For example, if you
      * already have a render loop, call this method to update all inputs.
      */
-    public updateInputDevices(timestamp = Date.now()): AllInputDevices {
+    public updateInputDevices(timestamp = Date.now()): AllDevices {
         const newValues = this.readAllInputDevices();
         this.fireEvents(timestamp, newValues);
         this.lastReadInputDevices = newValues;

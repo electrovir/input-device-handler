@@ -1,4 +1,4 @@
-import {getObjectTypedKeys, isTruthy, typedHasOwnProperty} from 'augment-vir';
+import {getObjectTypedKeys, isTruthy, typedHasProperty} from '@augment-vir/common';
 import {InputDevice} from '../../device/input-device';
 import {EventDataCheckCallback, InputDeviceHandlerEventTypeEnum} from '../event-util/event-types';
 import {defineTimedEvent} from '../event-util/timed.event';
@@ -16,7 +16,7 @@ function devicesRemovedDataCheckCallback(
     }
 
     const removedDeviceKeys = getObjectTypedKeys(previousInputDevices).filter((newKey) => {
-        return !typedHasOwnProperty(newInputDevices, newKey);
+        return !typedHasProperty(newInputDevices, newKey);
     });
 
     if (removedDeviceKeys.length) {

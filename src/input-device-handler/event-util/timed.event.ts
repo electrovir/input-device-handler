@@ -1,4 +1,4 @@
-import {Overwrite} from 'augment-vir';
+import {Overwrite} from '@augment-vir/common';
 import {defineTypedCustomEvent, TypedCustomEvent, TypedCustomEventInit} from 'typed-event-target';
 import {EventDataCheckCallback, InputDeviceHandlerEventTypeEnum} from './event-types';
 

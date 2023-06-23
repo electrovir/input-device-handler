@@ -1,6 +1,8 @@
+import {randomString} from '@augment-vir/browser';
+import {getObjectTypedValues} from '@augment-vir/common';
 import {assert} from '@open-wc/testing';
 import {sendKeys} from '@web/test-runner-commands';
-import {getObjectTypedValues, randomString} from 'augment-vir';
+import {createButtonName} from '../device/gamepad/gamepad-input-names';
 import {assertIsNonNullable} from '../test/typed-asserts';
 import {EventsMap} from './event-util/all-events';
 import {InputDeviceHandlerEventTypeEnum} from './event-util/event-types';
@@ -120,7 +122,7 @@ describe(InputDeviceHandler.constructor.name, () => {
         assert.strictEqual(inputChangedEvent.detail.data.allCurrentInputs.length, 1);
         const newInput = inputChangedEvent.detail.data.allCurrentInputs[0];
         assertIsNonNullable(newInput);
-        assert.strictEqual(newInput.inputName, pressedKey);
+        assert.strictEqual(newInput.inputName, createButtonName(pressedKey));
     });
 
     it('should fire an input changed event after releasing key', async () => {
@@ -147,6 +149,6 @@ describe(InputDeviceHandler.constructor.name, () => {
         assert.strictEqual(inputChangedEvent.detail.data.removedInputs.length, 1);
         const removedInput = inputChangedEvent.detail.data.removedInputs[0];
         assertIsNonNullable(removedInput);
-        assert.strictEqual(removedInput.inputName, pressedKey);
+        assert.strictEqual(removedInput.inputName, createButtonName(pressedKey));
     });
 });
