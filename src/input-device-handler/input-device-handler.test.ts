@@ -1,9 +1,9 @@
 import {randomString} from '@augment-vir/browser';
+import {typedAssertNotNullish} from '@augment-vir/browser-testing';
 import {getObjectTypedValues} from '@augment-vir/common';
 import {assert} from '@open-wc/testing';
 import {sendKeys} from '@web/test-runner-commands';
 import {createButtonName} from '../device/gamepad/gamepad-input-names';
-import {assertIsNonNullable} from '../test/typed-asserts';
 import {EventsMap} from './event-util/all-events';
 import {InputDeviceHandlerEventTypeEnum} from './event-util/event-types';
 import {CurrentInputsChangedEvent} from './events/current-inputs-changed.event';
@@ -99,9 +99,9 @@ describe(InputDeviceHandler.constructor.name, () => {
         index: number,
     ): CurrentInputsChangedEvent {
         const inputChangedEvents = events[InputDeviceHandlerEventTypeEnum.CurrentInputsChanged];
-        assertIsNonNullable(inputChangedEvents);
+        assert(inputChangedEvents);
         const inputChangedEvent = inputChangedEvents[index];
-        assertIsNonNullable(inputChangedEvent, `event at "${index}" should've exists`);
+        typedAssertNotNullish(inputChangedEvent, `event at "${index}" should've existed`);
 
         return inputChangedEvent;
     }
@@ -121,7 +121,7 @@ describe(InputDeviceHandler.constructor.name, () => {
         );
         assert.strictEqual(inputChangedEvent.detail.data.allCurrentInputs.length, 1);
         const newInput = inputChangedEvent.detail.data.allCurrentInputs[0];
-        assertIsNonNullable(newInput);
+        typedAssertNotNullish(newInput);
         assert.strictEqual(newInput.inputName, createButtonName(pressedKey));
     });
 
@@ -148,7 +148,7 @@ describe(InputDeviceHandler.constructor.name, () => {
         assert.isEmpty(inputChangedEvent.detail.data.allCurrentInputs);
         assert.strictEqual(inputChangedEvent.detail.data.removedInputs.length, 1);
         const removedInput = inputChangedEvent.detail.data.removedInputs[0];
-        assertIsNonNullable(removedInput);
+        typedAssertNotNullish(removedInput);
         assert.strictEqual(removedInput.inputName, createButtonName(pressedKey));
     });
 });

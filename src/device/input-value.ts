@@ -34,11 +34,18 @@ type InputValueWrapper<
     SpecificDeviceKey extends AnyInputDeviceKey,
     SpecificInputDetails extends DeviceInputDetails,
 > = Readonly<{
+    /**
+     * Human friendly name of the device. For gamepads, this will vary by browser (as they all read
+     * the names differently) and by the make and model of the gamepad.
+     */
     deviceName: string;
+    /** The device's unique key. */
     deviceKey: SpecificDeviceKey;
+    /** The type of device: gamepad, mouse, or keyboard. */
     deviceType: InputDeviceTypeEnum;
     inputName: InputName;
     inputValue: number;
+    /** Extra details for the input that depend on the device the input came from. */
     details: Readonly<SpecificInputDetails>;
 }>;
 

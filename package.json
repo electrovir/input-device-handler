@@ -1,6 +1,6 @@
 {
     "name": "input-device-handler",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "homepage": "https://github.com/electrovir/input-device-handler",
     "bugs": {
         "url": "https://github.com/electrovir/input-device-handler/issues"
@@ -32,12 +32,13 @@
         "test:types": "tsc --noEmit"
     },
     "dependencies": {
-        "@augment-vir/common": "^15.2.0",
+        "@augment-vir/common": "^15.2.1",
         "typed-event-target": "1.2.1"
     },
     "devDependencies": {
-        "@augment-vir/browser": "^15.2.0",
-        "@augment-vir/node-js": "^15.2.0",
+        "@augment-vir/browser": "^15.2.1",
+        "@augment-vir/browser-testing": "^15.2.1",
+        "@augment-vir/node-js": "^15.2.1",
         "@open-wc/testing": "3.2.0",
         "@types/mocha": "^10.0.1",
         "@web/dev-server-esbuild": "^0.4.1",

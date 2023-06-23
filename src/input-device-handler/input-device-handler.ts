@@ -6,7 +6,7 @@ import {
     gamepadMapToInputDevices,
 } from '../device/all-input-devices';
 import {GamepadDeadZoneSettings} from '../device/gamepad/dead-zone-settings';
-import {createButtonName} from '../device/gamepad/gamepad-input-names';
+import {createAxeName, createButtonName} from '../device/gamepad/gamepad-input-names';
 import {readCurrentGamepads} from '../device/gamepad/read-gamepads';
 import {
     KeyboardDevice,
@@ -25,6 +25,11 @@ export type InputDeviceHandlerOptions = Partial<{
      * set to true, you can trigger your own reads by calling .readInputDevices().
      */
     skipLoopStart: boolean;
+    /**
+     * By default listening to mouse movement is turned off because it would result in many changes
+     * detected all the time. Set this to true to listen to mouse inputs as well.
+     */
+    listenToMouseMovement: boolean;
     gamepadDeadZoneSettings: GamepadDeadZoneSettings;
 }>;
 
@@ -47,10 +52,10 @@ export class InputDeviceHandler extends TypedEventTarget<AllEventTypes> {
         if (options.gamepadDeadZoneSettings) {
             this.updateGamepadDeadZoneSettings(options.gamepadDeadZoneSettings);
         }
-        this.attachWindowListeners();
+        this.attachWindowListeners(options);
     }
 
-    private attachWindowListeners() {
+    private attachWindowListeners(options: InputDeviceHandlerOptions) {
         window.addEventListener('keydown', (event) => {
             const eventKey = createButtonName(event.key);
             // ignore keydown repeated events
@@ -74,6 +79,7 @@ export class InputDeviceHandler extends TypedEventTarget<AllEventTypes> {
         window.addEventListener('keyup', (event) => {
             delete this.currentKeyboardInputs[createButtonName(event.key)];
         });
+
         window.addEventListener('mousedown', (event) => {
             const eventButton = createButtonName(event.button);
             if (this.currentMouseInputs.hasOwnProperty(eventButton)) {
@@ -94,6 +100,33 @@ export class InputDeviceHandler extends TypedEventTarget<AllEventTypes> {
         window.addEventListener('mouseup', (event) => {
             delete this.currentMouseInputs[createButtonName(event.button)];
         });
+        if (options.listenToMouseMovement) {
+            window.addEventListener('mousemove', (event) => {
+                const xAxeName = createAxeName('x');
+                const yAxeName = createAxeName('y');
+
+                this.currentMouseInputs[xAxeName] = {
+                    deviceType: InputDeviceTypeEnum.Mouse,
+                    details: {
+                        mouseEvent: event,
+                    },
+                    deviceName: mouseBaseDevice.deviceName,
+                    deviceKey: inputDeviceKey.mouse,
+                    inputName: xAxeName,
+                    inputValue: event.clientX,
+                };
+                this.currentMouseInputs[yAxeName] = {
+                    deviceType: InputDeviceTypeEnum.Mouse,
+                    details: {
+                        mouseEvent: event,
+                    },
+                    deviceName: mouseBaseDevice.deviceName,
+                    deviceKey: inputDeviceKey.mouse,
+                    inputName: yAxeName,
+                    inputValue: event.clientY,
+                };
+            });
+        }
     }
 
     private runPollingLoop(loopIndex: number, timestamp: number) {
