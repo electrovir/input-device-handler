@@ -5,17 +5,17 @@ import {
     typedHasProperty,
 } from '@augment-vir/common';
 import {InputDevice} from '../../device/input-device';
-import {EventDataCheckCallback, InputDeviceHandlerEventTypeEnum} from '../event-util/event-types';
-import {defineTimedEvent} from '../event-util/timed.event';
+import {ConstructEventIfDataIsNew, InputDeviceEventTypeEnum} from '../event-util/event-types';
+import {defineTimedEvent} from '../event-util/timed-event';
 
 type NewDevicesAddedOutput = InputDevice[];
 
-function newDevicesAddedDataCheckCallback(
+function areThereNewDevices(
     ...[
         previousInputDevices,
         newInputDevices,
-    ]: Parameters<EventDataCheckCallback<NewDevicesAddedOutput>>
-): ReturnType<EventDataCheckCallback<NewDevicesAddedOutput>> {
+    ]: Parameters<ConstructEventIfDataIsNew<NewDevicesAddedOutput>>
+): ReturnType<ConstructEventIfDataIsNew<NewDevicesAddedOutput>> {
     if (!previousInputDevices) {
         return getObjectTypedValues(newInputDevices);
     }
@@ -31,7 +31,7 @@ function newDevicesAddedDataCheckCallback(
     }
 }
 
-export class NewDevicesAddedEvent extends defineTimedEvent<NewDevicesAddedOutput>()(
-    InputDeviceHandlerEventTypeEnum.NewDevicesAdded,
-    newDevicesAddedDataCheckCallback,
-) {}
+export const NewDevicesAddedEvent = defineTimedEvent<NewDevicesAddedOutput>()(
+    InputDeviceEventTypeEnum.NewDevicesAdded,
+    areThereNewDevices,
+);

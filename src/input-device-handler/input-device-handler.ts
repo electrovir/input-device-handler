@@ -1,5 +1,9 @@
 import {Writeable} from '@augment-vir/common';
-import {TypedEventTarget} from 'typed-event-target';
+import {TypedEventListenerOrEventListenerObject, TypedEventTarget} from 'typed-event-target';
+import {
+    ExtractEventByType,
+    ExtractEventTypes,
+} from '../../node_modules/typed-event-target/dist/types/event-types';
 import {
     AllDevices,
     GamepadInputDevices,
@@ -17,7 +21,7 @@ import {
 import {inputDeviceKey} from '../device/input-device-key';
 import {InputDeviceTypeEnum} from '../device/input-device-type';
 import {KeyboardInputValue} from '../device/input-value';
-import {AllEventTypes, allEvents} from './event-util/all-events';
+import {AnyInputHandlerEvent, allEvents, eventsByType} from './event-util/all-events';
 
 export type InputDeviceHandlerOptions = Partial<{
     /**
@@ -33,29 +37,38 @@ export type InputDeviceHandlerOptions = Partial<{
     gamepadDeadZoneSettings: GamepadDeadZoneSettings;
 }>;
 
-export class InputDeviceHandler extends TypedEventTarget<AllEventTypes> {
+export class InputDeviceHandler extends TypedEventTarget<AnyInputHandlerEvent> {
     private currentKeyboardInputs: Writeable<KeyboardDevice['currentInputs']> = {};
     private currentMouseInputs: Writeable<MouseDevice['currentInputs']> = {};
     private gamepadDeadZoneSettings: GamepadDeadZoneSettings = {};
 
-    // make sure this is set after the other member variables
-    private lastReadInputDevices: AllDevices | undefined;
+    /**
+     * Make sure this is set after the other member variables.
+     *
+     * This is not-null asserted because updateInputDevices, which sets it, is called in the
+     * constructor.
+     */
+    private lastReadInputDevices!: AllDevices;
     private loopIsRunning = false;
     // prevents multiple polling loops from running
     private currentLoopIndex = -1;
 
     constructor(options: InputDeviceHandlerOptions = {}) {
         super();
-        if (!options.skipLoopStart) {
-            this.startPollingLoop();
-        }
         if (options.gamepadDeadZoneSettings) {
             this.updateGamepadDeadZoneSettings(options.gamepadDeadZoneSettings);
         }
         this.attachWindowListeners(options);
+        this.updateInputDevices();
+
+        if (!options.skipLoopStart) {
+            this.startPollingLoop();
+        }
     }
 
-    private attachWindowListeners(options: InputDeviceHandlerOptions) {
+    private attachWindowListeners(
+        options: Pick<InputDeviceHandlerOptions, 'listenToMouseMovement'>,
+    ) {
         window.addEventListener('keydown', (event) => {
             const eventKey = createButtonName(event.key);
             // ignore keydown repeated events
@@ -140,7 +153,7 @@ export class InputDeviceHandler extends TypedEventTarget<AllEventTypes> {
 
     private fireEvents(timestamp: number, newValues: AllDevices) {
         allEvents.forEach((currentEventConstructor) => {
-            const maybeEventInstance = currentEventConstructor.constructIfDataDataCheckPasses(
+            const maybeEventInstance = currentEventConstructor.constructIfDataIsNew(
                 timestamp,
                 this.lastReadInputDevices,
                 newValues,
@@ -174,10 +187,35 @@ export class InputDeviceHandler extends TypedEventTarget<AllEventTypes> {
         return allDevices;
     }
 
-    public addEventListenerAndFireRightAway(
-        ...inputs: Parameters<InputDeviceHandler['addEventListener']>
-    ) {
-        this.addEventListener(...inputs);
+    /** Adds an event listener and fires it if devices have been setup already. */
+    public addEventListenerAndFireImmediately<
+        EventNameGeneric extends ExtractEventTypes<AnyInputHandlerEvent>,
+    >(
+        type: EventNameGeneric,
+        callback: TypedEventListenerOrEventListenerObject<
+            ExtractEventByType<AnyInputHandlerEvent, EventNameGeneric>
+        > | null,
+        options?: boolean | AddEventListenerOptions | undefined,
+    ): void {
+        this.addEventListener(type, callback, options);
+
+        if (!callback) {
+            return;
+        }
+
+        const listener = (typeof callback === 'function' ? callback : callback.handleEvent) as (
+            event: AnyInputHandlerEvent,
+        ) => void;
+
+        const eventConstructor = eventsByType[type];
+
+        const newEvent = eventConstructor.constructIfDataIsNew(
+            Date.now(),
+            undefined,
+            this.lastReadInputDevices,
+        ) as AnyInputHandlerEvent;
+
+        listener(newEvent);
     }
 
     public startPollingLoop() {
@@ -198,7 +236,7 @@ export class InputDeviceHandler extends TypedEventTarget<AllEventTypes> {
      * date. For example, if you previously paused polling, the returned value here would be from
      * right before polling was paused.
      */
-    public getLastPollResults() {
+    public getLastPollResults(): AllDevices {
         return this.lastReadInputDevices;
     }
 

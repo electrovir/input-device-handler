@@ -1,8 +1,8 @@
 import {areJsonEqual} from '@augment-vir/common';
 import {allInputDevicesToAllInputs} from '../../device/all-input-devices';
 import {DeviceInputValue} from '../../device/input-value';
-import {EventDataCheckCallback, InputDeviceHandlerEventTypeEnum} from '../event-util/event-types';
-import {defineTimedEvent} from '../event-util/timed.event';
+import {ConstructEventIfDataIsNew, InputDeviceEventTypeEnum} from '../event-util/event-types';
+import {defineTimedEvent} from '../event-util/timed-event';
 
 export type CurrentInputsChangedOutput = {
     newInputs: DeviceInputValue[];
@@ -10,12 +10,21 @@ export type CurrentInputsChangedOutput = {
     allCurrentInputs: DeviceInputValue[];
 };
 
-function currentInputsChangedDataCheckCallback(
+function areInputsEqual(a: DeviceInputValue, b: DeviceInputValue) {
+    return (
+        a.deviceKey === b.deviceKey &&
+        a.inputName === b.inputName &&
+        a.inputName === b.inputName &&
+        a.inputValue === b.inputValue
+    );
+}
+
+function didCurrentInputsChange(
     ...[
         previousInputDevices,
         latestInputDevices,
-    ]: Parameters<EventDataCheckCallback<CurrentInputsChangedOutput>>
-): ReturnType<EventDataCheckCallback<CurrentInputsChangedOutput>> {
+    ]: Parameters<ConstructEventIfDataIsNew<CurrentInputsChangedOutput>>
+): ReturnType<ConstructEventIfDataIsNew<CurrentInputsChangedOutput>> {
     const allLatestInputs = allInputDevicesToAllInputs(latestInputDevices);
 
     const allPreviousInputs = previousInputDevices
@@ -27,12 +36,12 @@ function currentInputsChangedDataCheckCallback(
     } else {
         const newInputs = allLatestInputs.filter((latestInput) => {
             return !allPreviousInputs.find((previousInput) => {
-                previousInput.inputName === latestInput.inputName;
+                return areInputsEqual(previousInput, latestInput);
             });
         });
         const removedInputs = allPreviousInputs.filter((latestInput) => {
             return !allLatestInputs.find((previousInput) => {
-                previousInput.inputName === latestInput.inputName;
+                return areInputsEqual(previousInput, latestInput);
             });
         });
 
@@ -44,7 +53,7 @@ function currentInputsChangedDataCheckCallback(
     }
 }
 
-export class CurrentInputsChangedEvent extends defineTimedEvent<CurrentInputsChangedOutput>()(
-    InputDeviceHandlerEventTypeEnum.CurrentInputsChanged,
-    currentInputsChangedDataCheckCallback,
-) {}
+export const CurrentInputsChangedEvent = defineTimedEvent<CurrentInputsChangedOutput>()(
+    InputDeviceEventTypeEnum.CurrentInputsChanged,
+    didCurrentInputsChange,
+);

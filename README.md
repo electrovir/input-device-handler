@@ -21,18 +21,18 @@ Since the gamepad api is [poll based](<https://en.wikipedia.org/wiki/Polling_(co
 <!-- example-link: ./src/readme-examples/basic-setup.example.ts -->
 
 ```TypeScript
-import {InputDeviceHandler, InputDeviceHandlerEventTypeEnum} from 'input-device-handler';
+import {InputDeviceEventTypeEnum, InputDeviceHandler} from 'input-device-handler';
 
 const deviceHandler = new InputDeviceHandler();
 
 // listen to new devices connecting (such as gamepads)
-deviceHandler.addEventListener(InputDeviceHandlerEventTypeEnum.NewDevicesAdded, (event) => {
-    console.info('new devices added:', event.detail.data);
+deviceHandler.addEventListener(InputDeviceEventTypeEnum.NewDevicesAdded, (event) => {
+    console.info('new devices added:', event.detail.inputs);
 });
 
 // listen to a change in inputs
-deviceHandler.addEventListener(InputDeviceHandlerEventTypeEnum.CurrentInputsChanged, (event) => {
-    console.info('inputs changed:', event.detail.data);
+deviceHandler.addEventListener(InputDeviceEventTypeEnum.CurrentInputsChanged, (event) => {
+    console.info('inputs changed:', event.detail.inputs);
 });
 ```
 

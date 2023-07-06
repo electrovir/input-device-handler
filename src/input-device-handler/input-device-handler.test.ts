@@ -1,13 +1,63 @@
 import {randomString} from '@augment-vir/browser';
 import {typedAssertNotNullish} from '@augment-vir/browser-testing';
-import {getObjectTypedValues} from '@augment-vir/common';
+import {getEnumTypedValues, getObjectTypedValues} from '@augment-vir/common';
 import {assert} from '@open-wc/testing';
 import {sendKeys} from '@web/test-runner-commands';
 import {createButtonName} from '../device/gamepad/gamepad-input-names';
-import {EventsMap} from './event-util/all-events';
-import {InputDeviceHandlerEventTypeEnum} from './event-util/event-types';
+import {
+    AnyInputHandlerEvent,
+    InputHandlerEventsMap,
+    createEmptyEventsMap,
+} from './event-util/all-events';
+import {InputDeviceEventTypeEnum} from './event-util/event-types';
+import {AllDevicesUpdatedEvent} from './events/all-devices-updated.event';
 import {CurrentInputsChangedEvent} from './events/current-inputs-changed.event';
 import {InputDeviceHandler} from './input-device-handler';
+
+function setupInstanceForTesting() {
+    const instance = new InputDeviceHandler({
+        skipLoopStart: true,
+    });
+
+    const events: InputHandlerEventsMap = createEmptyEventsMap();
+
+    getEnumTypedValues(InputDeviceEventTypeEnum).forEach((eventType) => {
+        instance.addEventListener(eventType, (event) => {
+            /**
+             * Any cast is necessary here because we're working with broader types than EventsMap
+             * is.
+             */
+            events[eventType].push(event as any);
+        });
+    });
+
+    return {instance, events};
+}
+
+async function pressDownRandomKey(): Promise<string> {
+    const pressedKey = randomString(1);
+
+    await sendKeys({
+        down: pressedKey,
+    });
+
+    return pressedKey;
+}
+
+function getFlattenedEvents(events: Readonly<InputHandlerEventsMap>): AnyInputHandlerEvent[] {
+    return Object.values(events).flat();
+}
+
+function getInputChangedEventAt(
+    events: Readonly<InputHandlerEventsMap>,
+    index: number,
+): InstanceType<typeof CurrentInputsChangedEvent> {
+    const inputChangedEvents = events[InputDeviceEventTypeEnum.CurrentInputsChanged];
+    const inputChangedEvent = inputChangedEvents[index];
+    typedAssertNotNullish(inputChangedEvent, `event at "${index}" should've existed`);
+
+    return inputChangedEvent;
+}
 
 describe(InputDeviceHandler.constructor.name, () => {
     it('should be constructable', () => {
@@ -25,86 +75,36 @@ describe(InputDeviceHandler.constructor.name, () => {
         instances.forEach((instance) => assert.instanceOf(instance, InputDeviceHandler));
     });
 
-    function setupInstanceForTesting(): Readonly<{
-        instance: InputDeviceHandler;
-        events: Readonly<Partial<EventsMap>>;
-    }> {
-        const instance = new InputDeviceHandler({
-            skipLoopStart: true,
-        });
-
-        const events: Partial<EventsMap> = {};
-
-        instance.addEventListener(InputDeviceHandlerEventTypeEnum.AllDevicesUpdated, (event) => {
-            if (!events[InputDeviceHandlerEventTypeEnum.AllDevicesUpdated]) {
-                events[InputDeviceHandlerEventTypeEnum.AllDevicesUpdated] = [];
-            }
-            events[InputDeviceHandlerEventTypeEnum.AllDevicesUpdated]!.push(event);
-        });
-        instance.addEventListener(InputDeviceHandlerEventTypeEnum.CurrentInputsChanged, (event) => {
-            if (!events[InputDeviceHandlerEventTypeEnum.CurrentInputsChanged]) {
-                events[InputDeviceHandlerEventTypeEnum.CurrentInputsChanged] = [];
-            }
-            events[InputDeviceHandlerEventTypeEnum.CurrentInputsChanged]!.push(event);
-        });
-        instance.addEventListener(InputDeviceHandlerEventTypeEnum.NewDevicesAdded, (event) => {
-            if (!events[InputDeviceHandlerEventTypeEnum.NewDevicesAdded]) {
-                events[InputDeviceHandlerEventTypeEnum.NewDevicesAdded] = [];
-            }
-            events[InputDeviceHandlerEventTypeEnum.NewDevicesAdded]!.push(event);
-        });
-
-        return {instance, events};
-    }
-
-    async function pressDownRandomKey(): Promise<string> {
-        const pressedKey = randomString(1);
-
-        await sendKeys({
-            down: pressedKey,
-        });
-
-        return pressedKey;
-    }
-
     it('should not fire events before running an update', async () => {
         const {events} = setupInstanceForTesting();
 
         await pressDownRandomKey();
 
-        assert.isEmpty(
-            getObjectTypedValues(events),
-            'events should not be fired before an any updates even after pressing inputs',
-        );
+        assert.isEmpty(getFlattenedEvents(events), 'events should not have fired yet');
     });
 
     it('should fire events after running an update', async () => {
         const {events, instance} = setupInstanceForTesting();
 
+        assert.isEmpty(
+            getFlattenedEvents(events),
+            'events should not have fired before calling update',
+        );
+
         instance.updateInputDevices();
 
-        assert.isNotEmpty(
-            getObjectTypedValues(events),
-            'events should not be fired before an any updates',
-        );
-        assert.strictEqual(
-            getObjectTypedValues(events).length,
-            2,
-            'should have an entry for two of the events',
-        );
+        assert.lengthOf(getFlattenedEvents(events), 1, 'should fire an update event');
+
+        instance.updateInputDevices();
+
+        const postUpdateEvents = getFlattenedEvents(events);
+
+        assert.lengthOf(postUpdateEvents, 2, 'should fire another updated event');
+
+        postUpdateEvents.forEach((event) => {
+            assert.instanceOf(event, AllDevicesUpdatedEvent);
+        });
     });
-
-    function getInputChangedEventAt(
-        events: Readonly<Partial<EventsMap>>,
-        index: number,
-    ): CurrentInputsChangedEvent {
-        const inputChangedEvents = events[InputDeviceHandlerEventTypeEnum.CurrentInputsChanged];
-        assert(inputChangedEvents);
-        const inputChangedEvent = inputChangedEvents[index];
-        typedAssertNotNullish(inputChangedEvent, `event at "${index}" should've existed`);
-
-        return inputChangedEvent;
-    }
 
     it('should fire an input changed event after pressing a key', async () => {
         const {events, instance} = setupInstanceForTesting();
@@ -113,14 +113,14 @@ describe(InputDeviceHandler.constructor.name, () => {
 
         instance.updateInputDevices();
 
-        assert.strictEqual(getObjectTypedValues(events).length, 3);
+        assert.lengthOf(getFlattenedEvents(events), 2);
         const inputChangedEvent = getInputChangedEventAt(events, 0);
         assert.deepStrictEqual(
-            inputChangedEvent.detail.data.newInputs,
-            inputChangedEvent.detail.data.allCurrentInputs,
+            inputChangedEvent.detail.inputs.newInputs,
+            inputChangedEvent.detail.inputs.allCurrentInputs,
         );
-        assert.strictEqual(inputChangedEvent.detail.data.allCurrentInputs.length, 1);
-        const newInput = inputChangedEvent.detail.data.allCurrentInputs[0];
+        assert.lengthOf(inputChangedEvent.detail.inputs.allCurrentInputs, 1);
+        const newInput = inputChangedEvent.detail.inputs.allCurrentInputs[0];
         typedAssertNotNullish(newInput);
         assert.strictEqual(newInput.inputName, createButtonName(pressedKey));
     });
@@ -138,17 +138,35 @@ describe(InputDeviceHandler.constructor.name, () => {
 
         instance.updateInputDevices();
 
-        assert.strictEqual(getObjectTypedValues(events).length, 3);
+        assert.lengthOf(getObjectTypedValues(events), 4);
         const inputChangedEvent = getInputChangedEventAt(events, 1);
         assert.deepStrictEqual(
-            inputChangedEvent.detail.data.newInputs,
-            inputChangedEvent.detail.data.allCurrentInputs,
+            inputChangedEvent.detail.inputs.newInputs,
+            inputChangedEvent.detail.inputs.allCurrentInputs,
         );
-        assert.isEmpty(inputChangedEvent.detail.data.newInputs);
-        assert.isEmpty(inputChangedEvent.detail.data.allCurrentInputs);
-        assert.strictEqual(inputChangedEvent.detail.data.removedInputs.length, 1);
-        const removedInput = inputChangedEvent.detail.data.removedInputs[0];
+        assert.isEmpty(inputChangedEvent.detail.inputs.newInputs);
+        assert.isEmpty(inputChangedEvent.detail.inputs.allCurrentInputs);
+        assert.lengthOf(inputChangedEvent.detail.inputs.removedInputs, 1);
+        const removedInput = inputChangedEvent.detail.inputs.removedInputs[0];
         typedAssertNotNullish(removedInput);
         assert.strictEqual(removedInput.inputName, createButtonName(pressedKey));
+    });
+
+    it('should fire an event listener immediately', () => {
+        const {instance} = setupInstanceForTesting();
+        const events: AnyInputHandlerEvent[] = [];
+
+        instance.addEventListenerAndFireImmediately(
+            InputDeviceEventTypeEnum.AllDevicesUpdated,
+            (event) => {
+                events.push(event);
+            },
+        );
+
+        assert.lengthOf(events, 1);
+
+        instance.updateInputDevices();
+
+        assert.lengthOf(events, 2);
     });
 });

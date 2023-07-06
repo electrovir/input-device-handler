@@ -1,16 +1,16 @@
 import {getObjectTypedKeys, isTruthy, typedHasProperty} from '@augment-vir/common';
 import {InputDevice} from '../../device/input-device';
-import {EventDataCheckCallback, InputDeviceHandlerEventTypeEnum} from '../event-util/event-types';
-import {defineTimedEvent} from '../event-util/timed.event';
+import {ConstructEventIfDataIsNew, InputDeviceEventTypeEnum} from '../event-util/event-types';
+import {defineTimedEvent} from '../event-util/timed-event';
 
 type DevicesRemovedOutput = InputDevice[];
 
-function devicesRemovedDataCheckCallback(
+function wereDevicesRemoved(
     ...[
         previousInputDevices,
         newInputDevices,
-    ]: Parameters<EventDataCheckCallback<DevicesRemovedOutput>>
-): ReturnType<EventDataCheckCallback<DevicesRemovedOutput>> {
+    ]: Parameters<ConstructEventIfDataIsNew<DevicesRemovedOutput>>
+): ReturnType<ConstructEventIfDataIsNew<DevicesRemovedOutput>> {
     if (!previousInputDevices) {
         return [];
     }
@@ -26,7 +26,7 @@ function devicesRemovedDataCheckCallback(
     }
 }
 
-export class DevicesRemovedEvent extends defineTimedEvent<DevicesRemovedOutput>()(
-    InputDeviceHandlerEventTypeEnum.DevicesRemoved,
-    devicesRemovedDataCheckCallback,
-) {}
+export const DevicesRemovedEvent = defineTimedEvent<DevicesRemovedOutput>()(
+    InputDeviceEventTypeEnum.DevicesRemoved,
+    wereDevicesRemoved,
+);

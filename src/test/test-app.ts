@@ -1,4 +1,4 @@
-import {InputDeviceHandlerEventTypeEnum} from '../input-device-handler/event-util/event-types';
+import {InputDeviceEventTypeEnum} from '../input-device-handler/event-util/event-types';
 import {InputDeviceHandler} from '../input-device-handler/input-device-handler';
 
 const deviceHandler = new InputDeviceHandler({
@@ -7,13 +7,13 @@ const deviceHandler = new InputDeviceHandler({
 
 const deviceNamesDiv = window.document.getElementById('device-names')!;
 
-deviceHandler.addEventListener(InputDeviceHandlerEventTypeEnum.CurrentInputsChanged, (event) => {
-    console.info('input changed:', event.detail.data);
+deviceHandler.addEventListener(InputDeviceEventTypeEnum.CurrentInputsChanged, (event) => {
+    console.info('input changed:', event.detail.inputs);
 });
 
-deviceHandler.addEventListener(InputDeviceHandlerEventTypeEnum.DevicesRemoved, (event) => {
-    console.info('devices removed:', event.detail.data);
-    event.detail.data.forEach((inputDevice) => {
+deviceHandler.addEventListener(InputDeviceEventTypeEnum.DevicesRemoved, (event) => {
+    console.info('devices removed:', event.detail.inputs);
+    event.detail.inputs.forEach((inputDevice) => {
         deviceNamesDiv.innerHTML = deviceNamesDiv.innerHTML.replace(
             String(inputDevice.deviceName) + '<br>',
             '',
@@ -21,16 +21,16 @@ deviceHandler.addEventListener(InputDeviceHandlerEventTypeEnum.DevicesRemoved, (
     });
 });
 
-deviceHandler.addEventListener(InputDeviceHandlerEventTypeEnum.NewDevicesAdded, (event) => {
-    console.info('new devices:', event.detail.data);
-    event.detail.data.forEach((inputDevice) => {
+deviceHandler.addEventListener(InputDeviceEventTypeEnum.NewDevicesAdded, (event) => {
+    console.info('new devices:', event.detail.inputs);
+    event.detail.inputs.forEach((inputDevice) => {
         deviceNamesDiv.innerHTML += String(inputDevice.deviceName) + '<br>';
     });
 });
 
 // // this one spams the console, only uncomment for debugging
 // deviceHandler.addEventListener(InputDeviceHandlerEventTypeEnum.AllDevicesUpdated, (event) => {
-//     console.info('all devices:', event.detail.data);
+//     console.info('all devices:', event.detail.inputs);
 // });
 
 console.info({instance: deviceHandler});
