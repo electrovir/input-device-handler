@@ -280,7 +280,7 @@ export class InputDeviceHandler extends TypedEventTarget<AnyInputHandlerEvent> {
      * Use this if method if you're hooking up polling to your own system. For example, if you
      * already have a render loop, call this method to update all inputs.
      */
-    public updateInputDevices(timestamp = Date.now()): AllDevices {
+    public updateInputDevices(timestamp = performance.now()): AllDevices {
         const newValues = this.readAllInputDevices();
         this.fireEvents(timestamp, newValues);
         this.lastReadInputDevices = newValues;
