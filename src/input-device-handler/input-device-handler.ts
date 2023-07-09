@@ -249,6 +249,9 @@ export class InputDeviceHandler extends TypedEventTarget<AnyInputHandlerEvent> {
     }
 
     public startPollingLoop() {
+        if (this.loopIsRunning) {
+            return;
+        }
         this.loopIsRunning = true;
         this.currentLoopIndex++;
 
@@ -258,6 +261,9 @@ export class InputDeviceHandler extends TypedEventTarget<AnyInputHandlerEvent> {
     }
 
     public pausePollingLoop() {
+        if (!this.loopIsRunning) {
+            return;
+        }
         this.loopIsRunning = false;
     }
 
