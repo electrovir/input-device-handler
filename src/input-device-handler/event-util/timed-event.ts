@@ -27,7 +27,7 @@ export type TimedEventConstructor<
         ) => TimedEvent<DataTypeGeneric, SpecificEventTypeGeneric> | undefined;
     };
 
-export function defineTimedEvent<DataTypeGeneric>() {
+export function defineTimedEvent<const DataTypeGeneric>() {
     return <SpecificEventTypeGeneric extends InputDeviceEventTypeEnum>(
         type: SpecificEventTypeGeneric,
         isDataNewCallback: ConstructEventIfDataIsNew<DataTypeGeneric>,

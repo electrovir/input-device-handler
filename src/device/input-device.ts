@@ -53,7 +53,7 @@ type DeviceTypeEnumToDeviceTypeObjectMapping = {
     [InputDeviceTypeEnum.Mouse]: MouseDevice;
 };
 
-export function isOfInputDeviceType<DeviceTypeGeneric extends InputDeviceTypeEnum>(
+export function isOfInputDeviceType<const DeviceTypeGeneric extends InputDeviceTypeEnum>(
     inputDevice: InputDevice,
     inputType: DeviceTypeGeneric,
 ): inputDevice is DeviceTypeEnumToDeviceTypeObjectMapping[DeviceTypeGeneric] {

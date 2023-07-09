@@ -30,3 +30,5 @@ export const DevicesRemovedEvent = defineTimedEvent<DevicesRemovedOutput>()(
     InputDeviceEventTypeEnum.DevicesRemoved,
     wereDevicesRemoved,
 );
+
+export type DevicesRemovedEvent = InstanceType<typeof DevicesRemovedEvent>;

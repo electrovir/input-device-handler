@@ -1,9 +1,9 @@
 import {Writeable} from '@augment-vir/common';
-import {TypedEventListenerOrEventListenerObject, TypedEventTarget} from 'typed-event-target';
 import {
     ExtractEventByType,
-    ExtractEventTypes,
-} from '../../node_modules/typed-event-target/dist/types/event-types';
+    TypedEventListenerOrEventListenerObject,
+    TypedEventTarget,
+} from 'typed-event-target';
 import {
     AllDevices,
     GamepadInputDevices,
@@ -21,7 +21,12 @@ import {
 import {inputDeviceKey} from '../device/input-device-key';
 import {InputDeviceTypeEnum} from '../device/input-device-type';
 import {KeyboardInputValue} from '../device/input-value';
-import {AnyInputHandlerEvent, allEvents, eventsByType} from './event-util/all-events';
+import {
+    AnyInputHandlerEvent,
+    AnyInputHandlerEventConstructor,
+    allEvents,
+} from './event-util/all-events';
+import {InputDeviceEventTypeEnum} from './event-util/event-types';
 
 export type InputDeviceHandlerOptions = Partial<{
     /**
@@ -52,6 +57,17 @@ export class InputDeviceHandler extends TypedEventTarget<AnyInputHandlerEvent> {
     private loopIsRunning = false;
     // prevents multiple polling loops from running
     private currentLoopIndex = -1;
+    private lastEventDetails: Partial<
+        Record<
+            InputDeviceEventTypeEnum,
+            {
+                constructor: AnyInputHandlerEventConstructor;
+                constructorInputs: Parameters<
+                    AnyInputHandlerEventConstructor['constructIfDataIsNew']
+                >;
+            }
+        >
+    > = {};
 
     constructor(options: InputDeviceHandlerOptions = {}) {
         super();
@@ -159,6 +175,14 @@ export class InputDeviceHandler extends TypedEventTarget<AnyInputHandlerEvent> {
                 newValues,
             );
             if (maybeEventInstance) {
+                this.lastEventDetails[maybeEventInstance.type] = {
+                    constructor: currentEventConstructor,
+                    constructorInputs: [
+                        timestamp,
+                        this.lastReadInputDevices,
+                        newValues,
+                    ],
+                };
                 this.dispatchEvent(maybeEventInstance);
             }
         });
@@ -188,8 +212,8 @@ export class InputDeviceHandler extends TypedEventTarget<AnyInputHandlerEvent> {
     }
 
     /** Adds an event listener and fires it if devices have been setup already. */
-    public addEventListenerAndFireImmediately<
-        EventNameGeneric extends ExtractEventTypes<AnyInputHandlerEvent>,
+    public addEventListenerAndFireWithLatest<
+        const EventNameGeneric extends InputDeviceEventTypeEnum,
     >(
         type: EventNameGeneric,
         callback: TypedEventListenerOrEventListenerObject<
@@ -203,19 +227,25 @@ export class InputDeviceHandler extends TypedEventTarget<AnyInputHandlerEvent> {
             return;
         }
 
+        const lastEventDetails = this.lastEventDetails[type];
+
         const listener = (typeof callback === 'function' ? callback : callback.handleEvent) as (
             event: AnyInputHandlerEvent,
         ) => void;
 
-        const eventConstructor = eventsByType[type];
+        if (lastEventDetails) {
+            const lastEvent = lastEventDetails.constructor.constructIfDataIsNew(
+                ...lastEventDetails.constructorInputs,
+            );
 
-        const newEvent = eventConstructor.constructIfDataIsNew(
-            Date.now(),
-            undefined,
-            this.lastReadInputDevices,
-        ) as AnyInputHandlerEvent;
+            if (!lastEvent) {
+                throw new Error(
+                    `Got input device event constructor args for event type '${type}' but the constructor did not produce an event.`,
+                );
+            }
 
-        listener(newEvent);
+            listener(lastEvent);
+        }
     }
 
     public startPollingLoop() {

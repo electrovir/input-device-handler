@@ -17,6 +17,7 @@ export const allEvents = [
     CurrentInputsChangedEvent,
 ] as const;
 
+export type AnyInputHandlerEventConstructor = ArrayElement<typeof allEvents>;
 export type AnyInputHandlerEvent = InstanceType<ArrayElement<typeof allEvents>>;
 
 export type InputHandlerEventsMap = {

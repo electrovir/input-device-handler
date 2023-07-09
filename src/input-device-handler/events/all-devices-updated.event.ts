@@ -20,3 +20,4 @@ export const AllDevicesUpdatedEvent = defineTimedEvent<AllDevices>()(
     InputDeviceEventTypeEnum.AllDevicesUpdated,
     allDevicesUpdatedDataCheckCallback,
 );
+export type AllDevicesUpdatedEvent = InstanceType<typeof AllDevicesUpdatedEvent>;

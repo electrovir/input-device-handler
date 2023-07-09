@@ -57,3 +57,4 @@ export const CurrentInputsChangedEvent = defineTimedEvent<CurrentInputsChangedOu
     InputDeviceEventTypeEnum.CurrentInputsChanged,
     didCurrentInputsChange,
 );
+export type CurrentInputsChangedEvent = InstanceType<typeof CurrentInputsChangedEvent>;

@@ -1,8 +1,9 @@
 import {randomString} from '@augment-vir/browser';
-import {typedAssertNotNullish} from '@augment-vir/browser-testing';
+import {assertTypeOf, typedAssertNotNullish} from '@augment-vir/browser-testing';
 import {getEnumTypedValues, getObjectTypedValues} from '@augment-vir/common';
 import {assert} from '@open-wc/testing';
 import {sendKeys} from '@web/test-runner-commands';
+import {AllDevices} from '../device/all-input-devices';
 import {createButtonName} from '../device/gamepad/gamepad-input-names';
 import {
     AnyInputHandlerEvent,
@@ -156,10 +157,12 @@ describe(InputDeviceHandler.constructor.name, () => {
         const {instance} = setupInstanceForTesting();
         const events: AnyInputHandlerEvent[] = [];
 
-        instance.addEventListenerAndFireImmediately(
+        instance.addEventListenerAndFireWithLatest(
             InputDeviceEventTypeEnum.AllDevicesUpdated,
             (event) => {
                 events.push(event);
+
+                assertTypeOf(event.detail.inputs).toEqualTypeOf<AllDevices>();
             },
         );
 

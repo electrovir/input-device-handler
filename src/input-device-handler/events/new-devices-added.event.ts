@@ -35,3 +35,5 @@ export const NewDevicesAddedEvent = defineTimedEvent<NewDevicesAddedOutput>()(
     InputDeviceEventTypeEnum.NewDevicesAdded,
     areThereNewDevices,
 );
+
+export type NewDevicesAddedEvent = InstanceType<typeof NewDevicesAddedEvent>;
