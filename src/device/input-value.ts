@@ -27,10 +27,10 @@ export type GamepadButtonInputDetails = {
 
 export type GamepadInputDetails = GamepadAxeInputDetails | GamepadButtonInputDetails;
 
-type DeviceInputDetails = KeyboardInputDetails | MouseInputDetails | GamepadInputDetails;
+export type DeviceInputDetails = KeyboardInputDetails | MouseInputDetails | GamepadInputDetails;
 
 /** A helper for creating values for each input device. */
-type InputValueWrapper<
+export type InputValueWrapper<
     SpecificDeviceKey extends AnyInputDeviceKey,
     SpecificInputDetails extends DeviceInputDetails,
 > = Readonly<{

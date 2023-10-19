@@ -1,8 +1,7 @@
-import {randomString} from '@augment-vir/browser';
-import {assertTypeOf, typedAssertNotNullish} from '@augment-vir/browser-testing';
-import {getEnumTypedValues, getObjectTypedValues} from '@augment-vir/common';
+import {getEnumTypedValues, getObjectTypedValues, randomString} from '@augment-vir/common';
 import {assert} from '@open-wc/testing';
 import {sendKeys} from '@web/test-runner-commands';
+import {assertDefined, assertTypeOf} from 'run-time-assertions';
 import {AllDevices} from '../device/all-input-devices';
 import {createButtonName} from '../device/gamepad/gamepad-input-names';
 import {
@@ -55,7 +54,7 @@ function getInputChangedEventAt(
 ): InstanceType<typeof CurrentInputsChangedEvent> {
     const inputChangedEvents = events[InputDeviceEventTypeEnum.CurrentInputsChanged];
     const inputChangedEvent = inputChangedEvents[index];
-    typedAssertNotNullish(inputChangedEvent, `event at "${index}" should've existed`);
+    assertDefined(inputChangedEvent, `event at "${index}" should've existed`);
 
     return inputChangedEvent;
 }
@@ -122,7 +121,7 @@ describe(InputDeviceHandler.constructor.name, () => {
         );
         assert.lengthOf(inputChangedEvent.detail.inputs.allCurrentInputs, 1);
         const newInput = inputChangedEvent.detail.inputs.allCurrentInputs[0];
-        typedAssertNotNullish(newInput);
+        assertDefined(newInput);
         assert.strictEqual(newInput.inputName, createButtonName(pressedKey));
     });
 
@@ -149,7 +148,7 @@ describe(InputDeviceHandler.constructor.name, () => {
         assert.isEmpty(inputChangedEvent.detail.inputs.allCurrentInputs);
         assert.lengthOf(inputChangedEvent.detail.inputs.removedInputs, 1);
         const removedInput = inputChangedEvent.detail.inputs.removedInputs[0];
-        typedAssertNotNullish(removedInput);
+        assertDefined(removedInput);
         assert.strictEqual(removedInput.inputName, createButtonName(pressedKey));
     });
 

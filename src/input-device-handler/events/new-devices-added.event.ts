@@ -8,7 +8,7 @@ import {InputDevice} from '../../device/input-device';
 import {ConstructEventIfDataIsNew, InputDeviceEventTypeEnum} from '../event-util/event-types';
 import {defineTimedEvent} from '../event-util/timed-event';
 
-type NewDevicesAddedOutput = InputDevice[];
+export type NewDevicesAddedOutput = InputDevice[];
 
 function areThereNewDevices(
     ...[
@@ -17,7 +17,7 @@ function areThereNewDevices(
     ]: Parameters<ConstructEventIfDataIsNew<NewDevicesAddedOutput>>
 ): ReturnType<ConstructEventIfDataIsNew<NewDevicesAddedOutput>> {
     if (!previousInputDevices) {
-        return getObjectTypedValues(newInputDevices);
+        return getObjectTypedValues(newInputDevices).filter(isTruthy);
     }
 
     const newDeviceKeys = getObjectTypedKeys(newInputDevices).filter((newKey) => {

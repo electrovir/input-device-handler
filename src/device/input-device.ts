@@ -9,9 +9,9 @@ import {
 } from './input-value';
 export type GamepadDetails = SerializedGamepad;
 
-type DeviceDetails = undefined | GamepadDetails;
+export type DeviceDetails = undefined | GamepadDetails;
 
-type DeviceWrapper<
+export type DeviceWrapper<
     DeviceTypeGeneric extends InputDeviceTypeEnum,
     KeyTypeGeneric extends AnyInputDeviceKey,
     DeviceDetailsGeneric extends DeviceDetails,
@@ -47,7 +47,7 @@ export type MouseDevice = DeviceWrapper<
 
 export type InputDevice = GamepadDevice | KeyboardDevice | MouseDevice;
 
-type DeviceTypeEnumToDeviceTypeObjectMapping = {
+export type DeviceTypeEnumToDeviceTypeObjectMapping = {
     [InputDeviceTypeEnum.Gamepad]: GamepadDevice;
     [InputDeviceTypeEnum.Keyboard]: KeyboardDevice;
     [InputDeviceTypeEnum.Mouse]: MouseDevice;

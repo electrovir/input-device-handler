@@ -3,7 +3,7 @@ import {InputDevice} from '../../device/input-device';
 import {ConstructEventIfDataIsNew, InputDeviceEventTypeEnum} from '../event-util/event-types';
 import {defineTimedEvent} from '../event-util/timed-event';
 
-type DevicesRemovedOutput = InputDevice[];
+export type DevicesRemovedOutput = InputDevice[];
 
 function wereDevicesRemoved(
     ...[
