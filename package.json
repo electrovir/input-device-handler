@@ -1,6 +1,6 @@
 {
     "name": "input-device-handler",
-    "version": "2.0.3",
+    "version": "3.0.0",
     "homepage": "https://github.com/electrovir/input-device-handler",
     "bugs": {
         "url": "https://github.com/electrovir/input-device-handler/issues"
@@ -17,9 +17,9 @@
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "scripts": {
-        "build": "virmator frontend build",
+        "build": "virmator frontend build && npm run docs && cp -r ./docs-dist ./build-dist/docs/",
         "compile": "virmator compile",
-        "docs:update": "virmator docs",
+        "docs": "virmator docs",
         "format": "virmator format",
         "publish": "virmator publish \"npm run compile && npm run test:all\"",
         "regenerate-deps": "rm -rf node_modules && rm -f package-lock.json && npm i",

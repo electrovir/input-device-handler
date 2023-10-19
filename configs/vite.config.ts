@@ -1,7 +1,12 @@
-import {baseViteConfig} from 'virmator/dist/compiled-base-configs/base-vite';
-import {defineConfig} from 'vite';
+import {join} from 'path';
+import {currentDir, defineConfig} from 'virmator/dist/compiled-base-configs/base-vite';
 
-export default defineConfig({
-    ...baseViteConfig,
-    base: '/input-device-handler',
+export default defineConfig({forGitHubPages: true}, (baseConfig) => {
+    return {
+        ...baseConfig,
+        build: {
+            ...baseConfig.build,
+            outDir: join(currentDir, 'build-dist'),
+        },
+    };
 });

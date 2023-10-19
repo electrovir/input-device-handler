@@ -24,3 +24,5 @@ tsconfig*.json
 coverage/
 graphics/
 src/
+docs-dist/
+build-dist/
