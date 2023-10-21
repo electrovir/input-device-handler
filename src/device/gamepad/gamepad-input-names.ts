@@ -1,11 +1,6 @@
-export type ButtonName = `button-${number | string}`;
-export type AxeName = `axe-${number | string}`;
-
-export type InputName = ButtonName | AxeName;
-
-export function createButtonName(buttonIndexOrName: number | string): ButtonName {
+export function createButtonName(buttonIndexOrName: number | string): string {
     return `button-${buttonIndexOrName}`;
 }
-export function createAxeName(axeNameOrIndex: number | string): AxeName {
+export function createAxeName(axeNameOrIndex: number | string): string {
     return `axe-${axeNameOrIndex}`;
 }

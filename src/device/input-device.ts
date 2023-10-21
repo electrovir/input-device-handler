@@ -21,7 +21,7 @@ export type DeviceWrapper<
     deviceKey: KeyTypeGeneric;
     deviceName: string;
     deviceDetails: DeviceDetailsGeneric;
-    currentInputs: Readonly<Record<DeviceInputValue['inputName'], InputValueTypeGeneric>>;
+    currentInputs: Readonly<Record<string, InputValueTypeGeneric>>;
 }>;
 
 export type GamepadDevice = DeviceWrapper<

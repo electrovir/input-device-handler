@@ -6,12 +6,14 @@ import {GamepadInputDeviceKey, inputDeviceKey} from './input-device-key';
 import {InputDeviceTypeEnum} from './input-device-type';
 import {DeviceInputValue} from './input-value';
 
-export type GamepadInputDevices = Partial<Record<GamepadInputDeviceKey, GamepadDevice>>;
+export type GamepadInputDevices = Record<GamepadInputDeviceKey, GamepadDevice>;
 
-export type AllDevices = {
-    [inputDeviceKey.mouse]: MouseDevice;
-    [inputDeviceKey.keyboard]: KeyboardDevice;
-} & GamepadInputDevices;
+export type AllDevices = Partial<
+    {
+        [inputDeviceKey.mouse]: MouseDevice;
+        [inputDeviceKey.keyboard]: KeyboardDevice;
+    } & GamepadInputDevices
+>;
 
 export function gamepadMapToInputDevices(gamepadMap: GamepadMap): GamepadInputDevices {
     return mapObjectValues(gamepadMap, (index, gamepad): GamepadDevice => {

@@ -1,4 +1,3 @@
-import {InputName} from './gamepad/gamepad-input-names';
 import {SerializedGamepadButton} from './gamepad/serialized-gamepad';
 import {AnyInputDeviceKey, GamepadInputDeviceKey, inputDeviceKey} from './input-device-key';
 import {InputDeviceTypeEnum} from './input-device-type';
@@ -43,7 +42,7 @@ export type InputValueWrapper<
     deviceKey: SpecificDeviceKey;
     /** The type of device: gamepad, mouse, or keyboard. */
     deviceType: InputDeviceTypeEnum;
-    inputName: InputName;
+    inputName: string;
     inputValue: number;
     /** Extra details for the input that depend on the device the input came from. */
     details: Readonly<SpecificInputDetails>;
