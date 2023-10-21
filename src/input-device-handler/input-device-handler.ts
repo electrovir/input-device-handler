@@ -37,10 +37,11 @@ export type InputDeviceHandlerOptions = Partial<{
      */
     startLoopImmediately: boolean;
     /**
-     * By default listening to mouse movement is turned off because it would result in many changes
-     * detected all the time. Set this to true to listen to mouse inputs as well.
+     * By default listening to mouse movement is turned on, which results in many changes detected
+     * all the time. If you're polling the status of inputs, that's fine. If you're listening to
+     * events, that might be too much. Consider setting this to true in that case.
      */
-    listenToMouseMovement: boolean;
+    disableMouseMovement: boolean;
     gamepadDeadZoneSettings: GamepadDeadZoneSettings;
 }>;
 
