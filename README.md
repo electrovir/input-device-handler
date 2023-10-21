@@ -24,7 +24,7 @@ Since the gamepad api is [poll based](<https://en.wikipedia.org/wiki/Polling_(co
 ```TypeScript
 import {InputDeviceEventTypeEnum, InputDeviceHandler} from 'input-device-handler';
 
-const deviceHandler = new InputDeviceHandler();
+const deviceHandler = new InputDeviceHandler({startLoopImmediately: true});
 
 // listen to new devices connecting (such as gamepads)
 deviceHandler.addEventListener(InputDeviceEventTypeEnum.NewDevicesAdded, (event) => {
@@ -46,10 +46,7 @@ Under the hood, `InputDeviceHandler` is hooking into the render loop to constant
 ```TypeScript
 import {InputDeviceHandler} from 'input-device-handler';
 
-const deviceHandler = new InputDeviceHandler({
-    // create the handler without starting its polling loop
-    skipLoopStart: true,
-});
+const deviceHandler = new InputDeviceHandler();
 
 // start the polling loop, events will get fired now
 deviceHandler.startPollingLoop();
@@ -67,12 +64,10 @@ If you already have a render loop, you can instruct `InputDeviceHandler` to not 
 ```TypeScript
 import {InputDeviceHandler} from 'input-device-handler';
 
-const deviceHandler = new InputDeviceHandler({
-    skipLoopStart: true,
-});
+const deviceHandler = new InputDeviceHandler();
 
 function myRenderLoop() {
-    const currentDevices = deviceHandler.updateInputDevices();
+    const currentDevices = deviceHandler.readAllDevices();
     // do something with the current devices and their inputs...
     requestAnimationFrame(myRenderLoop);
 }

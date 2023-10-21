@@ -78,15 +78,15 @@ export class InputDeviceHandler extends TypedEventTarget<AnyInputHandlerEvent> {
             this.updateGamepadDeadZoneSettings(options.gamepadDeadZoneSettings);
         }
         this.attachWindowListeners(options);
-        this.updateInputDevices();
+        this.readAllDevices();
 
-        if (!options.skipLoopStart) {
+        if (options.startLoopImmediately) {
             this.startPollingLoop();
         }
     }
 
     private attachWindowListeners(
-        options: Pick<InputDeviceHandlerOptions, 'listenToMouseMovement'>,
+        options: Pick<InputDeviceHandlerOptions, 'disableMouseMovement'>,
     ) {
         window.addEventListener('keydown', (event) => {
             const eventKey = createButtonName(event.key);
@@ -132,7 +132,7 @@ export class InputDeviceHandler extends TypedEventTarget<AnyInputHandlerEvent> {
         window.addEventListener('mouseup', (event) => {
             delete this.currentMouseInputs[createButtonName(event.button)];
         });
-        if (options.listenToMouseMovement) {
+        if (!options.disableMouseMovement) {
             window.addEventListener('mousemove', (event) => {
                 const xAxeName = createAxeName('x');
                 const yAxeName = createAxeName('y');
@@ -163,7 +163,7 @@ export class InputDeviceHandler extends TypedEventTarget<AnyInputHandlerEvent> {
 
     private runPollingLoop(loopIndex: number, timestamp: number) {
         if (this.loopIsRunning && this.currentLoopIndex === loopIndex) {
-            this.updateInputDevices(timestamp);
+            this.readAllDevices(this.gamepadDeadZoneSettings, timestamp);
             requestAnimationFrame((timestamp) => {
                 this.runPollingLoop(loopIndex, timestamp);
             });
@@ -191,8 +191,15 @@ export class InputDeviceHandler extends TypedEventTarget<AnyInputHandlerEvent> {
         });
     }
 
-    private readAllInputDevices(): AllDevices {
-        const gamepadMap = readCurrentGamepads(this.gamepadDeadZoneSettings);
+    /**
+     * Reads all inputs devices and their current inputs according to the given deadZone settings
+     * and returns current input values.
+     *
+     * Does not update any internal state or fire any event listeners that have been attached to the
+     * input handler. Thus, this is not public.
+     */
+    private getCurrentDeviceValues(deadZoneSettings: GamepadDeadZoneSettings): AllDevices {
+        const gamepadMap = readCurrentGamepads(deadZoneSettings);
         const gamepadInputDevices: GamepadInputDevices = gamepadMapToInputDevices(gamepadMap);
 
         const allDevices: AllDevices = {

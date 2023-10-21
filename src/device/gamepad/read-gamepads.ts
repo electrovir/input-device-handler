@@ -90,16 +90,16 @@ function normalizeGamepadInput(
     gamepad: SerializedGamepad,
     deadZones: GamepadDeadZoneSettings,
 ): SerializedGamepadInputs {
-    const currentGamepadSettings = deadZones[gamepad.id];
+    const currentDeadZones = deadZones[gamepad.id];
 
     const axes: SerializedGamepadInputs['axes'] = gamepad.axes.map((axeInput, axeIndex) => {
-        const deadZone: number = currentGamepadSettings?.axesDeadZones[axeIndex] ?? defaultDeadZone;
+        const deadZone: number = currentDeadZones?.[createAxeName(axeIndex)] ?? defaultDeadZone;
         return Math.abs(axeInput) < deadZone ? 0 : axeInput;
     });
     const buttons: SerializedGamepadInputs['buttons'] = gamepad.buttons.map(
         (buttonInput, buttonIndex) => {
             const deadZone: number =
-                currentGamepadSettings?.axesDeadZones[buttonIndex] ?? defaultDeadZone;
+                currentDeadZones?.[createButtonName(buttonIndex)] ?? defaultDeadZone;
             const buttonValue: number =
                 Math.abs(buttonInput.value) < deadZone ? 0 : buttonInput.value;
 

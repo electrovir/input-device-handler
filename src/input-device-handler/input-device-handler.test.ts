@@ -15,9 +15,7 @@ import {CurrentInputsChangedEvent} from './events/current-inputs-changed.event';
 import {InputDeviceHandler} from './input-device-handler';
 
 function setupInstanceForTesting() {
-    const instance = new InputDeviceHandler({
-        skipLoopStart: true,
-    });
+    const instance = new InputDeviceHandler();
 
     const events: InputHandlerEventsMap = createEmptyEventsMap();
 
@@ -91,11 +89,11 @@ describe(InputDeviceHandler.constructor.name, () => {
             'events should not have fired before calling update',
         );
 
-        instance.updateInputDevices();
+        instance.readAllDevices();
 
         assert.lengthOf(getFlattenedEvents(events), 1, 'should fire an update event');
 
-        instance.updateInputDevices();
+        instance.readAllDevices();
 
         const postUpdateEvents = getFlattenedEvents(events);
 
@@ -111,7 +109,7 @@ describe(InputDeviceHandler.constructor.name, () => {
 
         const pressedKey = await pressDownRandomKey();
 
-        instance.updateInputDevices();
+        instance.readAllDevices();
 
         assert.lengthOf(getFlattenedEvents(events), 2);
         const inputChangedEvent = getInputChangedEventAt(events, 0);
@@ -130,13 +128,13 @@ describe(InputDeviceHandler.constructor.name, () => {
 
         const pressedKey = await pressDownRandomKey();
 
-        instance.updateInputDevices();
+        instance.readAllDevices();
 
         await sendKeys({
             up: pressedKey,
         });
 
-        instance.updateInputDevices();
+        instance.readAllDevices();
 
         assert.lengthOf(getObjectTypedValues(events), 4);
         const inputChangedEvent = getInputChangedEventAt(events, 1);
@@ -167,7 +165,7 @@ describe(InputDeviceHandler.constructor.name, () => {
 
         assert.lengthOf(events, 1);
 
-        instance.updateInputDevices();
+        instance.readAllDevices();
 
         assert.lengthOf(events, 2);
     });

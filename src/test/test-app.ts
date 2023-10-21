@@ -1,9 +1,7 @@
 import {InputDeviceEventTypeEnum} from '../input-device-handler/event-util/event-types';
 import {InputDeviceHandler} from '../input-device-handler/input-device-handler';
 
-const deviceHandler = new InputDeviceHandler({
-    listenToMouseMovement: true,
-});
+const deviceHandler = new InputDeviceHandler();
 
 const deviceNamesDiv = window.document.getElementById('device-names')!;
 
@@ -28,7 +26,7 @@ deviceHandler.addEventListener(InputDeviceEventTypeEnum.NewDevicesAdded, (event)
     });
 });
 
-// // this one spams the console, only uncomment for debugging
+// // this spams the console, only uncomment for debugging
 // deviceHandler.addEventListener(InputDeviceHandlerEventTypeEnum.AllDevicesUpdated, (event) => {
 //     console.info('all devices:', event.detail.inputs);
 // });

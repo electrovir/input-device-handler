@@ -1,6 +1,6 @@
 import {InputDeviceEventTypeEnum, InputDeviceHandler} from '..';
 
-const deviceHandler = new InputDeviceHandler();
+const deviceHandler = new InputDeviceHandler({startLoopImmediately: true});
 
 // listen to new devices connecting (such as gamepads)
 deviceHandler.addEventListener(InputDeviceEventTypeEnum.NewDevicesAdded, (event) => {

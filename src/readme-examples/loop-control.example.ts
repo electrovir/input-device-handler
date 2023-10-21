@@ -1,9 +1,6 @@
 import {InputDeviceHandler} from '..';
 
-const deviceHandler = new InputDeviceHandler({
-    // create the handler without starting its polling loop
-    skipLoopStart: true,
-});
+const deviceHandler = new InputDeviceHandler();
 
 // start the polling loop, events will get fired now
 deviceHandler.startPollingLoop();
