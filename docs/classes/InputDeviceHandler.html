@@ -1,4 +1,4 @@
-<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>InputDeviceHandler | input-device-handler - v3.0.0</title><meta name="description" content="Documentation for input-device-handler"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css?cache=1697753895443"/><link rel="stylesheet" href="../assets/highlight.css?cache=1697753895443"/><script defer src="../assets/main.js?cache=1697753895443"></script><script async src="../assets/search.js?cache=1697753895443" id="tsd-search-script"></script><script async src="../assets/navigation.js?cache=1697753895443" id="tsd-nav-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
+<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>InputDeviceHandler | input-device-handler - v4.0.0</title><meta name="description" content="Documentation for input-device-handler"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css?cache=1697913655334"/><link rel="stylesheet" href="../assets/highlight.css?cache=1697913655334"/><script defer src="../assets/main.js?cache=1697913655334"></script><script async src="../assets/search.js?cache=1697913655334" id="tsd-search-script"></script><script async src="../assets/navigation.js?cache=1697913655334" id="tsd-nav-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
 <div class="tsd-toolbar-contents container">
 <div class="table-cell" id="tsd-search" data-base="..">
 <div class="field"><label for="tsd-search-field" class="tsd-widget tsd-toolbar-icon search no-caption"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><use href="#icon-search"></use></svg></label><input type="text" id="tsd-search-field" aria-label="Search"/></div>
@@ -6,7 +6,7 @@
 <div id="tsd-toolbar-links"></div></div>
 <ul class="results">
 <li class="state loading">Preparing search index...</li>
-<li class="state failure">The search index is not available</li></ul><a href="../index.html" class="title">input-device-handler - v3.0.0</a></div>
+<li class="state failure">The search index is not available</li></ul><a href="../index.html" class="title">input-device-handler - v4.0.0</a></div>
 <div class="table-cell" id="tsd-widgets"><a href="#" class="tsd-widget tsd-toolbar-icon menu no-caption" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><use href="#icon-menu"></use></svg></a></div></div></header>
 <div class="container container-main">
 <div class="col-content">
@@ -22,7 +22,7 @@
 <ul class="tsd-hierarchy">
 <li><span class="target">InputDeviceHandler</span></li></ul></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/electrovir/input-device-handler/blob/35edd70/src/input-device-handler/input-device-handler.ts#L45">input-device-handler/input-device-handler.ts:45</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/electrovir/input-device-handler/blob/e8d4cf3/src/input-device-handler/input-device-handler.ts#L48">input-device-handler/input-device-handler.ts:48</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-index-accordion" open><summary class="tsd-accordion-summary tsd-index-summary">
@@ -37,9 +37,9 @@
 <div class="tsd-index-list"><a href="InputDeviceHandler.html#addEventListenerAndFireWithLatest" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>add<wbr/>Event<wbr/>Listener<wbr/>And<wbr/>Fire<wbr/>With<wbr/>Latest</span></a>
 <a href="InputDeviceHandler.html#getLastPollResults" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>get<wbr/>Last<wbr/>Poll<wbr/>Results</span></a>
 <a href="InputDeviceHandler.html#pausePollingLoop" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>pause<wbr/>Polling<wbr/>Loop</span></a>
+<a href="InputDeviceHandler.html#readAllDevices" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>read<wbr/>All<wbr/>Devices</span></a>
 <a href="InputDeviceHandler.html#startPollingLoop" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>start<wbr/>Polling<wbr/>Loop</span></a>
 <a href="InputDeviceHandler.html#updateGamepadDeadZoneSettings" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>update<wbr/>Gamepad<wbr/>Dead<wbr/>Zone<wbr/>Settings</span></a>
-<a href="InputDeviceHandler.html#updateInputDevices" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>update<wbr/>Input<wbr/>Devices</span></a>
 </div></section></div></details></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Constructors</h2>
@@ -52,11 +52,11 @@
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">options</span>: <span class="tsd-signature-type ">Partial</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">{ </span><br/><span>    </span><span class="tsd-kind-property">gamepadDeadZoneSettings</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Readonly</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-symbol">{ </span><br/><span>        </span><span class="tsd-kind-property">axesDeadZones</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Readonly</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span><br/><span>        </span><span class="tsd-kind-property">buttonDeadZones</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Readonly</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span><br/><span>    </span><span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span><br/><span>    </span><span class="tsd-kind-property">listenToMouseMovement</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">; </span><br/><span>    </span><span class="tsd-kind-property">skipLoopStart</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">; </span><br/><span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = {}</span></h5></li></ul></div>
+<h5><span class="tsd-kind-parameter">options</span>: <span class="tsd-signature-type ">Partial</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">{ </span><br/><span>    </span><span class="tsd-kind-property">disableMouseMovement</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">; </span><br/><span>    </span><span class="tsd-kind-property">gamepadDeadZoneSettings</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Readonly</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">{ </span><br/><span>        </span>[<span class="tsd-kind-index-signature">deviceName</span>: <span class="tsd-signature-type">string</span>]<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span><br/><span>            </span>[<span class="tsd-kind-index-signature">inputName</span>: <span class="tsd-signature-type">string</span>]<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span><br/><span>        </span><span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">; </span><br/><span>    </span><span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span><br/><span>    </span><span class="tsd-kind-property">startLoopImmediately</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">; </span><br/><span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = {}</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="InputDeviceHandler.html" class="tsd-signature-type tsd-kind-class">InputDeviceHandler</a></h4><aside class="tsd-sources">
 <p>Overrides TypedEventTarget&lt;AnyInputHandlerEvent&gt;.constructor</p>
 <ul>
-<li>Defined in <a href="https://github.com/electrovir/input-device-handler/blob/35edd70/src/input-device-handler/input-device-handler.ts#L72">input-device-handler/input-device-handler.ts:72</a></li></ul></aside></li></ul></section></section>
+<li>Defined in <a href="https://github.com/electrovir/input-device-handler/blob/e8d4cf3/src/input-device-handler/input-device-handler.ts#L75">input-device-handler/input-device-handler.ts:75</a></li></ul></aside></li></ul></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Methods</h2>
 <section class="tsd-panel tsd-member"><a id="addEventListenerAndFireWithLatest" class="tsd-anchor"></a>
@@ -83,7 +83,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/electrovir/input-device-handler/blob/35edd70/src/input-device-handler/input-device-handler.ts#L215">input-device-handler/input-device-handler.ts:215</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/electrovir/input-device-handler/blob/e8d4cf3/src/input-device-handler/input-device-handler.ts#L225">input-device-handler/input-device-handler.ts:225</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="getLastPollResults" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Last<wbr/>Poll<wbr/>Results</span><a href="#getLastPollResults" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -96,7 +96,7 @@ right before polling was paused.</p>
 <h4 class="tsd-returns-title">Returns <a href="../types/AllDevices.html" class="tsd-signature-type tsd-kind-type-alias">AllDevices</a></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/electrovir/input-device-handler/blob/35edd70/src/input-device-handler/input-device-handler.ts#L275">input-device-handler/input-device-handler.ts:275</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/electrovir/input-device-handler/blob/e8d4cf3/src/input-device-handler/input-device-handler.ts#L285">input-device-handler/input-device-handler.ts:285</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="pausePollingLoop" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>pause<wbr/>Polling<wbr/>Loop</span><a href="#pausePollingLoop" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -104,7 +104,27 @@ right before polling was paused.</p>
 <li class="tsd-description">
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/electrovir/input-device-handler/blob/35edd70/src/input-device-handler/input-device-handler.ts#L263">input-device-handler/input-device-handler.ts:263</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/electrovir/input-device-handler/blob/e8d4cf3/src/input-device-handler/input-device-handler.ts#L273">input-device-handler/input-device-handler.ts:273</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member"><a id="readAllDevices" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>read<wbr/>All<wbr/>Devices</span><a href="#readAllDevices" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures">
+<li class="tsd-signature tsd-anchor-link" id="readAllDevices.readAllDevices-1"><span class="tsd-kind-call-signature">read<wbr/>All<wbr/>Devices</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">deadZoneSettings</span><span class="tsd-signature-symbol">?</span>, <span class="tsd-kind-parameter">timestamp</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../types/AllDevices.html" class="tsd-signature-type tsd-kind-type-alias">AllDevices</a><a href="#readAllDevices.readAllDevices-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Updates the internal state of all current devices and triggers all relevant listeners.</p>
+<p>Use this if method if you&#39;re hooking up polling to your own system. For example, if you
+already have a render loop, call this method to update all inputs and read their values.</p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5><span class="tsd-kind-parameter">deadZoneSettings</span>: <span class="tsd-signature-type ">Readonly</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">{ </span><br/><span>    </span>[<span class="tsd-kind-index-signature">deviceName</span>: <span class="tsd-signature-type">string</span>]<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span><br/><span>        </span>[<span class="tsd-kind-index-signature">inputName</span>: <span class="tsd-signature-type">string</span>]<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span><br/><span>    </span><span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">; </span><br/><span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = ...</span></h5></li>
+<li>
+<h5><span class="tsd-kind-parameter">timestamp</span>: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = ...</span></h5></li></ul></div>
+<h4 class="tsd-returns-title">Returns <a href="../types/AllDevices.html" class="tsd-signature-type tsd-kind-type-alias">AllDevices</a></h4>
+<div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/electrovir/input-device-handler/blob/e8d4cf3/src/input-device-handler/input-device-handler.ts#L295">input-device-handler/input-device-handler.ts:295</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="startPollingLoop" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>start<wbr/>Polling<wbr/>Loop</span><a href="#startPollingLoop" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -112,7 +132,7 @@ right before polling was paused.</p>
 <li class="tsd-description">
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/electrovir/input-device-handler/blob/35edd70/src/input-device-handler/input-device-handler.ts#L251">input-device-handler/input-device-handler.ts:251</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/electrovir/input-device-handler/blob/e8d4cf3/src/input-device-handler/input-device-handler.ts#L261">input-device-handler/input-device-handler.ts:261</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="updateGamepadDeadZoneSettings" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>update<wbr/>Gamepad<wbr/>Dead<wbr/>Zone<wbr/>Settings</span><a href="#updateGamepadDeadZoneSettings" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -122,27 +142,10 @@ right before polling was paused.</p>
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">newValue</span>: <span class="tsd-signature-type ">Readonly</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-symbol">{ </span><br/><span>    </span><span class="tsd-kind-property">axesDeadZones</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Readonly</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span><br/><span>    </span><span class="tsd-kind-property">buttonDeadZones</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Readonly</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span><br/><span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h5></li></ul></div>
+<h5><span class="tsd-kind-parameter">newValue</span>: <span class="tsd-signature-type ">Readonly</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">{ </span><br/><span>    </span>[<span class="tsd-kind-index-signature">deviceName</span>: <span class="tsd-signature-type">string</span>]<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span><br/><span>        </span>[<span class="tsd-kind-index-signature">inputName</span>: <span class="tsd-signature-type">string</span>]<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span><br/><span>    </span><span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">; </span><br/><span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">&gt;</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/electrovir/input-device-handler/blob/35edd70/src/input-device-handler/input-device-handler.ts#L291">input-device-handler/input-device-handler.ts:291</a></li></ul></aside></li></ul></section>
-<section class="tsd-panel tsd-member"><a id="updateInputDevices" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>update<wbr/>Input<wbr/>Devices</span><a href="#updateInputDevices" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
-<ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="updateInputDevices.updateInputDevices-1"><span class="tsd-kind-call-signature">update<wbr/>Input<wbr/>Devices</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">timestamp</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../types/AllDevices.html" class="tsd-signature-type tsd-kind-type-alias">AllDevices</a><a href="#updateInputDevices.updateInputDevices-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
-<li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Use this if method if you&#39;re hooking up polling to your own system. For example, if you
-already have a render loop, call this method to update all inputs.</p>
-</div>
-<div class="tsd-parameters">
-<h4 class="tsd-parameters-title">Parameters</h4>
-<ul class="tsd-parameter-list">
-<li>
-<h5><span class="tsd-kind-parameter">timestamp</span>: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = ...</span></h5></li></ul></div>
-<h4 class="tsd-returns-title">Returns <a href="../types/AllDevices.html" class="tsd-signature-type tsd-kind-type-alias">AllDevices</a></h4>
-<div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
-<ul>
-<li>Defined in <a href="https://github.com/electrovir/input-device-handler/blob/35edd70/src/input-device-handler/input-device-handler.ts#L283">input-device-handler/input-device-handler.ts:283</a></li></ul></aside></li></ul></section></section></div>
+<li>Defined in <a href="https://github.com/electrovir/input-device-handler/blob/e8d4cf3/src/input-device-handler/input-device-handler.ts#L306">input-device-handler/input-device-handler.ts:306</a></li></ul></aside></li></ul></section></section></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
@@ -164,11 +167,11 @@ already have a render loop, call this method to update all inputs.</p>
 <li><a href="#addEventListenerAndFireWithLatest" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>add<wbr/>Event<wbr/>Listener<wbr/>And<wbr/>Fire<wbr/>With<wbr/>Latest</span></a></li>
 <li><a href="#getLastPollResults" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>get<wbr/>Last<wbr/>Poll<wbr/>Results</span></a></li>
 <li><a href="#pausePollingLoop" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>pause<wbr/>Polling<wbr/>Loop</span></a></li>
+<li><a href="#readAllDevices" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>read<wbr/>All<wbr/>Devices</span></a></li>
 <li><a href="#startPollingLoop" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>start<wbr/>Polling<wbr/>Loop</span></a></li>
-<li><a href="#updateGamepadDeadZoneSettings" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>update<wbr/>Gamepad<wbr/>Dead<wbr/>Zone<wbr/>Settings</span></a></li>
-<li><a href="#updateInputDevices" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>update<wbr/>Input<wbr/>Devices</span></a></li></ul></div></details></div>
+<li><a href="#updateGamepadDeadZoneSettings" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>update<wbr/>Gamepad<wbr/>Dead<wbr/>Zone<wbr/>Settings</span></a></li></ul></div></details></div>
 <div class="site-menu">
-<nav class="tsd-navigation"><a href="../modules.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1"></use></svg><span>input-device-handler - v3.0.0</span></a>
+<nav class="tsd-navigation"><a href="../modules.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1"></use></svg><span>input-device-handler - v4.0.0</span></a>
 <ul class="tsd-small-nested-navigation" id="tsd-nav-container" data-base="..">
 <li><a href="../enums/GamepadInputType.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-8"></use></svg>GamepadInputType</a></li>
 <li><a href="../enums/InputDeviceEventTypeEnum.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-8"></use></svg>InputDeviceEventTypeEnum</a></li>
