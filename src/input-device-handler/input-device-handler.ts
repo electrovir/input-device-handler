@@ -30,10 +30,12 @@ import {InputDeviceEventTypeEnum} from './event-util/event-types';
 
 export type InputDeviceHandlerOptions = Partial<{
     /**
-     * Set to true to prevent the loop from starting which will continuously read inputs. If this is
-     * set to true, you can trigger your own reads by calling .readInputDevices().
+     * Set to true to automatically start the loop from starting which will continuously read inputs
+     * and emit events. If you already have a render loop running, do not enable this (as then
+     * you'll have multiple render loops running). Instead, call readAllDevices directly from your
+     * render loop.
      */
-    skipLoopStart: boolean;
+    startLoopImmediately: boolean;
     /**
      * By default listening to mouse movement is turned off because it would result in many changes
      * detected all the time. Set this to true to listen to mouse inputs as well.
