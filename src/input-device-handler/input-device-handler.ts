@@ -280,11 +280,16 @@ export class InputDeviceHandler extends TypedEventTarget<AnyInputHandlerEvent> {
     }
 
     /**
+     * Updates the internal state of all current devices and triggers all relevant listeners.
+     *
      * Use this if method if you're hooking up polling to your own system. For example, if you
-     * already have a render loop, call this method to update all inputs.
+     * already have a render loop, call this method to update all inputs and read their values.
      */
-    public updateInputDevices(timestamp = performance.now()): AllDevices {
-        const newValues = this.readAllInputDevices();
+    public readAllDevices(
+        deadZoneSettings = this.gamepadDeadZoneSettings,
+        timestamp = performance.now(),
+    ): AllDevices {
+        const newValues = this.getCurrentDeviceValues(deadZoneSettings);
         this.fireEvents(timestamp, newValues);
         this.lastReadInputDevices = newValues;
 
