@@ -1,12 +1,12 @@
 import {join} from 'path';
-import {currentDir, defineConfig} from 'virmator/dist/compiled-base-configs/base-vite';
+import {defineConfig} from 'virmator/dist/compiled-base-configs/base-vite';
 
-export default defineConfig({forGitHubPages: true}, (baseConfig) => {
+export default defineConfig({forGitHubPages: true}, (baseConfig, basePaths) => {
     return {
         ...baseConfig,
         build: {
             ...baseConfig.build,
-            outDir: join(currentDir, 'build-dist'),
+            outDir: join(basePaths.cwd, 'dist-build'),
         },
     };
 });

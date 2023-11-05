@@ -15,10 +15,9 @@ export type TimedEvent<
 export type TimedEventConstructor<
     DataTypeGeneric,
     SpecificEventTypeGeneric extends InputDeviceEventTypeEnum,
-> = (new (eventInitDict: TypedCustomEventInit<TimedEventDetail<DataTypeGeneric>>) => TimedEvent<
-    DataTypeGeneric,
-    SpecificEventTypeGeneric
->) &
+> = (new (
+    eventInitDict: TypedCustomEventInit<TimedEventDetail<DataTypeGeneric>>,
+) => TimedEvent<DataTypeGeneric, SpecificEventTypeGeneric>) &
     Overwrite<typeof Event, Pick<TimedEvent<DataTypeGeneric, SpecificEventTypeGeneric>, 'type'>> & {
         getNewData: ConstructEventIfDataIsNew<DataTypeGeneric>;
         constructIfDataIsNew: (
