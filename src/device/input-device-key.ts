@@ -1,4 +1,5 @@
 import {PropertyValueType} from '@augment-vir/common';
+import {InputDeviceTypeEnum} from './input-device-type';
 
 /** Only 4 gamepad keys because some browsers only support 4. */
 export const gamepadInputDeviceKey = {
@@ -27,3 +28,12 @@ export const inputDeviceKey = {
 } as const;
 
 export type AnyInputDeviceKey = PropertyValueType<typeof inputDeviceKey>;
+
+export const deviceKeyToDeviceType: Readonly<Record<AnyInputDeviceKey, InputDeviceTypeEnum>> = {
+    '0': InputDeviceTypeEnum.Gamepad,
+    '1': InputDeviceTypeEnum.Gamepad,
+    '2': InputDeviceTypeEnum.Gamepad,
+    '3': InputDeviceTypeEnum.Gamepad,
+    keyboard: InputDeviceTypeEnum.Keyboard,
+    mouse: InputDeviceTypeEnum.Mouse,
+};
