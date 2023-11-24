@@ -17,7 +17,7 @@
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "scripts": {
-        "build": "virmator frontend build && npm run docs && cp -r ./docs-dist ./dist-build/docs/",
+        "build": "virmator frontend build && npm run docs && cp -r ./dist-docs ./dist-build/docs/",
         "compile": "virmator compile",
         "docs": "virmator docs",
         "format": "virmator format",
