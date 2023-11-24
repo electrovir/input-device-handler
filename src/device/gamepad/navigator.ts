@@ -14,21 +14,20 @@ export interface ChromeNavigator extends Omit<Navigator, 'getGamepads'> {
     getGamepads(): GamepadList;
 }
 
-export interface OldChromeNavigator extends Omit<Navigator, 'getGamepads'> {
+export interface OldWebkitNavigator extends Omit<Navigator, 'getGamepads'> {
     webkitGetGamepads(): GamepadList;
 }
 
 /** Includes different navigator types to support different browsers */
-export function getNavigator(): OldChromeNavigator | ChromeNavigator | Navigator {
-    return window.navigator;
-}
+const globalNavigator: OldWebkitNavigator | ChromeNavigator | Navigator = window.navigator;
 
 export function getSerializedGamepads(): SerializedGamepad[] {
-    const navigator = getNavigator();
     return Array.from(
-        typedHasProperty(navigator, 'webkitGetGamepads')
-            ? navigator.webkitGetGamepads()
-            : navigator.getGamepads(),
+        typedHasProperty(globalNavigator, 'webkitGetGamepads')
+            ? globalNavigator.webkitGetGamepads()
+            : typedHasProperty(globalNavigator, 'getGamepads')
+              ? globalNavigator.getGamepads()
+              : [],
     )
         .filter((gamepad): gamepad is Gamepad => !!gamepad)
         .map((gamepad) => serializeGamepad(gamepad));

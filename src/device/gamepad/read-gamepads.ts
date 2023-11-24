@@ -1,27 +1,13 @@
-import {typedHasProperty} from '@augment-vir/common';
 import {isGamepadDeviceKey} from '../input-device-key';
 import {InputDeviceTypeEnum} from '../input-device-type';
 import {DeviceInputValue, GamepadInputType, GamepadInputValue} from '../input-value';
 import {GamepadDeadZoneSettings} from './dead-zone-settings';
 import {createAxeName, createButtonName} from './gamepad-input-names';
-import {getNavigator} from './navigator';
-import {
-    GamepadMap,
-    SerializedGamepad,
-    SerializedGamepadInputs,
-    serializeGamepad,
-} from './serialized-gamepad';
+import {getSerializedGamepads} from './navigator';
+import {GamepadMap, SerializedGamepad, SerializedGamepadInputs} from './serialized-gamepad';
 
 export function readCurrentGamepads(gamepadDeadZoneSettings: GamepadDeadZoneSettings): GamepadMap {
-    const navigator = getNavigator();
-
-    const gamepads = Array.from(
-        typedHasProperty(navigator, 'webkitGetGamepads')
-            ? navigator.webkitGetGamepads()
-            : navigator.getGamepads(),
-    )
-        .filter((gamepad): gamepad is Gamepad => !!gamepad)
-        .map((gamepad) => serializeGamepad(gamepad));
+    const gamepads = getSerializedGamepads();
 
     const gamepadMap: GamepadMap = gamepads.reduce((mapping, gamepad) => {
         const normalizedInputs = normalizeGamepadInput(gamepad, gamepadDeadZoneSettings);
