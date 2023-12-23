@@ -170,11 +170,11 @@ export class InputDeviceHandler extends TypedEventTarget<AnyInputHandlerEvent> {
         }
     }
 
-    private fireEvents(timestamp: number, newValues: AllDevices) {
+    private fireEvents(timestamp: number, lastValues: AllDevices, newValues: AllDevices) {
         allEvents.forEach((currentEventConstructor) => {
             const maybeEventInstance = currentEventConstructor.constructIfDataIsNew(
                 timestamp,
-                this.lastReadInputDevices,
+                lastValues,
                 newValues,
             );
             if (maybeEventInstance) {
@@ -182,7 +182,7 @@ export class InputDeviceHandler extends TypedEventTarget<AnyInputHandlerEvent> {
                     constructor: currentEventConstructor,
                     constructorInputs: [
                         timestamp,
-                        this.lastReadInputDevices,
+                        lastValues,
                         newValues,
                     ],
                 };
@@ -297,8 +297,9 @@ export class InputDeviceHandler extends TypedEventTarget<AnyInputHandlerEvent> {
         timestamp = performance.now(),
     ): AllDevices {
         const newValues = this.getCurrentDeviceValues(deadZoneSettings);
-        this.fireEvents(timestamp, newValues);
+        const oldValues = this.lastReadInputDevices;
         this.lastReadInputDevices = newValues;
+        this.fireEvents(timestamp, oldValues, newValues);
 
         return newValues;
     }
