@@ -1,7 +1,7 @@
 import {InputDeviceEventTypeEnum} from '../input-device-handler/event-util/event-types';
 import {InputDeviceHandler} from '../input-device-handler/input-device-handler';
 
-const deviceHandler = new InputDeviceHandler();
+const deviceHandler = new InputDeviceHandler({startLoopImmediately: true});
 
 const deviceNamesDiv = window.document.getElementById('device-names')!;
 
