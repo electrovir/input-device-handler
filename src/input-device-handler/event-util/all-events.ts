@@ -4,7 +4,7 @@ import {AllDevicesUpdatedEvent} from '../events/all-devices-updated.event';
 import {CurrentInputsChangedEvent} from '../events/current-inputs-changed.event';
 import {DevicesRemovedEvent} from '../events/devices-removed.event';
 import {NewDevicesAddedEvent} from '../events/new-devices-added.event';
-import {InputDeviceEventTypeEnum} from './event-types';
+import {DeviceHandlerEventTypeEnum} from './event-types';
 
 export const allEvents = [
     /**
@@ -17,18 +17,21 @@ export const allEvents = [
     CurrentInputsChangedEvent,
 ] as const;
 
-export type AnyInputHandlerEventConstructor = ArrayElement<typeof allEvents>;
-export type AnyInputHandlerEvent = InstanceType<ArrayElement<typeof allEvents>>;
+export type AnyDeviceHandlerEventConstructor = ArrayElement<typeof allEvents>;
+export type AnyDeviceHandlerEvent = InstanceType<ArrayElement<typeof allEvents>>;
 
-export type InputHandlerEventsMap = {
-    [PropKey in InputDeviceEventTypeEnum]: ExtractEventByType<AnyInputHandlerEvent, PropKey>[];
+export type DeviceHandlerEventsMap = {
+    [PropKey in DeviceHandlerEventTypeEnum]: ExtractEventByType<AnyDeviceHandlerEvent, PropKey>[];
 };
 
-export type AnyInputHandlerEventsMap = Record<keyof InputHandlerEventsMap, AnyInputHandlerEvent[]>;
+export type AnyDeviceHandlerEventsMap = Record<
+    keyof DeviceHandlerEventsMap,
+    AnyDeviceHandlerEvent[]
+>;
 
-export function createEmptyEventsMap(): InputHandlerEventsMap {
+export function createEmptyEventsMap(): DeviceHandlerEventsMap {
     return typedObjectFromEntries(
-        getEnumTypedValues(InputDeviceEventTypeEnum).map((eventType) => [
+        getEnumTypedValues(DeviceHandlerEventTypeEnum).map((eventType) => [
             eventType,
             [],
         ]),
@@ -41,5 +44,8 @@ export const eventsByType = Object.fromEntries(
         event,
     ]),
 ) as {
-    [PropKey in InputDeviceEventTypeEnum]: Extract<ArrayElement<typeof allEvents>, {type: PropKey}>;
+    [PropKey in DeviceHandlerEventTypeEnum]: Extract<
+        ArrayElement<typeof allEvents>,
+        {type: PropKey}
+    >;
 };

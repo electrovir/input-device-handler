@@ -1,7 +1,7 @@
 import {areJsonEqual} from '@augment-vir/common';
 import {allInputDevicesToAllInputs} from '../../device/all-input-devices';
 import {DeviceInputValue} from '../../device/input-value';
-import {ConstructEventIfDataIsNew, InputDeviceEventTypeEnum} from '../event-util/event-types';
+import {ConstructEventIfDataIsNew, DeviceHandlerEventTypeEnum} from '../event-util/event-types';
 import {defineTimedEvent} from '../event-util/timed-event';
 
 export type CurrentInputsChangedOutput = {
@@ -54,7 +54,7 @@ function didCurrentInputsChange(
 }
 
 export const CurrentInputsChangedEvent = defineTimedEvent<CurrentInputsChangedOutput>()(
-    InputDeviceEventTypeEnum.CurrentInputsChanged,
+    DeviceHandlerEventTypeEnum.CurrentInputsChanged,
     didCurrentInputsChange,
 );
 export type CurrentInputsChangedEvent = InstanceType<typeof CurrentInputsChangedEvent>;

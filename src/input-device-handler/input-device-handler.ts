@@ -1,9 +1,9 @@
-import {Writeable} from '@augment-vir/common';
 import {
-    ExtractEventByType,
-    TypedEventListenerOrEventListenerObject,
-    TypedEventTarget,
-} from 'typed-event-target';
+    AnyFunction,
+    Writeable,
+    getEnumTypedValues,
+    typedObjectFromEntries,
+} from '@augment-vir/common';
 import {
     AllDevices,
     GamepadInputDevices,
@@ -22,11 +22,12 @@ import {inputDeviceKey} from '../device/input-device-key';
 import {InputDeviceTypeEnum} from '../device/input-device-type';
 import {KeyboardInputValue} from '../device/input-value';
 import {
-    AnyInputHandlerEvent,
-    AnyInputHandlerEventConstructor,
+    AnyDeviceHandlerEvent,
+    AnyDeviceHandlerEventConstructor,
     allEvents,
 } from './event-util/all-events';
-import {InputDeviceEventTypeEnum} from './event-util/event-types';
+import {AnyDeviceHandlerListener, DeviceHandlerListener} from './event-util/event-listener';
+import {DeviceHandlerEventTypeEnum} from './event-util/event-types';
 
 export type InputDeviceHandlerOptions = Partial<{
     /**
@@ -46,7 +47,7 @@ export type InputDeviceHandlerOptions = Partial<{
     globalDeadZone: number;
 }>;
 
-export class InputDeviceHandler extends TypedEventTarget<AnyInputHandlerEvent> {
+export class InputDeviceHandler {
     private currentKeyboardInputs: Writeable<KeyboardDevice['currentInputs']> = {};
     private currentMouseInputs: Writeable<MouseDevice['currentInputs']> = {};
     private gamepadDeadZoneSettings: AllGamepadDeadZoneSettings = {};
@@ -64,18 +65,17 @@ export class InputDeviceHandler extends TypedEventTarget<AnyInputHandlerEvent> {
     private currentLoopIndex = -1;
     private lastEventDetails: Partial<
         Record<
-            InputDeviceEventTypeEnum,
+            DeviceHandlerEventTypeEnum,
             {
-                constructor: AnyInputHandlerEventConstructor;
+                constructor: AnyDeviceHandlerEventConstructor;
                 constructorInputs: Parameters<
-                    AnyInputHandlerEventConstructor['constructIfDataIsNew']
+                    AnyDeviceHandlerEventConstructor['constructIfDataIsNew']
                 >;
             }
         >
     > = {};
 
     constructor(options: InputDeviceHandlerOptions = {}) {
-        super();
         if (options.gamepadDeadZoneSettings) {
             this.updateGamepadDeadZoneSettings(options.gamepadDeadZoneSettings);
         }
@@ -88,6 +88,28 @@ export class InputDeviceHandler extends TypedEventTarget<AnyInputHandlerEvent> {
         if (options.startLoopImmediately) {
             this.startPollingLoop();
         }
+    }
+
+    private listeners = typedObjectFromEntries(
+        getEnumTypedValues(DeviceHandlerEventTypeEnum).map((eventType) => [
+            eventType,
+            new Set<AnyDeviceHandlerListener>(),
+        ]),
+    );
+
+    private dispatchEvent(event: AnyDeviceHandlerEvent) {
+        this.listeners[event.type].forEach((listener) => listener(event));
+    }
+
+    /** Returns a callback that removes the listener. */
+    public listen<EventType extends DeviceHandlerEventTypeEnum>(
+        eventType: EventType,
+        listener: DeviceHandlerListener<EventType>,
+    ): () => void {
+        this.listeners[eventType].add(listener as AnyFunction);
+        return () => {
+            this.listeners[eventType].delete(listener as AnyFunction);
+        };
     }
 
     private attachWindowListeners(
@@ -230,43 +252,6 @@ export class InputDeviceHandler extends TypedEventTarget<AnyInputHandlerEvent> {
         };
 
         return allDevices;
-    }
-
-    /** Adds an event listener and fires it if devices have been setup already. */
-    public addEventListenerAndFireWithLatest<
-        const EventNameGeneric extends InputDeviceEventTypeEnum,
-    >(
-        type: EventNameGeneric,
-        callback: TypedEventListenerOrEventListenerObject<
-            ExtractEventByType<AnyInputHandlerEvent, EventNameGeneric>
-        > | null,
-        options?: boolean | AddEventListenerOptions | undefined,
-    ): void {
-        this.addEventListener(type, callback, options);
-
-        if (!callback) {
-            return;
-        }
-
-        const lastEventDetails = this.lastEventDetails[type];
-
-        const listener = (typeof callback === 'function' ? callback : callback.handleEvent) as (
-            event: AnyInputHandlerEvent,
-        ) => void;
-
-        if (lastEventDetails) {
-            const lastEvent = lastEventDetails.constructor.constructIfDataIsNew(
-                ...lastEventDetails.constructorInputs,
-            );
-
-            if (!lastEvent) {
-                throw new Error(
-                    `Got input device event constructor args for event type '${type}' but the constructor did not produce an event.`,
-                );
-            }
-
-            listener(lastEvent);
-        }
     }
 
     public startPollingLoop() {

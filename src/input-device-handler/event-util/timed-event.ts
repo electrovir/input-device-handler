@@ -1,6 +1,6 @@
 import {kebabCaseToCamelCase, Overwrite} from '@augment-vir/common';
 import {defineTypedCustomEvent, TypedCustomEvent, TypedCustomEventInit} from 'typed-event-target';
-import {ConstructEventIfDataIsNew, InputDeviceEventTypeEnum} from './event-types';
+import {ConstructEventIfDataIsNew, DeviceHandlerEventTypeEnum} from './event-types';
 
 export type TimedEventDetail<DataTypeGeneric> = {
     timestamp: number;
@@ -9,12 +9,12 @@ export type TimedEventDetail<DataTypeGeneric> = {
 
 export type TimedEvent<
     DataTypeGeneric,
-    SpecificEventTypeGeneric extends InputDeviceEventTypeEnum,
+    SpecificEventTypeGeneric extends DeviceHandlerEventTypeEnum,
 > = TypedCustomEvent<TimedEventDetail<DataTypeGeneric>, SpecificEventTypeGeneric>;
 
 export type TimedEventConstructor<
     DataTypeGeneric,
-    SpecificEventTypeGeneric extends InputDeviceEventTypeEnum,
+    SpecificEventTypeGeneric extends DeviceHandlerEventTypeEnum,
 > = (new (
     eventInitDict: TypedCustomEventInit<TimedEventDetail<DataTypeGeneric>>,
 ) => TimedEvent<DataTypeGeneric, SpecificEventTypeGeneric>) &
@@ -27,7 +27,7 @@ export type TimedEventConstructor<
     };
 
 export function defineTimedEvent<const DataTypeGeneric>() {
-    return <SpecificEventTypeGeneric extends InputDeviceEventTypeEnum>(
+    return <SpecificEventTypeGeneric extends DeviceHandlerEventTypeEnum>(
         type: SpecificEventTypeGeneric,
         isDataNewCallback: ConstructEventIfDataIsNew<DataTypeGeneric>,
     ) => {

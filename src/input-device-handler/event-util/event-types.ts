@@ -1,6 +1,6 @@
 import {AllDevices} from '../../device/all-input-devices';
 
-export enum InputDeviceEventTypeEnum {
+export enum DeviceHandlerEventTypeEnum {
     NewDevicesAdded = 'new-devices-added',
     /**
      * This event is triggered any time devices are updated (either manually or on each poll event).

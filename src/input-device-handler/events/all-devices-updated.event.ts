@@ -1,5 +1,5 @@
 import {AllDevices} from '../../device/all-input-devices';
-import {ConstructEventIfDataIsNew, InputDeviceEventTypeEnum} from '../event-util/event-types';
+import {ConstructEventIfDataIsNew, DeviceHandlerEventTypeEnum} from '../event-util/event-types';
 import {defineTimedEvent} from '../event-util/timed-event';
 
 function allDevicesUpdatedDataCheckCallback(
@@ -17,7 +17,7 @@ function allDevicesUpdatedDataCheckCallback(
  * This will fire even if there were no changes to the devices or their current inputs.
  */
 export const AllDevicesUpdatedEvent = defineTimedEvent<AllDevices>()(
-    InputDeviceEventTypeEnum.AllDevicesUpdated,
+    DeviceHandlerEventTypeEnum.AllDevicesUpdated,
     allDevicesUpdatedDataCheckCallback,
 );
 export type AllDevicesUpdatedEvent = InstanceType<typeof AllDevicesUpdatedEvent>;

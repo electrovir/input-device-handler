@@ -5,7 +5,7 @@ import {
     typedHasProperty,
 } from '@augment-vir/common';
 import {InputDevice} from '../../device/input-device';
-import {ConstructEventIfDataIsNew, InputDeviceEventTypeEnum} from '../event-util/event-types';
+import {ConstructEventIfDataIsNew, DeviceHandlerEventTypeEnum} from '../event-util/event-types';
 import {defineTimedEvent} from '../event-util/timed-event';
 
 export type NewDevicesAddedOutput = InputDevice[];
@@ -32,7 +32,7 @@ function areThereNewDevices(
 }
 
 export const NewDevicesAddedEvent = defineTimedEvent<NewDevicesAddedOutput>()(
-    InputDeviceEventTypeEnum.NewDevicesAdded,
+    DeviceHandlerEventTypeEnum.NewDevicesAdded,
     areThereNewDevices,
 );
 

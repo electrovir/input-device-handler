@@ -10,6 +10,7 @@ export * from './device/input-device-key';
 export * from './device/input-device-type';
 export * from './device/input-value';
 export * from './input-device-handler/event-util/all-events';
+export * from './input-device-handler/event-util/event-listener';
 export * from './input-device-handler/event-util/event-types';
 export * from './input-device-handler/event-util/timed-event';
 export * from './input-device-handler/events/all-devices-updated.event';

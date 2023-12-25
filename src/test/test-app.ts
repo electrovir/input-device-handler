@@ -1,15 +1,15 @@
-import {InputDeviceEventTypeEnum} from '../input-device-handler/event-util/event-types';
+import {DeviceHandlerEventTypeEnum} from '../input-device-handler/event-util/event-types';
 import {InputDeviceHandler} from '../input-device-handler/input-device-handler';
 
 const deviceHandler = new InputDeviceHandler({startLoopImmediately: true});
 
 const deviceNamesDiv = window.document.getElementById('device-names')!;
 
-deviceHandler.addEventListener(InputDeviceEventTypeEnum.CurrentInputsChanged, (event) => {
+deviceHandler.listen(DeviceHandlerEventTypeEnum.CurrentInputsChanged, (event) => {
     console.info('input changed:', event.detail.inputs);
 });
 
-deviceHandler.addEventListener(InputDeviceEventTypeEnum.DevicesRemoved, (event) => {
+deviceHandler.listen(DeviceHandlerEventTypeEnum.DevicesRemoved, (event) => {
     console.info('devices removed:', event.detail.inputs);
     event.detail.inputs.forEach((inputDevice) => {
         deviceNamesDiv.innerHTML = deviceNamesDiv.innerHTML.replace(
@@ -19,7 +19,7 @@ deviceHandler.addEventListener(InputDeviceEventTypeEnum.DevicesRemoved, (event) 
     });
 });
 
-deviceHandler.addEventListener(InputDeviceEventTypeEnum.NewDevicesAdded, (event) => {
+deviceHandler.listen(DeviceHandlerEventTypeEnum.NewDevicesAdded, (event) => {
     console.info('new devices:', event.detail.inputs);
     event.detail.inputs.forEach((inputDevice) => {
         deviceNamesDiv.innerHTML += String(inputDevice.deviceName) + '<br>';
@@ -27,7 +27,7 @@ deviceHandler.addEventListener(InputDeviceEventTypeEnum.NewDevicesAdded, (event)
 });
 
 // // this spams the console, only uncomment for debugging
-// deviceHandler.addEventListener(InputDeviceHandlerEventTypeEnum.AllDevicesUpdated, (event) => {
+// deviceHandler.listen(InputDeviceHandlerEventTypeEnum.AllDevicesUpdated, (event) => {
 //     console.info('all devices:', event.detail.inputs);
 // });
 
