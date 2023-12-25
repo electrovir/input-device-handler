@@ -1,4 +1,5 @@
 import {typedHasProperty} from '@augment-vir/common';
+import {AllGamepadDeadZoneSettings} from './dead-zone-settings';
 import {SerializedGamepad, serializeGamepad} from './serialized-gamepad';
 /** Wrapper for the global navigator object that takes into account browser discrepancies. */
 
@@ -21,7 +22,13 @@ export interface OldWebkitNavigator extends Omit<Navigator, 'getGamepads'> {
 /** Includes different navigator types to support different browsers */
 const globalNavigator: OldWebkitNavigator | ChromeNavigator | Navigator = window.navigator;
 
-export function getSerializedGamepads(): SerializedGamepad[] {
+export function getSerializedGamepads({
+    deadZoneSettings,
+    globalDeadZone,
+}: {
+    deadZoneSettings: AllGamepadDeadZoneSettings;
+    globalDeadZone: number;
+}): SerializedGamepad[] {
     return Array.from(
         typedHasProperty(globalNavigator, 'webkitGetGamepads')
             ? globalNavigator.webkitGetGamepads()
@@ -30,5 +37,5 @@ export function getSerializedGamepads(): SerializedGamepad[] {
               : [],
     )
         .filter((gamepad): gamepad is Gamepad => !!gamepad)
-        .map((gamepad) => serializeGamepad(gamepad));
+        .map((gamepad) => serializeGamepad({gamepad, deadZoneSettings, globalDeadZone}));
 }

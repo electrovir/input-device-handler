@@ -1,6 +1,7 @@
 export * from './device/all-input-devices';
 export * from './device/gamepad/dead-zone-settings';
 export * from './device/gamepad/gamepad-input-names';
+export * from './device/gamepad/gamepad-input-type';
 export * from './device/gamepad/navigator';
 export * from './device/gamepad/read-gamepads';
 export * from './device/gamepad/serialized-gamepad';

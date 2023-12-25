@@ -1,3 +1,5 @@
+import {isEnumValue} from '@augment-vir/common';
+import {GamepadInputType} from './gamepad-input-type';
 export function createButtonName(buttonIndexOrName: number | string): string {
     return `button-${buttonIndexOrName}`;
 }
@@ -8,16 +10,16 @@ export function createAxeName(axeNameOrIndex: number | string): string {
 
 export function parseGamepadInputName(
     inputName: string,
-): {inputType: 'axe' | 'button'; inputIndex: number} | undefined {
+): {inputType: GamepadInputType; inputIndex: number} | undefined {
     const [
-        type,
+        inputType,
         rawIndex,
     ] = inputName.split('-');
-    const index = Number(rawIndex);
-    if ((type === 'button' || type === 'axe') && !isNaN(index)) {
+    const inputIndex = Number(rawIndex);
+    if (isEnumValue(inputType, GamepadInputType) && !isNaN(inputIndex)) {
         return {
-            inputType: type,
-            inputIndex: index,
+            inputType,
+            inputIndex,
         };
     } else {
         return undefined;

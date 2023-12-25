@@ -10,14 +10,15 @@ describe('InputDevice types', () => {
             deviceName: 'test device name',
             currentInputs: {},
             deviceDetails: {
-                connected: false,
-                id: 'gamepad id',
+                isConnected: false,
+                gamepadName: 'gamepad id',
                 index: 3,
                 mapping: '',
                 serialized: true,
                 timestamp: 0,
                 axes: [],
                 buttons: [],
+                inputsByName: {},
             },
         };
 

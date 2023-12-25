@@ -9,7 +9,7 @@ import {
     GamepadInputDevices,
     gamepadMapToInputDevices,
 } from '../device/all-input-devices';
-import {GamepadDeadZoneSettings} from '../device/gamepad/dead-zone-settings';
+import {AllGamepadDeadZoneSettings} from '../device/gamepad/dead-zone-settings';
 import {createAxeName, createButtonName} from '../device/gamepad/gamepad-input-names';
 import {readCurrentGamepads} from '../device/gamepad/read-gamepads';
 import {
@@ -42,14 +42,14 @@ export type InputDeviceHandlerOptions = Partial<{
      * events, that might be too much. Consider setting this to true in that case.
      */
     disableMouseMovement: boolean;
-    gamepadDeadZoneSettings: GamepadDeadZoneSettings;
+    gamepadDeadZoneSettings: AllGamepadDeadZoneSettings;
     globalDeadZone: number;
 }>;
 
 export class InputDeviceHandler extends TypedEventTarget<AnyInputHandlerEvent> {
     private currentKeyboardInputs: Writeable<KeyboardDevice['currentInputs']> = {};
     private currentMouseInputs: Writeable<MouseDevice['currentInputs']> = {};
-    private gamepadDeadZoneSettings: GamepadDeadZoneSettings = {};
+    private gamepadDeadZoneSettings: AllGamepadDeadZoneSettings = {};
 
     /**
      * Make sure this is set after the other member variables.
@@ -204,10 +204,13 @@ export class InputDeviceHandler extends TypedEventTarget<AnyInputHandlerEvent> {
      * input handler. Thus, this is not public.
      */
     private getCurrentDeviceValues(
-        deadZoneSettings: GamepadDeadZoneSettings,
+        deadZoneSettings: AllGamepadDeadZoneSettings,
         globalDeadZone: number,
     ): AllDevices {
-        const gamepadMap = readCurrentGamepads(deadZoneSettings, globalDeadZone);
+        const gamepadMap = readCurrentGamepads({
+            deadZoneSettings,
+            globalDeadZone,
+        });
         const gamepadInputDevices: GamepadInputDevices = gamepadMapToInputDevices(gamepadMap);
 
         const allDevices: AllDevices = {
@@ -317,7 +320,7 @@ export class InputDeviceHandler extends TypedEventTarget<AnyInputHandlerEvent> {
         return newValues;
     }
 
-    public updateGamepadDeadZoneSettings(newValue: GamepadDeadZoneSettings) {
+    public updateGamepadDeadZoneSettings(newValue: AllGamepadDeadZoneSettings) {
         this.gamepadDeadZoneSettings = newValue;
     }
 }

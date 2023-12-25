@@ -1,4 +1,4 @@
-import {SerializedGamepadButton} from './gamepad/serialized-gamepad';
+import {SerializedGamepadInput} from './gamepad/serialized-gamepad';
 import {AnyInputDeviceKey, GamepadInputDeviceKey, inputDeviceKey} from './input-device-key';
 import {InputDeviceTypeEnum} from './input-device-type';
 
@@ -10,21 +10,7 @@ export type KeyboardInputDetails = {
     keyboardEvent: KeyboardEvent;
 };
 
-export enum GamepadInputType {
-    Button = 'button',
-    Axe = 'axe',
-}
-
-export type GamepadAxeInputDetails = {
-    inputType: GamepadInputType.Axe;
-};
-
-export type GamepadButtonInputDetails = {
-    inputType: GamepadInputType.Button;
-    buttonDetails: SerializedGamepadButton;
-};
-
-export type GamepadInputDetails = GamepadAxeInputDetails | GamepadButtonInputDetails;
+export type GamepadInputDetails = SerializedGamepadInput;
 
 export type DeviceInputDetails = KeyboardInputDetails | MouseInputDetails | GamepadInputDetails;
 

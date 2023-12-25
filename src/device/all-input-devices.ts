@@ -20,7 +20,7 @@ export function gamepadMapToInputDevices(gamepadMap: GamepadMap): GamepadInputDe
         return {
             currentInputs: gamepadToCurrentInputs(gamepad),
             deviceDetails: gamepad,
-            deviceName: gamepad.id,
+            deviceName: gamepad.gamepadName,
             deviceKey: gamepad.index,
             deviceType: InputDeviceTypeEnum.Gamepad,
         };

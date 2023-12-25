@@ -1,24 +1,21 @@
 import {isGamepadDeviceKey} from '../input-device-key';
 import {InputDeviceTypeEnum} from '../input-device-type';
-import {DeviceInputValue, GamepadInputType, GamepadInputValue} from '../input-value';
-import {GamepadDeadZoneSettings} from './dead-zone-settings';
-import {createAxeName, createButtonName} from './gamepad-input-names';
+import {DeviceInputValue, GamepadInputValue} from '../input-value';
+import {AllGamepadDeadZoneSettings} from './dead-zone-settings';
+import {createButtonName} from './gamepad-input-names';
 import {getSerializedGamepads} from './navigator';
-import {GamepadMap, SerializedGamepad, SerializedGamepadInputs} from './serialized-gamepad';
+import {GamepadMap, SerializedGamepad} from './serialized-gamepad';
 
-export function readCurrentGamepads(
-    gamepadDeadZoneSettings: GamepadDeadZoneSettings,
-    globalDeadZone: number,
-): GamepadMap {
-    const gamepads = getSerializedGamepads();
+export function readCurrentGamepads({
+    deadZoneSettings,
+    globalDeadZone,
+}: {
+    deadZoneSettings: AllGamepadDeadZoneSettings;
+    globalDeadZone: number;
+}): GamepadMap {
+    const gamepads = getSerializedGamepads({deadZoneSettings, globalDeadZone});
 
     const gamepadMap: GamepadMap = gamepads.reduce((mapping, gamepad) => {
-        const normalizedInputs = normalizeGamepadInput(
-            gamepad,
-            gamepadDeadZoneSettings,
-            globalDeadZone,
-        );
-
         const gamepadKey = gamepad.index;
 
         if (!isGamepadDeviceKey(gamepadKey)) {
@@ -26,10 +23,7 @@ export function readCurrentGamepads(
             return mapping;
         }
 
-        mapping[gamepadKey] = {
-            ...gamepad,
-            ...normalizedInputs,
-        };
+        mapping[gamepadKey] = gamepad;
         return mapping;
     }, {} as GamepadMap);
 
@@ -43,70 +37,21 @@ export function gamepadToCurrentInputs(
 
     const gamepadDetails: Pick<GamepadInputValue, 'deviceKey' | 'deviceName' | 'deviceType'> = {
         deviceKey: gamepad.index,
-        deviceName: gamepad.id,
+        deviceName: gamepad.gamepadName,
         deviceType: InputDeviceTypeEnum.Gamepad,
     } as const;
 
-    gamepad.buttons.forEach((button, index) => {
-        if (button.value) {
+    Object.values(gamepad.inputsByName).forEach((gamepadInput, index) => {
+        if (gamepadInput.value) {
             const buttonName = createButtonName(index);
             currentInputs[buttonName] = {
                 ...gamepadDetails,
-                details: {
-                    inputType: GamepadInputType.Button,
-                    buttonDetails: button,
-                },
+                details: gamepadInput,
                 inputName: buttonName,
-                inputValue: button.value,
+                inputValue: gamepadInput.value,
             };
         }
     });
-    gamepad.axes.forEach((axe, index) => {
-        if (axe) {
-            const axeName = createAxeName(index);
-            currentInputs[axeName] = {
-                ...gamepadDetails,
-                details: {
-                    inputType: GamepadInputType.Axe,
-                },
-                inputName: axeName,
-                inputValue: axe,
-            };
-        }
-    });
+
     return currentInputs;
-}
-
-const defaultDeadZone = 0.01;
-
-function normalizeGamepadInput(
-    gamepad: SerializedGamepad,
-    deadZones: GamepadDeadZoneSettings,
-    globalDeadZone: number,
-): SerializedGamepadInputs {
-    const currentDeadZones = deadZones[gamepad.id];
-
-    const axes: SerializedGamepadInputs['axes'] = gamepad.axes.map((axeInput, axeIndex) => {
-        const deadZone: number =
-            currentDeadZones?.[createAxeName(axeIndex)] ?? (globalDeadZone || defaultDeadZone);
-        return Math.abs(axeInput) < deadZone ? 0 : axeInput;
-    });
-    const buttons: SerializedGamepadInputs['buttons'] = gamepad.buttons.map(
-        (buttonInput, buttonIndex) => {
-            const deadZone: number =
-                currentDeadZones?.[createButtonName(buttonIndex)] ?? defaultDeadZone;
-            const buttonValue: number =
-                Math.abs(buttonInput.value) < deadZone ? 0 : buttonInput.value;
-
-            return {
-                ...buttonInput,
-                value: buttonValue,
-            };
-        },
-    );
-
-    return {
-        axes,
-        buttons,
-    };
 }
