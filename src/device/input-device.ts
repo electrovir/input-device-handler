@@ -7,6 +7,7 @@ import {
     KeyboardInputValue,
     MouseInputValue,
 } from './input-value';
+
 export type GamepadDetails = SerializedGamepad;
 
 export type DeviceDetails = undefined | GamepadDetails;
