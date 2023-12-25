@@ -43,6 +43,7 @@ export type InputDeviceHandlerOptions = Partial<{
      */
     disableMouseMovement: boolean;
     gamepadDeadZoneSettings: GamepadDeadZoneSettings;
+    globalDeadZone: number;
 }>;
 
 export class InputDeviceHandler extends TypedEventTarget<AnyInputHandlerEvent> {
@@ -58,6 +59,7 @@ export class InputDeviceHandler extends TypedEventTarget<AnyInputHandlerEvent> {
      */
     private lastReadInputDevices!: AllDevices;
     private loopIsRunning = false;
+    private globalDeadZone = 0;
     // prevents multiple polling loops from running
     private currentLoopIndex = -1;
     private lastEventDetails: Partial<
@@ -76,6 +78,9 @@ export class InputDeviceHandler extends TypedEventTarget<AnyInputHandlerEvent> {
         super();
         if (options.gamepadDeadZoneSettings) {
             this.updateGamepadDeadZoneSettings(options.gamepadDeadZoneSettings);
+        }
+        if (options.globalDeadZone) {
+            this.globalDeadZone = options.globalDeadZone;
         }
         this.attachWindowListeners(options);
         this.readAllDevices();
@@ -198,8 +203,11 @@ export class InputDeviceHandler extends TypedEventTarget<AnyInputHandlerEvent> {
      * Does not update any internal state or fire any event listeners that have been attached to the
      * input handler. Thus, this is not public.
      */
-    private getCurrentDeviceValues(deadZoneSettings: GamepadDeadZoneSettings): AllDevices {
-        const gamepadMap = readCurrentGamepads(deadZoneSettings);
+    private getCurrentDeviceValues(
+        deadZoneSettings: GamepadDeadZoneSettings,
+        globalDeadZone: number,
+    ): AllDevices {
+        const gamepadMap = readCurrentGamepads(deadZoneSettings, globalDeadZone);
         const gamepadInputDevices: GamepadInputDevices = gamepadMapToInputDevices(gamepadMap);
 
         const allDevices: AllDevices = {
@@ -291,12 +299,17 @@ export class InputDeviceHandler extends TypedEventTarget<AnyInputHandlerEvent> {
      *
      * Use this if method if you're hooking up polling to your own system. For example, if you
      * already have a render loop, call this method to update all inputs and read their values.
+     *
+     * If you just want to read the last values but already have InputDeviceHandler running its
+     * loop, instead call getLastPollResults.
      */
     public readAllDevices(
         deadZoneSettings = this.gamepadDeadZoneSettings,
         timestamp = performance.now(),
+        /** DeadZone for all inputs. */
+        globalDeadZone = this.globalDeadZone,
     ): AllDevices {
-        const newValues = this.getCurrentDeviceValues(deadZoneSettings);
+        const newValues = this.getCurrentDeviceValues(deadZoneSettings, globalDeadZone);
         const oldValues = this.lastReadInputDevices;
         this.lastReadInputDevices = newValues;
         this.fireEvents(timestamp, oldValues, newValues);

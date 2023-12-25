@@ -6,11 +6,18 @@ import {createAxeName, createButtonName} from './gamepad-input-names';
 import {getSerializedGamepads} from './navigator';
 import {GamepadMap, SerializedGamepad, SerializedGamepadInputs} from './serialized-gamepad';
 
-export function readCurrentGamepads(gamepadDeadZoneSettings: GamepadDeadZoneSettings): GamepadMap {
+export function readCurrentGamepads(
+    gamepadDeadZoneSettings: GamepadDeadZoneSettings,
+    globalDeadZone: number,
+): GamepadMap {
     const gamepads = getSerializedGamepads();
 
     const gamepadMap: GamepadMap = gamepads.reduce((mapping, gamepad) => {
-        const normalizedInputs = normalizeGamepadInput(gamepad, gamepadDeadZoneSettings);
+        const normalizedInputs = normalizeGamepadInput(
+            gamepad,
+            gamepadDeadZoneSettings,
+            globalDeadZone,
+        );
 
         const gamepadKey = gamepad.index;
 
@@ -75,11 +82,13 @@ const defaultDeadZone = 0.01;
 function normalizeGamepadInput(
     gamepad: SerializedGamepad,
     deadZones: GamepadDeadZoneSettings,
+    globalDeadZone: number,
 ): SerializedGamepadInputs {
     const currentDeadZones = deadZones[gamepad.id];
 
     const axes: SerializedGamepadInputs['axes'] = gamepad.axes.map((axeInput, axeIndex) => {
-        const deadZone: number = currentDeadZones?.[createAxeName(axeIndex)] ?? defaultDeadZone;
+        const deadZone: number =
+            currentDeadZones?.[createAxeName(axeIndex)] ?? (globalDeadZone || defaultDeadZone);
         return Math.abs(axeInput) < deadZone ? 0 : axeInput;
     });
     const buttons: SerializedGamepadInputs['buttons'] = gamepad.buttons.map(
