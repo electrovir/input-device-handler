@@ -2,7 +2,6 @@ import {isGamepadDeviceKey} from '../input-device-key';
 import {InputDeviceTypeEnum} from '../input-device-type';
 import {DeviceInputValue, GamepadInputValue} from '../input-value';
 import {AllGamepadDeadZoneSettings} from './dead-zone-settings';
-import {createButtonName} from './gamepad-input-names';
 import {getSerializedGamepads} from './navigator';
 import {GamepadMap, SerializedGamepad} from './serialized-gamepad';
 
@@ -41,13 +40,12 @@ export function gamepadToCurrentInputs(
         deviceType: InputDeviceTypeEnum.Gamepad,
     } as const;
 
-    Object.values(gamepad.inputsByName).forEach((gamepadInput, index) => {
+    Object.values(gamepad.inputsByName).forEach((gamepadInput) => {
         if (gamepadInput.value) {
-            const buttonName = createButtonName(index);
-            currentInputs[buttonName] = {
+            currentInputs[gamepadInput.inputName] = {
                 ...gamepadDetails,
                 details: gamepadInput,
-                inputName: buttonName,
+                inputName: gamepadInput.inputName,
                 inputValue: gamepadInput.value,
             };
         }
