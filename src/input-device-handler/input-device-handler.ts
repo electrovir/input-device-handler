@@ -1,9 +1,5 @@
-import {
-    AnyFunction,
-    Writeable,
-    getEnumTypedValues,
-    typedObjectFromEntries,
-} from '@augment-vir/common';
+import {Writeable} from '@augment-vir/common';
+import {TypedListenTarget} from 'typed-event-target';
 import {
     AllDevices,
     GamepadInputDevices,
@@ -26,7 +22,6 @@ import {
     AnyDeviceHandlerEventConstructor,
     allEvents,
 } from './event-util/all-events';
-import {AnyDeviceHandlerListener, DeviceHandlerListener} from './event-util/event-listener';
 import {DeviceHandlerEventTypeEnum} from './event-util/event-types';
 
 export type InputDeviceHandlerOptions = Partial<{
@@ -47,7 +42,7 @@ export type InputDeviceHandlerOptions = Partial<{
     globalDeadZone: number;
 }>;
 
-export class InputDeviceHandler {
+export class InputDeviceHandler extends TypedListenTarget<AnyDeviceHandlerEvent> {
     private currentKeyboardInputs: Writeable<KeyboardDevice['currentInputs']> = {};
     private currentMouseInputs: Writeable<MouseDevice['currentInputs']> = {};
     private gamepadDeadZoneSettings: AllGamepadDeadZoneSettings = {};
@@ -76,6 +71,7 @@ export class InputDeviceHandler {
     > = {};
 
     constructor(options: InputDeviceHandlerOptions = {}) {
+        super();
         if (options.gamepadDeadZoneSettings) {
             this.updateGamepadDeadZoneSettings(options.gamepadDeadZoneSettings);
         }
@@ -88,28 +84,6 @@ export class InputDeviceHandler {
         if (options.startLoopImmediately) {
             this.startPollingLoop();
         }
-    }
-
-    private listeners = typedObjectFromEntries(
-        getEnumTypedValues(DeviceHandlerEventTypeEnum).map((eventType) => [
-            eventType,
-            new Set<AnyDeviceHandlerListener>(),
-        ]),
-    );
-
-    private dispatchEvent(event: AnyDeviceHandlerEvent) {
-        this.listeners[event.type].forEach((listener) => listener(event));
-    }
-
-    /** Returns a callback that removes the listener. */
-    public listen<EventType extends DeviceHandlerEventTypeEnum>(
-        eventType: EventType,
-        listener: DeviceHandlerListener<EventType>,
-    ): () => void {
-        this.listeners[eventType].add(listener as AnyFunction);
-        return () => {
-            this.listeners[eventType].delete(listener as AnyFunction);
-        };
     }
 
     private attachWindowListeners(
