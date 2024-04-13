@@ -187,7 +187,7 @@ export class InputDeviceHandler extends TypedListenTarget<AnyDeviceHandlerEvent>
                         newValues,
                     ],
                 };
-                this.dispatchEvent(maybeEventInstance);
+                this.dispatch(maybeEventInstance);
             }
         });
     }

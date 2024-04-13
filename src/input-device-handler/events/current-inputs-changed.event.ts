@@ -1,4 +1,4 @@
-import {areJsonEqual} from '@augment-vir/common';
+import {isJsonEqual} from 'run-time-assertions';
 import {allInputDevicesToAllInputs} from '../../device/all-input-devices';
 import {DeviceInputValue} from '../../device/input-value';
 import {ConstructEventIfDataIsNew, DeviceHandlerEventTypeEnum} from '../event-util/event-types';
@@ -31,7 +31,7 @@ function didCurrentInputsChange(
         ? allInputDevicesToAllInputs(previousInputDevices)
         : [];
 
-    if (areJsonEqual(allPreviousInputs, allLatestInputs)) {
+    if (isJsonEqual(allPreviousInputs, allLatestInputs)) {
         return undefined;
     } else {
         const newInputs = allLatestInputs.filter((latestInput) => {
