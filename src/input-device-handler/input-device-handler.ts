@@ -90,7 +90,7 @@ export class InputDeviceHandler extends TypedListenTarget<AnyDeviceHandlerEvent>
         options: Pick<InputDeviceHandlerOptions, 'disableMouseMovement'>,
     ) {
         window.addEventListener('keydown', (event) => {
-            const eventKey = createButtonName(event.key);
+            const eventKey = createButtonName(event.code);
             // ignore keydown repeated events
             if (this.currentKeyboardInputs.hasOwnProperty(eventKey)) {
                 return;
