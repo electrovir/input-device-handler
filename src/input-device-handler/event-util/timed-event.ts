@@ -1,21 +1,23 @@
 import {kebabCaseToCamelCase, Overwrite} from '@augment-vir/common';
 import {defineTypedCustomEvent, TypedCustomEvent, TypedCustomEventInit} from 'typed-event-target';
-import {ConstructEventIfDataIsNew, DeviceHandlerEventTypeEnum} from './event-types';
+import {AllDevices} from '../../device/all-input-devices';
 
 export type TimedEventDetail<DataTypeGeneric> = {
     timestamp: number;
     inputs: DataTypeGeneric;
 };
 
-export type TimedEvent<
-    DataTypeGeneric,
-    SpecificEventTypeGeneric extends DeviceHandlerEventTypeEnum,
-> = TypedCustomEvent<TimedEventDetail<DataTypeGeneric>, SpecificEventTypeGeneric>;
+export type TimedEvent<DataTypeGeneric, SpecificEventTypeGeneric extends string> = TypedCustomEvent<
+    TimedEventDetail<DataTypeGeneric>,
+    SpecificEventTypeGeneric
+>;
 
-export type TimedEventConstructor<
-    DataTypeGeneric,
-    SpecificEventTypeGeneric extends DeviceHandlerEventTypeEnum,
-> = (new (
+export type ConstructEventIfDataIsNew<EventDataGeneric> = (
+    previousValues: AllDevices | undefined,
+    latestValues: AllDevices,
+) => EventDataGeneric | undefined;
+
+export type TimedEventConstructor<DataTypeGeneric, SpecificEventTypeGeneric extends string> = (new (
     eventInitDict: TypedCustomEventInit<TimedEventDetail<DataTypeGeneric>>,
 ) => TimedEvent<DataTypeGeneric, SpecificEventTypeGeneric>) &
     Overwrite<typeof Event, Pick<TimedEvent<DataTypeGeneric, SpecificEventTypeGeneric>, 'type'>> & {
@@ -27,7 +29,7 @@ export type TimedEventConstructor<
     };
 
 export function defineTimedEvent<const DataTypeGeneric>() {
-    return <SpecificEventTypeGeneric extends DeviceHandlerEventTypeEnum>(
+    return <SpecificEventTypeGeneric extends string>(
         type: SpecificEventTypeGeneric,
         isDataNewCallback: ConstructEventIfDataIsNew<DataTypeGeneric>,
     ) => {

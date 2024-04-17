@@ -1,10 +1,9 @@
-import {ArrayElement, getEnumTypedValues, typedObjectFromEntries} from '@augment-vir/common';
+import {ArrayElement, typedObjectFromEntries} from '@augment-vir/common';
 import {ExtractEventByType} from 'typed-event-target';
 import {AllDevicesUpdatedEvent} from '../events/all-devices-updated.event';
 import {CurrentInputsChangedEvent} from '../events/current-inputs-changed.event';
 import {DevicesRemovedEvent} from '../events/devices-removed.event';
 import {NewDevicesAddedEvent} from '../events/new-devices-added.event';
-import {DeviceHandlerEventTypeEnum} from './event-types';
 
 export const allEvents = [
     /**
@@ -19,9 +18,10 @@ export const allEvents = [
 
 export type AnyDeviceHandlerEventConstructor = ArrayElement<typeof allEvents>;
 export type AnyDeviceHandlerEvent = InstanceType<ArrayElement<typeof allEvents>>;
+export type DeviceHandlerEventType = AnyDeviceHandlerEventConstructor['type'];
 
 export type DeviceHandlerEventsMap = {
-    [PropKey in DeviceHandlerEventTypeEnum]: ExtractEventByType<AnyDeviceHandlerEvent, PropKey>[];
+    [PropKey in DeviceHandlerEventType]: ExtractEventByType<AnyDeviceHandlerEvent, PropKey>[];
 };
 
 export type AnyDeviceHandlerEventsMap = Record<
@@ -29,23 +29,20 @@ export type AnyDeviceHandlerEventsMap = Record<
     AnyDeviceHandlerEvent[]
 >;
 
-export function createEmptyEventsMap(): DeviceHandlerEventsMap {
+export function createEmptyDeviceHandlerEventsMap(): DeviceHandlerEventsMap {
     return typedObjectFromEntries(
-        getEnumTypedValues(DeviceHandlerEventTypeEnum).map((eventType) => [
-            eventType,
+        allEvents.map((eventConstructor) => [
+            eventConstructor.type,
             [],
         ]),
     );
 }
 
-export const eventsByType = Object.fromEntries(
-    allEvents.map((event) => [
-        event.type,
-        event,
+export const deviceHandlerEventConstructorsByType = Object.fromEntries(
+    allEvents.map((eventConstructor) => [
+        eventConstructor.type,
+        eventConstructor,
     ]),
 ) as {
-    [PropKey in DeviceHandlerEventTypeEnum]: Extract<
-        ArrayElement<typeof allEvents>,
-        {type: PropKey}
-    >;
+    [PropKey in DeviceHandlerEventType]: Extract<ArrayElement<typeof allEvents>, {type: PropKey}>;
 };

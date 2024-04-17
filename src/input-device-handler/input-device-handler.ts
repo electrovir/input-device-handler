@@ -20,9 +20,9 @@ import {KeyboardInputValue} from '../device/input-value';
 import {
     AnyDeviceHandlerEvent,
     AnyDeviceHandlerEventConstructor,
+    DeviceHandlerEventType,
     allEvents,
 } from './event-util/all-events';
-import {DeviceHandlerEventTypeEnum} from './event-util/event-types';
 
 export type InputDeviceHandlerOptions = Partial<{
     /**
@@ -60,7 +60,7 @@ export class InputDeviceHandler extends TypedListenTarget<AnyDeviceHandlerEvent>
     private currentLoopIndex = -1;
     private lastEventDetails: Partial<
         Record<
-            DeviceHandlerEventTypeEnum,
+            DeviceHandlerEventType,
             {
                 constructor: AnyDeviceHandlerEventConstructor;
                 constructorInputs: Parameters<

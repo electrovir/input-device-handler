@@ -1,4 +1,4 @@
-import {getEnumTypedValues, getObjectTypedValues, randomString} from '@augment-vir/common';
+import {getObjectTypedKeys, getObjectTypedValues, randomString} from '@augment-vir/common';
 import {assert} from '@open-wc/testing';
 import {sendKeys} from '@web/test-runner-commands';
 import {assertDefined} from 'run-time-assertions';
@@ -6,9 +6,9 @@ import {createButtonName} from '../device/gamepad/gamepad-input-names';
 import {
     AnyDeviceHandlerEvent,
     DeviceHandlerEventsMap,
-    createEmptyEventsMap,
+    createEmptyDeviceHandlerEventsMap,
+    deviceHandlerEventConstructorsByType,
 } from './event-util/all-events';
-import {DeviceHandlerEventTypeEnum} from './event-util/event-types';
 import {AllDevicesUpdatedEvent} from './events/all-devices-updated.event';
 import {CurrentInputsChangedEvent} from './events/current-inputs-changed.event';
 import {InputDeviceHandler} from './input-device-handler';
@@ -16,9 +16,9 @@ import {InputDeviceHandler} from './input-device-handler';
 function setupInstanceForTesting() {
     const instance = new InputDeviceHandler();
 
-    const events: DeviceHandlerEventsMap = createEmptyEventsMap();
+    const events: DeviceHandlerEventsMap = createEmptyDeviceHandlerEventsMap();
 
-    getEnumTypedValues(DeviceHandlerEventTypeEnum).forEach((eventType) => {
+    getObjectTypedKeys(deviceHandlerEventConstructorsByType).forEach((eventType) => {
         instance.listen(eventType, (event) => {
             /**
              * Any cast is necessary here because we're working with broader types than EventsMap
@@ -49,9 +49,9 @@ function getInputChangedEventAt(
     events: Readonly<DeviceHandlerEventsMap>,
     index: number,
 ): InstanceType<typeof CurrentInputsChangedEvent> {
-    const inputChangedEvents = events[DeviceHandlerEventTypeEnum.CurrentInputsChanged];
+    const inputChangedEvents = events[CurrentInputsChangedEvent.type];
     const inputChangedEvent = inputChangedEvents[index];
-    assertDefined(inputChangedEvent, `event at "${index}" should've existed`);
+    assertDefined(inputChangedEvent, `event at '${index}' should've existed`);
 
     return inputChangedEvent;
 }
@@ -106,7 +106,9 @@ describe(InputDeviceHandler.constructor.name, () => {
     it('should fire an input changed event after pressing a key', async () => {
         const {events, instance} = setupInstanceForTesting();
 
-        const pressedKey = await pressDownRandomKey();
+        await sendKeys({
+            down: 'h',
+        });
 
         instance.readAllDevices();
 
@@ -119,18 +121,20 @@ describe(InputDeviceHandler.constructor.name, () => {
         assert.lengthOf(inputChangedEvent.detail.inputs.allCurrentInputs, 1);
         const newInput = inputChangedEvent.detail.inputs.allCurrentInputs[0];
         assertDefined(newInput);
-        assert.strictEqual(newInput.inputName, createButtonName(pressedKey));
+        assert.strictEqual(newInput.inputName, createButtonName('KeyH'));
     });
 
     it('should fire an input changed event after releasing key', async () => {
         const {events, instance} = setupInstanceForTesting();
 
-        const pressedKey = await pressDownRandomKey();
+        await sendKeys({
+            down: 'j',
+        });
 
         instance.readAllDevices();
 
         await sendKeys({
-            up: pressedKey,
+            up: 'j',
         });
 
         instance.readAllDevices();
@@ -146,6 +150,6 @@ describe(InputDeviceHandler.constructor.name, () => {
         assert.lengthOf(inputChangedEvent.detail.inputs.removedInputs, 1);
         const removedInput = inputChangedEvent.detail.inputs.removedInputs[0];
         assertDefined(removedInput);
-        assert.strictEqual(removedInput.inputName, createButtonName(pressedKey));
+        assert.strictEqual(removedInput.inputName, createButtonName('KeyJ'));
     });
 });

@@ -1,8 +1,7 @@
 import {isJsonEqual} from 'run-time-assertions';
 import {allInputDevicesToAllInputs} from '../../device/all-input-devices';
 import {DeviceInputValue} from '../../device/input-value';
-import {ConstructEventIfDataIsNew, DeviceHandlerEventTypeEnum} from '../event-util/event-types';
-import {defineTimedEvent} from '../event-util/timed-event';
+import {ConstructEventIfDataIsNew, defineTimedEvent} from '../event-util/timed-event';
 
 export type CurrentInputsChangedOutput = {
     newInputs: DeviceInputValue[];
@@ -52,9 +51,7 @@ function didCurrentInputsChange(
         };
     }
 }
-
-export const CurrentInputsChangedEvent = defineTimedEvent<CurrentInputsChangedOutput>()(
-    DeviceHandlerEventTypeEnum.CurrentInputsChanged,
+export class CurrentInputsChangedEvent extends defineTimedEvent<CurrentInputsChangedOutput>()(
+    'current-inputs-changed',
     didCurrentInputsChange,
-);
-export type CurrentInputsChangedEvent = InstanceType<typeof CurrentInputsChangedEvent>;
+) {}
