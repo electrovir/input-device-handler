@@ -3,6 +3,11 @@ import {allInputDevicesToAllInputs} from '../../device/all-input-devices';
 import {DeviceInputValue} from '../../device/input-value';
 import {ConstructEventIfDataIsNew, defineTimedEvent} from '../event-util/timed-event';
 
+/**
+ * The data contained within a `CurrentInputsChangedEvent` event.
+ *
+ * @category Events
+ */
 export type CurrentInputsChangedOutput = {
     newInputs: DeviceInputValue[];
     removedInputs: DeviceInputValue[];
@@ -51,7 +56,21 @@ function didCurrentInputsChange(
         };
     }
 }
-export class CurrentInputsChangedEvent extends defineTimedEvent<CurrentInputsChangedOutput>()(
+
+/**
+ * This event is triggered any time the inputs to any device change. Meaning, any frame wherein a
+ * device input value differs from the last frame's value for that same input, this event will
+ * fire.
+ *
+ * @category Events
+ */
+export const CurrentInputsChangedEvent = defineTimedEvent<CurrentInputsChangedOutput>()(
     'current-inputs-changed',
     didCurrentInputsChange,
-) {}
+);
+/**
+ * Type for `CurrentInputsChangedEvent` because it's a faked class.
+ *
+ * @category Internal
+ */
+export type CurrentInputsChangedEvent = InstanceType<typeof CurrentInputsChangedEvent>;

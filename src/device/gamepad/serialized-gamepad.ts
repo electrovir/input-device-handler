@@ -1,21 +1,37 @@
 import {typedObjectFromEntries} from '@augment-vir/common';
 import {isRunTimeType} from 'run-time-assertions';
 import {GamepadInputDeviceKey, isGamepadDeviceKey} from '../input-device-key';
+import {DeviceInputType, createAxeName, createButtonName} from '../input-names';
 import {AllGamepadDeadZoneSettings, GamepadDeadZones, applyDeadZone} from './dead-zone-settings';
-import {createAxeName, createButtonName} from './gamepad-input-names';
-import {GamepadInputType} from './gamepad-input-type';
 
+/**
+ * A single input from a gamepad.
+ *
+ * @category Types
+ */
 export type SerializedGamepadInput = Readonly<{
+    /** The standardized name of the input, which includes the input type. */
     inputName: string;
+    /** The current input's value masked by any dead zone settings. */
     value: number;
-    inputType: GamepadInputType;
+    inputType: DeviceInputType;
 }>;
 
+/**
+ * All current serialized gamepad inputs grouped by their input type.
+ *
+ * @category Types
+ */
 export type SerializedGamepadInputs = Readonly<{
     axes: ReadonlyArray<Readonly<SerializedGamepadInput>>;
     buttons: ReadonlyArray<Readonly<SerializedGamepadInput>>;
 }>;
 
+/**
+ * All a gamepad's information serialized into a pure JSON object.
+ *
+ * @category Types
+ */
 export type SerializedGamepad = Readonly<{
     isConnected: boolean;
     gamepadName: string;
@@ -28,17 +44,22 @@ export type SerializedGamepad = Readonly<{
 }> &
     SerializedGamepadInputs;
 
+/**
+ * Serialize an input from a Gamepad API gamepad.
+ *
+ * @category Internal
+ */
 export function serializeGamepadInput({
     gamepadInput,
     inputIndex,
     deadZones,
     globalDeadZone,
-}: {
-    gamepadInput: GamepadButton | number;
+}: Readonly<{
+    gamepadInput: Readonly<GamepadButton> | number;
     inputIndex: number;
-    deadZones: GamepadDeadZones;
+    deadZones: Readonly<GamepadDeadZones>;
     globalDeadZone: number;
-}): SerializedGamepadInput {
+}>): SerializedGamepadInput {
     const isAxe = isRunTimeType(gamepadInput, 'number');
     const inputName = isAxe ? createAxeName(inputIndex) : createButtonName(inputIndex);
     const value: number = isAxe ? gamepadInput : gamepadInput.value;
@@ -46,21 +67,31 @@ export function serializeGamepadInput({
     return {
         inputName,
         value: applyDeadZone({value, gamepadDeadZone: deadZones[inputName], globalDeadZone}),
-        inputType: isAxe ? GamepadInputType.Axe : GamepadInputType.Button,
+        inputType: isAxe ? DeviceInputType.Axe : DeviceInputType.Button,
     };
 }
 
+/**
+ * An object of gamepad keys to their serialized objects.
+ *
+ * @category Internal
+ */
 export type GamepadMap = Record<GamepadInputDeviceKey, SerializedGamepad>;
 
+/**
+ * Serialize a gamepad from a Gamepad API.
+ *
+ * @category Internal
+ */
 export function serializeGamepad({
     gamepad,
     deadZoneSettings,
     globalDeadZone,
-}: {
+}: Readonly<{
     gamepad: Readonly<Gamepad>;
-    deadZoneSettings: AllGamepadDeadZoneSettings;
+    deadZoneSettings: Readonly<AllGamepadDeadZoneSettings>;
     globalDeadZone: number;
-}): SerializedGamepad {
+}>): SerializedGamepad {
     /**
      * Basically this includes everything but the haptic interfaces since those include methods
      * (which are not serializable).

@@ -1,17 +1,22 @@
 import {isGamepadDeviceKey} from '../input-device-key';
-import {InputDeviceTypeEnum} from '../input-device-type';
+import {InputDeviceType} from '../input-device-type';
 import {DeviceInputValue, GamepadInputValue} from '../input-value';
 import {AllGamepadDeadZoneSettings} from './dead-zone-settings';
 import {getSerializedGamepads} from './navigator';
 import {GamepadMap, SerializedGamepad} from './serialized-gamepad';
 
+/**
+ * Read and serialize all gamepads.
+ *
+ * @category Internal
+ */
 export function readCurrentGamepads({
     deadZoneSettings,
     globalDeadZone,
-}: {
-    deadZoneSettings: AllGamepadDeadZoneSettings;
+}: Readonly<{
+    deadZoneSettings: Readonly<AllGamepadDeadZoneSettings>;
     globalDeadZone: number;
-}): GamepadMap {
+}>): GamepadMap {
     const gamepads = getSerializedGamepads({deadZoneSettings, globalDeadZone});
 
     const gamepadMap: GamepadMap = gamepads.reduce((mapping, gamepad) => {
@@ -29,15 +34,20 @@ export function readCurrentGamepads({
     return gamepadMap;
 }
 
+/**
+ * Read and serialize all current inputs from all gamepads.
+ *
+ * @category Internal
+ */
 export function gamepadToCurrentInputs(
-    gamepad: SerializedGamepad,
+    gamepad: Readonly<SerializedGamepad>,
 ): Record<DeviceInputValue['inputName'], GamepadInputValue> {
     const currentInputs: Record<DeviceInputValue['inputName'], GamepadInputValue> = {};
 
     const gamepadDetails: Pick<GamepadInputValue, 'deviceKey' | 'deviceName' | 'deviceType'> = {
         deviceKey: gamepad.index,
         deviceName: gamepad.gamepadName,
-        deviceType: InputDeviceTypeEnum.Gamepad,
+        deviceType: InputDeviceType.Gamepad,
     } as const;
 
     Object.values(gamepad.inputsByName).forEach((gamepadInput) => {

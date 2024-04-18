@@ -29,7 +29,7 @@ deviceHandler.listen(NewDevicesAddedEvent, (event) => {
 });
 
 // // this spams the console, only uncomment for debugging
-// deviceHandler.listen(InputDeviceHandlerEventTypeEnum.AllDevicesUpdated, (event) => {
+// deviceHandler.listen(InputDeviceHandlerEventType.AllDevicesUpdated, (event) => {
 //     console.info('all devices:', event.detail.inputs);
 // });
 

@@ -1,3 +1,4 @@
+import {listenToGlobal} from '@augment-vir/browser';
 import {Writeable} from '@augment-vir/common';
 import {TypedListenTarget} from 'typed-event-target';
 import {
@@ -6,7 +7,6 @@ import {
     gamepadMapToInputDevices,
 } from '../device/all-input-devices';
 import {AllGamepadDeadZoneSettings} from '../device/gamepad/dead-zone-settings';
-import {createAxeName, createButtonName} from '../device/gamepad/gamepad-input-names';
 import {readCurrentGamepads} from '../device/gamepad/read-gamepads';
 import {
     KeyboardDevice,
@@ -15,15 +15,23 @@ import {
     mouseBaseDevice,
 } from '../device/input-device';
 import {inputDeviceKey} from '../device/input-device-key';
-import {InputDeviceTypeEnum} from '../device/input-device-type';
+import {InputDeviceType} from '../device/input-device-type';
+import {createAxeName, createButtonName} from '../device/input-names';
 import {KeyboardInputValue} from '../device/input-value';
 import {
-    AnyDeviceHandlerEvent,
-    AnyDeviceHandlerEventConstructor,
+    DeviceHandlerEvent,
+    DeviceHandlerEventConstructor,
     DeviceHandlerEventType,
     allEvents,
 } from './event-util/all-events';
 
+const keyReadProperty = 'code' as const satisfies keyof KeyboardEvent;
+
+/**
+ * Options for constructing a `InputDeviceHandler` instance.
+ *
+ * @category Main
+ */
 export type InputDeviceHandlerOptions = Partial<{
     /**
      * Set to true to automatically start the loop from starting which will continuously read inputs
@@ -42,7 +50,12 @@ export type InputDeviceHandlerOptions = Partial<{
     globalDeadZone: number;
 }>;
 
-export class InputDeviceHandler extends TypedListenTarget<AnyDeviceHandlerEvent> {
+/**
+ * The main export of this package. Construct one to start listening to and handling input devices.
+ *
+ * @category Main
+ */
+export class InputDeviceHandler extends TypedListenTarget<DeviceHandlerEvent> {
     private currentKeyboardInputs: Writeable<KeyboardDevice['currentInputs']> = {};
     private currentMouseInputs: Writeable<MouseDevice['currentInputs']> = {};
     private gamepadDeadZoneSettings: AllGamepadDeadZoneSettings = {};
@@ -56,15 +69,16 @@ export class InputDeviceHandler extends TypedListenTarget<AnyDeviceHandlerEvent>
     private lastReadInputDevices!: AllDevices;
     private loopIsRunning = false;
     private globalDeadZone = 0;
+    private removeGlobalListeners = () => {};
     // prevents multiple polling loops from running
     private currentLoopIndex = -1;
     private lastEventDetails: Partial<
         Record<
             DeviceHandlerEventType,
             {
-                constructor: AnyDeviceHandlerEventConstructor;
+                constructor: DeviceHandlerEventConstructor;
                 constructorInputs: Parameters<
-                    AnyDeviceHandlerEventConstructor['constructIfDataIsNew']
+                    DeviceHandlerEventConstructor['constructIfDataIsNew']
                 >;
             }
         >
@@ -89,77 +103,82 @@ export class InputDeviceHandler extends TypedListenTarget<AnyDeviceHandlerEvent>
     private attachWindowListeners(
         options: Pick<InputDeviceHandlerOptions, 'disableMouseMovement'>,
     ) {
-        window.addEventListener('keydown', (event) => {
-            const eventKey = createButtonName(event.code);
-            // ignore keydown repeated events
-            if (this.currentKeyboardInputs.hasOwnProperty(eventKey)) {
-                return;
-            }
+        const listenerRemovers = [
+            listenToGlobal('keydown', (event) => {
+                const eventKey = createButtonName(event[keyReadProperty]);
+                // ignore keydown repeated events
+                if (this.currentKeyboardInputs.hasOwnProperty(eventKey)) {
+                    return;
+                }
 
-            const newKeyboardInput: KeyboardInputValue = {
-                deviceType: InputDeviceTypeEnum.Keyboard,
-                details: {
-                    keyboardEvent: event,
-                },
-                deviceKey: inputDeviceKey.keyboard,
-                deviceName: keyboardBaseDevice.deviceName,
-                inputName: eventKey,
-                inputValue: 1,
-            };
+                const newKeyboardInput: KeyboardInputValue = {
+                    deviceType: InputDeviceType.Keyboard,
+                    details: {
+                        keyboardEvent: event,
+                    },
+                    deviceKey: inputDeviceKey.keyboard,
+                    deviceName: keyboardBaseDevice.deviceName,
+                    inputName: eventKey,
+                    inputValue: 1,
+                };
 
-            this.currentKeyboardInputs[eventKey] = newKeyboardInput;
-        });
-        window.addEventListener('keyup', (event) => {
-            delete this.currentKeyboardInputs[createButtonName(event.key)];
-        });
+                this.currentKeyboardInputs[eventKey] = newKeyboardInput;
+            }),
+            listenToGlobal('keyup', (event) => {
+                delete this.currentKeyboardInputs[createButtonName(event[keyReadProperty])];
+            }),
+            listenToGlobal('mousedown', (event) => {
+                const eventButton = createButtonName(event.button);
+                if (this.currentMouseInputs.hasOwnProperty(eventButton)) {
+                    return;
+                }
 
-        window.addEventListener('mousedown', (event) => {
-            const eventButton = createButtonName(event.button);
-            if (this.currentMouseInputs.hasOwnProperty(eventButton)) {
-                return;
-            }
-
-            this.currentMouseInputs[eventButton] = {
-                deviceType: InputDeviceTypeEnum.Mouse,
-                details: {
-                    mouseEvent: event,
-                },
-                deviceName: mouseBaseDevice.deviceName,
-                deviceKey: inputDeviceKey.mouse,
-                inputName: eventButton,
-                inputValue: 1,
-            };
-        });
-        window.addEventListener('mouseup', (event) => {
-            delete this.currentMouseInputs[createButtonName(event.button)];
-        });
-        if (!options.disableMouseMovement) {
-            window.addEventListener('mousemove', (event) => {
-                const xAxeName = createAxeName('x');
-                const yAxeName = createAxeName('y');
-
-                this.currentMouseInputs[xAxeName] = {
-                    deviceType: InputDeviceTypeEnum.Mouse,
+                this.currentMouseInputs[eventButton] = {
+                    deviceType: InputDeviceType.Mouse,
                     details: {
                         mouseEvent: event,
                     },
                     deviceName: mouseBaseDevice.deviceName,
                     deviceKey: inputDeviceKey.mouse,
-                    inputName: xAxeName,
-                    inputValue: event.clientX,
+                    inputName: eventButton,
+                    inputValue: 1,
                 };
-                this.currentMouseInputs[yAxeName] = {
-                    deviceType: InputDeviceTypeEnum.Mouse,
-                    details: {
-                        mouseEvent: event,
-                    },
-                    deviceName: mouseBaseDevice.deviceName,
-                    deviceKey: inputDeviceKey.mouse,
-                    inputName: yAxeName,
-                    inputValue: event.clientY,
-                };
-            });
-        }
+            }),
+            listenToGlobal('mouseup', (event) => {
+                delete this.currentMouseInputs[createButtonName(event.button)];
+            }),
+            options.disableMouseMovement
+                ? undefined
+                : listenToGlobal('mousemove', (event) => {
+                      const xAxeName = createAxeName('x');
+                      const yAxeName = createAxeName('y');
+
+                      this.currentMouseInputs[xAxeName] = {
+                          deviceType: InputDeviceType.Mouse,
+                          details: {
+                              mouseEvent: event,
+                          },
+                          deviceName: mouseBaseDevice.deviceName,
+                          deviceKey: inputDeviceKey.mouse,
+                          inputName: xAxeName,
+                          inputValue: event.clientX,
+                      };
+                      this.currentMouseInputs[yAxeName] = {
+                          deviceType: InputDeviceType.Mouse,
+                          details: {
+                              mouseEvent: event,
+                          },
+                          deviceName: mouseBaseDevice.deviceName,
+                          deviceKey: inputDeviceKey.mouse,
+                          inputName: yAxeName,
+                          inputValue: event.clientY,
+                      };
+                  }),
+        ];
+
+        this.removeGlobalListeners = () => {
+            listenerRemovers.forEach((listenerRemover) => listenerRemover?.());
+        };
     }
 
     private runPollingLoop(loopIndex: number, timestamp: number) {
@@ -228,6 +247,7 @@ export class InputDeviceHandler extends TypedListenTarget<AnyDeviceHandlerEvent>
         return allDevices;
     }
 
+    /** Start an internal loop which polls all devices on each animation frame. */
     public startPollingLoop() {
         if (this.loopIsRunning) {
             return;
@@ -240,6 +260,7 @@ export class InputDeviceHandler extends TypedListenTarget<AnyDeviceHandlerEvent>
         });
     }
 
+    /** Stop the internal loop for polling input devices. */
     public pausePollingLoop() {
         if (!this.loopIsRunning) {
             return;
@@ -279,6 +300,7 @@ export class InputDeviceHandler extends TypedListenTarget<AnyDeviceHandlerEvent>
         return newValues;
     }
 
+    /** Supply new gamepad dead zone settings. */
     public updateGamepadDeadZoneSettings(newValue: AllGamepadDeadZoneSettings) {
         this.gamepadDeadZoneSettings = newValue;
     }

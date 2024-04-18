@@ -2,6 +2,11 @@ import {getObjectTypedKeys, isTruthy, typedHasProperty} from '@augment-vir/commo
 import {InputDevice} from '../../device/input-device';
 import {ConstructEventIfDataIsNew, defineTimedEvent} from '../event-util/timed-event';
 
+/**
+ * The data contained within a `DevicesRemovedEvent` event.
+ *
+ * @category Events
+ */
 export type DevicesRemovedOutput = InputDevice[];
 
 function wereDevicesRemoved(
@@ -25,7 +30,18 @@ function wereDevicesRemoved(
     }
 }
 
-export class DevicesRemovedEvent extends defineTimedEvent<DevicesRemovedOutput>()(
+/**
+ * This event is triggered any time a device is removed or disconnected.
+ *
+ * @category Events
+ */
+export const DevicesRemovedEvent = defineTimedEvent<DevicesRemovedOutput>()(
     'devices-removed',
     wereDevicesRemoved,
-) {}
+);
+/**
+ * Type for `DevicesRemovedEvent` because it's a faked class.
+ *
+ * @category Internal
+ */
+export type DevicesRemovedEvent = InstanceType<typeof DevicesRemovedEvent>;

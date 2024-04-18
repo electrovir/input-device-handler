@@ -14,8 +14,16 @@ function allDevicesUpdatedDataCheckCallback(
 /**
  * This event is triggered any time devices are updated (either manually or on each poll event).
  * This will fire even if there were no changes to the devices or their current inputs.
+ *
+ * @category Events
  */
-export class AllDevicesUpdatedEvent extends defineTimedEvent<AllDevices>()(
+export const AllDevicesUpdatedEvent = defineTimedEvent<AllDevices>()(
     'all-devices-updated',
     allDevicesUpdatedDataCheckCallback,
-) {}
+);
+/**
+ * Type for `AllDevicesUpdatedEvent` because it's a faked class.
+ *
+ * @category Internal
+ */
+export type AllDevicesUpdatedEvent = InstanceType<typeof AllDevicesUpdatedEvent>;

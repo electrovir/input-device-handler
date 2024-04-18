@@ -2,9 +2,9 @@ import {getObjectTypedKeys, getObjectTypedValues, randomString} from '@augment-v
 import {assert} from '@open-wc/testing';
 import {sendKeys} from '@web/test-runner-commands';
 import {assertDefined} from 'run-time-assertions';
-import {createButtonName} from '../device/gamepad/gamepad-input-names';
+import {createButtonName} from '../device/input-names';
 import {
-    AnyDeviceHandlerEvent,
+    DeviceHandlerEvent,
     DeviceHandlerEventsMap,
     createEmptyDeviceHandlerEventsMap,
     deviceHandlerEventConstructorsByType,
@@ -41,7 +41,7 @@ async function pressDownRandomKey(): Promise<string> {
     return pressedKey;
 }
 
-function getFlattenedEvents(events: Readonly<DeviceHandlerEventsMap>): AnyDeviceHandlerEvent[] {
+function getFlattenedEvents(events: Readonly<DeviceHandlerEventsMap>): DeviceHandlerEvent[] {
     return Object.values(events).flat();
 }
 

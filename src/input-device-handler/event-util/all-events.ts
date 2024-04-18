@@ -5,6 +5,11 @@ import {CurrentInputsChangedEvent} from '../events/current-inputs-changed.event'
 import {DevicesRemovedEvent} from '../events/devices-removed.event';
 import {NewDevicesAddedEvent} from '../events/new-devices-added.event';
 
+/**
+ * All possible `InputDeviceHandler` events.
+ *
+ * @category Internal
+ */
 export const allEvents = [
     /**
      * Make this this event is listed before the others so that devices get updated before their
@@ -16,19 +21,40 @@ export const allEvents = [
     CurrentInputsChangedEvent,
 ] as const;
 
-export type AnyDeviceHandlerEventConstructor = ArrayElement<typeof allEvents>;
-export type AnyDeviceHandlerEvent = InstanceType<ArrayElement<typeof allEvents>>;
-export type DeviceHandlerEventType = AnyDeviceHandlerEventConstructor['type'];
+/**
+ * A union of all possible `InputDeviceHandler` event constructors.
+ *
+ * @category Internal
+ */
+export type DeviceHandlerEventConstructor = ArrayElement<typeof allEvents>;
+/**
+ * A union of all possible `InputDeviceHandler` event instances.
+ *
+ * @category Events
+ */
+export type DeviceHandlerEvent = InstanceType<ArrayElement<typeof allEvents>>;
+/**
+ * A union of all possible `InputDeviceHandler` event strings.
+ *
+ * @category Internal
+ */
+export type DeviceHandlerEventType = DeviceHandlerEventConstructor['type'];
 
+/**
+ * An object that maps all possible `InputDeviceHandler` event strings to an array of their
+ * respective event instances.
+ *
+ * @category Internal
+ */
 export type DeviceHandlerEventsMap = {
-    [PropKey in DeviceHandlerEventType]: ExtractEventByType<AnyDeviceHandlerEvent, PropKey>[];
+    [PropKey in DeviceHandlerEventType]: ExtractEventByType<DeviceHandlerEvent, PropKey>[];
 };
 
-export type AnyDeviceHandlerEventsMap = Record<
-    keyof DeviceHandlerEventsMap,
-    AnyDeviceHandlerEvent[]
->;
-
+/**
+ * Creates an instance of `DeviceHandlerEventsMap` with empty arrays, ready for population.
+ *
+ * @category Internal
+ */
 export function createEmptyDeviceHandlerEventsMap(): DeviceHandlerEventsMap {
     return typedObjectFromEntries(
         allEvents.map((eventConstructor) => [
@@ -38,6 +64,12 @@ export function createEmptyDeviceHandlerEventsMap(): DeviceHandlerEventsMap {
     );
 }
 
+/**
+ * An object that maps all possible `InputDeviceHandler` event strings to their respective event
+ * constructors.
+ *
+ * @category Internal
+ */
 export const deviceHandlerEventConstructorsByType = Object.fromEntries(
     allEvents.map((eventConstructor) => [
         eventConstructor.type,

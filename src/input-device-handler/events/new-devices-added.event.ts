@@ -7,6 +7,11 @@ import {
 import {InputDevice} from '../../device/input-device';
 import {ConstructEventIfDataIsNew, defineTimedEvent} from '../event-util/timed-event';
 
+/**
+ * The data contained within a `NewDevicesAddedEvent` event.
+ *
+ * @category Events
+ */
 export type NewDevicesAddedOutput = InputDevice[];
 
 function areThereNewDevices(
@@ -30,7 +35,18 @@ function areThereNewDevices(
     }
 }
 
-export class NewDevicesAddedEvent extends defineTimedEvent<NewDevicesAddedOutput>()(
+/**
+ * This event is triggered any time a new device is added or connected.
+ *
+ * @category Events
+ */
+export const NewDevicesAddedEvent = defineTimedEvent<NewDevicesAddedOutput>()(
     'new-devices-added',
     areThereNewDevices,
-) {}
+);
+/**
+ * Type for `NewDevicesAddedEvent` because it's a faked class.
+ *
+ * @category Internal
+ */
+export type NewDevicesAddedEvent = InstanceType<typeof NewDevicesAddedEvent>;

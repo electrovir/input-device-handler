@@ -1,8 +1,18 @@
 import {MaybePromise} from '@augment-vir/common';
 import {ExtractEventByType} from 'typed-event-target';
-import {AnyDeviceHandlerEvent, DeviceHandlerEventType} from './all-events';
+import {DeviceHandlerEvent, DeviceHandlerEventType} from './all-events';
 
-export type AnyDeviceHandlerListener = (event: AnyDeviceHandlerEvent) => MaybePromise<void>;
+/**
+ * A listener for any of the possible `InputDeviceHandler` events.
+ *
+ * @category Events
+ */
+export type AnyDeviceHandlerListener = (event: DeviceHandlerEvent) => MaybePromise<void>;
+/**
+ * A listener for a specific `InputDeviceHandler` event, as determined by the type parameter.
+ *
+ * @category Events
+ */
 export type DeviceHandlerListener<EventType extends DeviceHandlerEventType> = (
-    event: ExtractEventByType<AnyDeviceHandlerEvent, EventType>,
+    event: ExtractEventByType<DeviceHandlerEvent, EventType>,
 ) => MaybePromise<void>;

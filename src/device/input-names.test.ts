@@ -1,5 +1,5 @@
 import {assert} from '@open-wc/testing';
-import {createAxeName, createButtonName} from './gamepad-input-names';
+import {createAxeName, createButtonName} from './input-names';
 
 describe(createButtonName.name, () => {
     it('should produce correct button names', () => {
