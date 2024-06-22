@@ -1,6 +1,5 @@
-import {listenToGlobal} from '@augment-vir/browser';
 import {Writeable} from '@augment-vir/common';
-import {TypedListenTarget} from 'typed-event-target';
+import {TypedListenTarget, listenToGlobal} from 'typed-event-target';
 import {
     AllDevices,
     GamepadInputDevices,
