@@ -6,13 +6,13 @@ describe('InputDevice types', () => {
     it('should allow generic types as well as specific types', () => {
         const genericInputDevice: InputDevice = {
             deviceType: InputDeviceType.Gamepad,
-            deviceKey: 0,
+            deviceKey: '0',
             deviceName: 'test device name',
             currentInputs: {},
             deviceDetails: {
                 isConnected: false,
                 gamepadName: 'gamepad id',
-                index: 3,
+                deviceKey: '3',
                 mapping: '',
                 serialized: true,
                 timestamp: 0,

@@ -36,7 +36,7 @@ export function gamepadMapToInputDevices(gamepadMap: Readonly<GamepadMap>): Game
             currentInputs: gamepadToCurrentInputs(gamepad),
             deviceDetails: gamepad,
             deviceName: gamepad.gamepadName,
-            deviceKey: gamepad.index,
+            deviceKey: gamepad.deviceKey,
             deviceType: InputDeviceType.Gamepad,
         };
     });

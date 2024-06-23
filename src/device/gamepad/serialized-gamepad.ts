@@ -30,12 +30,15 @@ export type SerializedGamepadInputs = Readonly<{
 /**
  * All a gamepad's information serialized into a pure JSON object.
  *
+ * Basically this includes everything except the haptic interfaces since those include methods
+ * (which are not serializable).
+ *
  * @category Types
  */
 export type SerializedGamepad = Readonly<{
     isConnected: boolean;
     gamepadName: string;
-    index: GamepadInputDeviceKey;
+    deviceKey: GamepadInputDeviceKey;
     /** From the gamepad API itself. */
     mapping: string;
     serialized: true;
@@ -92,12 +95,8 @@ export function serializeGamepad({
     deadZoneSettings: Readonly<AllGamepadDeadZoneSettings>;
     globalDeadZone: number;
 }>): SerializedGamepad {
-    /**
-     * Basically this includes everything but the haptic interfaces since those include methods
-     * (which are not serializable).
-     */
-
-    if (!isGamepadDeviceKey(gamepad.index)) {
+    const deviceKey = String(gamepad.index);
+    if (!isGamepadDeviceKey(deviceKey)) {
         throw new Error(`Tried to serialize gamepad with out-of-bounds index: '${gamepad.index}'`);
     }
     const gamepadDeadZones = deadZoneSettings[gamepad.id] || {};
@@ -134,7 +133,7 @@ export function serializeGamepad({
         buttons,
         isConnected: gamepad.connected,
         gamepadName: gamepad.id,
-        index: gamepad.index,
+        deviceKey,
         mapping: gamepad.mapping,
         serialized: true,
         timestamp: gamepad.timestamp,

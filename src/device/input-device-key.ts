@@ -1,4 +1,4 @@
-import {PropertyValueType} from '@augment-vir/common';
+import {PropertyValueType, typedArrayIncludes} from '@augment-vir/common';
 
 /**
  * Only 4 gamepad keys because some browsers only support 4.
@@ -6,10 +6,10 @@ import {PropertyValueType} from '@augment-vir/common';
  * @category Internal
  */
 export const gamepadInputDeviceKey = {
-    gamepad1: 0,
-    gamepad2: 1,
-    gamepad3: 2,
-    gamepad4: 3,
+    gamepad1: '0',
+    gamepad2: '1',
+    gamepad3: '2',
+    gamepad4: '3',
 } as const;
 
 /**
@@ -23,8 +23,8 @@ export type GamepadInputDeviceKey = PropertyValueType<typeof gamepadInputDeviceK
  *
  * @category Util
  */
-export function isGamepadDeviceKey(input: number): input is GamepadInputDeviceKey {
-    return (Object.values(gamepadInputDeviceKey) as number[]).includes(input);
+export function isGamepadDeviceKey(input: string): input is GamepadInputDeviceKey {
+    return typedArrayIncludes(Object.values(gamepadInputDeviceKey), input);
 }
 
 /**

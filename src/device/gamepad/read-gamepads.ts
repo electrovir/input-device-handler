@@ -20,7 +20,7 @@ export function readCurrentGamepads({
     const gamepads = getSerializedGamepads({deadZoneSettings, globalDeadZone});
 
     const gamepadMap: GamepadMap = gamepads.reduce((mapping, gamepad) => {
-        const gamepadKey = gamepad.index;
+        const gamepadKey = gamepad.deviceKey;
 
         if (!isGamepadDeviceKey(gamepadKey)) {
             console.warn(`ignoring gamepad index '${gamepadKey}'`);
@@ -45,7 +45,7 @@ export function gamepadToCurrentInputs(
     const currentInputs: Record<DeviceInputValue['inputName'], GamepadInputValue> = {};
 
     const gamepadDetails: Pick<GamepadInputValue, 'deviceKey' | 'deviceName' | 'deviceType'> = {
-        deviceKey: gamepad.index,
+        deviceKey: gamepad.deviceKey,
         deviceName: gamepad.gamepadName,
         deviceType: InputDeviceType.Gamepad,
     } as const;
