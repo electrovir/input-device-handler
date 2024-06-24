@@ -122,3 +122,17 @@ export const mouseBaseDevice: Readonly<Omit<MouseDevice, 'currentInputs'>> = {
     deviceName: 'mouse',
     deviceType: InputDeviceType.Mouse,
 };
+
+/**
+ * Maps each {@link InputDeviceKey} value to its respective {@link InputDeviceType}.
+ *
+ * @category Util
+ */
+export const inputDeviceKeyToInputDeviceType = {
+    [InputDeviceKey.Gamepad1]: InputDeviceType.Gamepad,
+    [InputDeviceKey.Gamepad2]: InputDeviceType.Gamepad,
+    [InputDeviceKey.Gamepad3]: InputDeviceType.Gamepad,
+    [InputDeviceKey.Gamepad4]: InputDeviceType.Gamepad,
+    [InputDeviceKey.Keyboard]: InputDeviceType.Keyboard,
+    [InputDeviceKey.Mouse]: InputDeviceType.Mouse,
+} as const satisfies Record<InputDeviceKey, InputDeviceType>;
