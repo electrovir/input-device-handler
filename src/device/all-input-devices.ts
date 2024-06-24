@@ -2,7 +2,7 @@ import {getObjectTypedValues, isTruthy, mapObjectValues} from '@augment-vir/comm
 import {gamepadToCurrentInputs} from './gamepad/read-gamepads';
 import {GamepadMap} from './gamepad/serialized-gamepad';
 import {GamepadDevice, KeyboardDevice, MouseDevice} from './input-device';
-import {GamepadInputDeviceKey, inputDeviceKey} from './input-device-key';
+import {GamepadInputDeviceKey, InputDeviceKey} from './input-device-key';
 import {InputDeviceType} from './input-device-type';
 import {DeviceInputValue} from './input-value';
 
@@ -20,8 +20,8 @@ export type GamepadInputDevices = Record<GamepadInputDeviceKey, GamepadDevice>;
  */
 export type AllDevices = Partial<
     {
-        [inputDeviceKey.mouse]: MouseDevice;
-        [inputDeviceKey.keyboard]: KeyboardDevice;
+        [InputDeviceKey.Mouse]: MouseDevice;
+        [InputDeviceKey.Keyboard]: KeyboardDevice;
     } & GamepadInputDevices
 >;
 

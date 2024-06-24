@@ -13,7 +13,7 @@ import {
     keyboardBaseDevice,
     mouseBaseDevice,
 } from '../device/input-device';
-import {inputDeviceKey} from '../device/input-device-key';
+import {InputDeviceKey} from '../device/input-device-key';
 import {InputDeviceType} from '../device/input-device-type';
 import {createAxeName, createButtonName} from '../device/input-names';
 import {KeyboardInputValue} from '../device/input-value';
@@ -115,7 +115,7 @@ export class InputDeviceHandler extends TypedListenTarget<DeviceHandlerEvent> {
                     details: {
                         keyboardEvent: event,
                     },
-                    deviceKey: inputDeviceKey.keyboard,
+                    deviceKey: InputDeviceKey.Keyboard,
                     deviceName: keyboardBaseDevice.deviceName,
                     inputName: eventKey,
                     inputValue: 1,
@@ -138,7 +138,7 @@ export class InputDeviceHandler extends TypedListenTarget<DeviceHandlerEvent> {
                         mouseEvent: event,
                     },
                     deviceName: mouseBaseDevice.deviceName,
-                    deviceKey: inputDeviceKey.mouse,
+                    deviceKey: InputDeviceKey.Mouse,
                     inputName: eventButton,
                     inputValue: 1,
                 };
@@ -158,7 +158,7 @@ export class InputDeviceHandler extends TypedListenTarget<DeviceHandlerEvent> {
                               mouseEvent: event,
                           },
                           deviceName: mouseBaseDevice.deviceName,
-                          deviceKey: inputDeviceKey.mouse,
+                          deviceKey: InputDeviceKey.Mouse,
                           inputName: xAxeName,
                           inputValue: event.clientX,
                       };
@@ -168,7 +168,7 @@ export class InputDeviceHandler extends TypedListenTarget<DeviceHandlerEvent> {
                               mouseEvent: event,
                           },
                           deviceName: mouseBaseDevice.deviceName,
-                          deviceKey: inputDeviceKey.mouse,
+                          deviceKey: InputDeviceKey.Mouse,
                           inputName: yAxeName,
                           inputValue: event.clientY,
                       };
@@ -228,13 +228,13 @@ export class InputDeviceHandler extends TypedListenTarget<DeviceHandlerEvent> {
         const gamepadInputDevices: GamepadInputDevices = gamepadMapToInputDevices(gamepadMap);
 
         const allDevices: AllDevices = {
-            [inputDeviceKey.keyboard]: {
+            [InputDeviceKey.Keyboard]: {
                 ...keyboardBaseDevice,
                 currentInputs: {
                     ...this.currentKeyboardInputs,
                 },
             },
-            [inputDeviceKey.mouse]: {
+            [InputDeviceKey.Mouse]: {
                 ...mouseBaseDevice,
                 currentInputs: {
                     ...this.currentMouseInputs,

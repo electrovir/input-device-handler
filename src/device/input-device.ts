@@ -1,5 +1,5 @@
 import {SerializedGamepad} from './gamepad/serialized-gamepad';
-import {GamepadInputDeviceKey, InputDeviceKey, inputDeviceKey} from './input-device-key';
+import {GamepadInputDeviceKey, InputDeviceKey} from './input-device-key';
 import {InputDeviceType} from './input-device-type';
 import {
     DeviceInputValue,
@@ -52,7 +52,7 @@ export type GamepadDevice = DeviceWrapper<
  */
 export type KeyboardDevice = DeviceWrapper<
     InputDeviceType.Keyboard,
-    typeof inputDeviceKey.keyboard,
+    typeof InputDeviceKey.Keyboard,
     undefined,
     KeyboardInputValue
 >;
@@ -64,7 +64,7 @@ export type KeyboardDevice = DeviceWrapper<
  */
 export type MouseDevice = DeviceWrapper<
     InputDeviceType.Mouse,
-    typeof inputDeviceKey.mouse,
+    typeof InputDeviceKey.Mouse,
     undefined,
     MouseInputValue
 >;
@@ -106,7 +106,7 @@ export function isOfInputDeviceType<const DeviceTypeGeneric extends InputDeviceT
  */
 export const keyboardBaseDevice: Readonly<Omit<KeyboardDevice, 'currentInputs'>> = {
     deviceDetails: undefined,
-    deviceKey: inputDeviceKey.keyboard,
+    deviceKey: InputDeviceKey.Keyboard,
     deviceName: 'keyboard',
     deviceType: InputDeviceType.Keyboard,
 };
@@ -118,7 +118,7 @@ export const keyboardBaseDevice: Readonly<Omit<KeyboardDevice, 'currentInputs'>>
  */
 export const mouseBaseDevice: Readonly<Omit<MouseDevice, 'currentInputs'>> = {
     deviceDetails: undefined,
-    deviceKey: inputDeviceKey.mouse,
+    deviceKey: InputDeviceKey.Mouse,
     deviceName: 'mouse',
     deviceType: InputDeviceType.Mouse,
 };

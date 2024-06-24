@@ -1,5 +1,5 @@
 import {SerializedGamepadInput} from './gamepad/serialized-gamepad';
-import {GamepadInputDeviceKey, InputDeviceKey, inputDeviceKey} from './input-device-key';
+import {GamepadInputDeviceKey, InputDeviceKey} from './input-device-key';
 import {InputDeviceType} from './input-device-type';
 
 /**
@@ -64,7 +64,7 @@ export type InputValueWrapper<
  * @category Types
  */
 export type KeyboardInputValue = InputValueWrapper<
-    typeof inputDeviceKey.keyboard,
+    typeof InputDeviceKey.Keyboard,
     KeyboardInputDetails
 >;
 
@@ -73,7 +73,7 @@ export type KeyboardInputValue = InputValueWrapper<
  *
  * @category Types
  */
-export type MouseInputValue = InputValueWrapper<typeof inputDeviceKey.mouse, MouseInputDetails>;
+export type MouseInputValue = InputValueWrapper<typeof InputDeviceKey.Mouse, MouseInputDetails>;
 
 /**
  * Input values from gamepad devices.
