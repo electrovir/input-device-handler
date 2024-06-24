@@ -1,3 +1,5 @@
+import {isEnumValue, typedSplit} from '@augment-vir/common';
+
 /**
  * The different input types.
  *
@@ -29,4 +31,19 @@ export function createButtonName(buttonIndexOrName: number | string): string {
  */
 export function createAxeName(axeNameOrIndex: number | string): string {
     return `axe-${axeNameOrIndex}`;
+}
+
+/**
+ * Parse the {@link DeviceInputType} from an input name.
+ *
+ * @category Util
+ */
+export function parseInputTypeFromInputName(inputName: string): DeviceInputType {
+    const [deviceType] = typedSplit(inputName, '-');
+
+    if (isEnumValue(deviceType, DeviceInputType)) {
+        return deviceType;
+    } else {
+        throw new Error(`Failed to parse input type from input named '${inputName}'`);
+    }
 }
