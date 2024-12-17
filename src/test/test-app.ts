@@ -1,10 +1,11 @@
-import {CurrentInputsChangedEvent} from '../input-device-handler/events/current-inputs-changed.event';
-import {DevicesRemovedEvent} from '../input-device-handler/events/devices-removed.event';
-import {NewDevicesAddedEvent} from '../input-device-handler/events/new-devices-added.event';
-import {InputDeviceHandler} from '../input-device-handler/input-device-handler';
+import {CurrentInputsChangedEvent} from '../input-device-handler/events/current-inputs-changed.event.js';
+import {DevicesRemovedEvent} from '../input-device-handler/events/devices-removed.event.js';
+import {NewDevicesAddedEvent} from '../input-device-handler/events/new-devices-added.event.js';
+import {InputDeviceHandler} from '../input-device-handler/input-device-handler.js';
 
 const deviceHandler = new InputDeviceHandler({startLoopImmediately: true});
 
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const deviceNamesDiv = window.document.getElementById('device-names')!;
 
 deviceHandler.listen(CurrentInputsChangedEvent, (event) => {

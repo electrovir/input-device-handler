@@ -1,6 +1,7 @@
-import {assert} from '@open-wc/testing';
-import {GamepadDevice, InputDevice, isOfInputDeviceType} from './input-device';
-import {InputDeviceType} from './input-device-type';
+import {assert} from '@augment-vir/assert';
+import {describe, it} from '@augment-vir/test';
+import {InputDeviceType} from './input-device-type.js';
+import {GamepadDevice, InputDevice, isOfInputDeviceType} from './input-device.js';
 
 describe('InputDevice types', () => {
     it('should allow generic types as well as specific types', () => {
@@ -28,7 +29,7 @@ describe('InputDevice types', () => {
             assert.isTrue(true, 'this is the path that the type guard should take');
         } else {
             const shouldBeOtherType: InputDevice = genericInputDevice;
-            // @ts-expect-error
+            // @ts-expect-error: should fail here
             const genericInputDeviceShouldNotWorkHere: GamepadDevice =
                 genericInputDevice as InputDevice;
             assert.isFalse(true, 'the type guard should have been true');

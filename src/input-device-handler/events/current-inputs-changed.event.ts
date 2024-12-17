@@ -1,7 +1,7 @@
-import {isJsonEqual} from 'run-time-assertions';
-import {allInputDevicesToAllInputs} from '../../device/all-input-devices';
-import {DeviceInputValue} from '../../device/input-value';
-import {ConstructEventIfDataIsNew, defineTimedEvent} from '../event-util/timed-event';
+import {check} from '@augment-vir/assert';
+import {allInputDevicesToAllInputs} from '../../device/all-input-devices.js';
+import {DeviceInputValue} from '../../device/input-value.js';
+import {ConstructEventIfDataIsNew, defineTimedEvent} from '../event-util/timed-event.js';
 
 /**
  * The data contained within a `CurrentInputsChangedEvent` event.
@@ -35,16 +35,16 @@ function didCurrentInputsChange(
         ? allInputDevicesToAllInputs(previousInputDevices)
         : [];
 
-    if (isJsonEqual(allPreviousInputs, allLatestInputs)) {
+    if (check.jsonEquals(allPreviousInputs as unknown, allLatestInputs as unknown)) {
         return undefined;
     } else {
         const newInputs = allLatestInputs.filter((latestInput) => {
-            return !allPreviousInputs.find((previousInput) => {
+            return !allPreviousInputs.some((previousInput) => {
                 return areInputsEqual(previousInput, latestInput);
             });
         });
         const removedInputs = allPreviousInputs.filter((latestInput) => {
-            return !allLatestInputs.find((previousInput) => {
+            return !allLatestInputs.some((previousInput) => {
                 return areInputsEqual(previousInput, latestInput);
             });
         });

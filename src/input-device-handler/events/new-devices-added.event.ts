@@ -1,11 +1,7 @@
-import {
-    getObjectTypedKeys,
-    getObjectTypedValues,
-    isTruthy,
-    typedHasProperty,
-} from '@augment-vir/common';
-import {InputDevice} from '../../device/input-device';
-import {ConstructEventIfDataIsNew, defineTimedEvent} from '../event-util/timed-event';
+import {check} from '@augment-vir/assert';
+import {getObjectTypedKeys, getObjectTypedValues} from '@augment-vir/common';
+import {InputDevice} from '../../device/input-device.js';
+import {ConstructEventIfDataIsNew, defineTimedEvent} from '../event-util/timed-event.js';
 
 /**
  * The data contained within a `NewDevicesAddedEvent` event.
@@ -21,15 +17,15 @@ function areThereNewDevices(
     ]: Parameters<ConstructEventIfDataIsNew<NewDevicesAddedOutput>>
 ): ReturnType<ConstructEventIfDataIsNew<NewDevicesAddedOutput>> {
     if (!previousInputDevices) {
-        return getObjectTypedValues(newInputDevices).filter(isTruthy);
+        return getObjectTypedValues(newInputDevices).filter(check.isTruthy);
     }
 
     const newDeviceKeys = getObjectTypedKeys(newInputDevices).filter((newKey) => {
-        return !typedHasProperty(previousInputDevices, newKey);
+        return !check.hasKey(previousInputDevices, newKey);
     });
 
     if (newDeviceKeys.length) {
-        return newDeviceKeys.map((newKey) => newInputDevices[newKey]).filter(isTruthy);
+        return newDeviceKeys.map((newKey) => newInputDevices[newKey]).filter(check.isTruthy);
     } else {
         return undefined;
     }

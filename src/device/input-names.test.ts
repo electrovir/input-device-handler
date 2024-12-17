@@ -1,5 +1,6 @@
-import {assert} from '@open-wc/testing';
-import {createAxeName, createButtonName} from './input-names';
+import {assert} from '@augment-vir/assert';
+import {describe, it} from '@augment-vir/test';
+import {createAxeName, createButtonName} from './input-names.js';
 
 describe(createButtonName.name, () => {
     it('should produce correct button names', () => {
@@ -38,7 +39,7 @@ describe(createButtonName.name, () => {
         ].concat(weirdTestCases);
 
         buttonIndexTestCases.forEach((testCase) => {
-            assert.strictEqual(createButtonName(testCase.input), testCase.expect);
+            assert.strictEquals(createButtonName(testCase.input), testCase.expect);
         });
     });
 });
@@ -80,7 +81,7 @@ describe(createAxeName.name, () => {
         ].concat(weirdTestCases);
 
         axeIndexTestCases.forEach((testCase) => {
-            assert.strictEqual(createAxeName(testCase.input), testCase.expect);
+            assert.strictEquals(createAxeName(testCase.input), testCase.expect);
         });
     });
 });

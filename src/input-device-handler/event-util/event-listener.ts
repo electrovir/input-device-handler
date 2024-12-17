@@ -1,6 +1,6 @@
 import {MaybePromise} from '@augment-vir/common';
 import {ExtractEventByType} from 'typed-event-target';
-import {DeviceHandlerEvent, DeviceHandlerEventType} from './all-events';
+import {DeviceHandlerEvent, DeviceHandlerEventType} from './all-events.js';
 
 /**
  * A listener for any of the possible `InputDeviceHandler` events.

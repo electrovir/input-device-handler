@@ -1,4 +1,5 @@
-import {isEnumValue, typedSplit} from '@augment-vir/common';
+import {check} from '@augment-vir/assert';
+import {safeSplit} from '@augment-vir/common';
 
 /**
  * The different input types.
@@ -39,9 +40,9 @@ export function createAxeName(axeNameOrIndex: number | string): string {
  * @category Util
  */
 export function parseInputTypeFromInputName(inputName: string): DeviceInputType {
-    const [deviceType] = typedSplit(inputName, '-');
+    const [deviceType] = safeSplit(inputName, '-');
 
-    if (isEnumValue(deviceType, DeviceInputType)) {
+    if (check.isEnumValue(deviceType, DeviceInputType)) {
         return deviceType;
     } else {
         throw new Error(`Failed to parse input type from input named '${inputName}'`);

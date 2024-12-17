@@ -1,4 +1,5 @@
-import {PropertyValueType, typedArrayIncludes} from '@augment-vir/common';
+import {check} from '@augment-vir/assert';
+import type {Values} from '@augment-vir/common';
 
 /**
  * Only 4 gamepad keys because some browsers only support 4.
@@ -17,14 +18,14 @@ export const GamepadInputDeviceKey = {
  *
  * @category Internal
  */
-export type GamepadInputDeviceKey = PropertyValueType<typeof GamepadInputDeviceKey>;
+export type GamepadInputDeviceKey = Values<typeof GamepadInputDeviceKey>;
 /**
  * Checks if the given number is within the range of gamepad device keys.
  *
  * @category Util
  */
 export function isGamepadDeviceKey(input: string): input is GamepadInputDeviceKey {
-    return typedArrayIncludes(Object.values(GamepadInputDeviceKey), input);
+    return check.hasValue(GamepadInputDeviceKey, input);
 }
 
 /**
@@ -42,7 +43,7 @@ export const NonGamepadInputDeviceKey = {
  *
  * @category Internal
  */
-export type NonGamepadInputDeviceKey = PropertyValueType<typeof NonGamepadInputDeviceKey>;
+export type NonGamepadInputDeviceKey = Values<typeof NonGamepadInputDeviceKey>;
 
 /**
  * All possible input device keys: both gamepad and non-gamepad keys.
@@ -58,4 +59,4 @@ export const InputDeviceKey = {
  *
  * @category Types
  */
-export type InputDeviceKey = PropertyValueType<typeof InputDeviceKey>;
+export type InputDeviceKey = Values<typeof InputDeviceKey>;

@@ -1,12 +1,12 @@
-import {SerializedGamepad} from './gamepad/serialized-gamepad';
-import {GamepadInputDeviceKey, InputDeviceKey} from './input-device-key';
-import {InputDeviceType} from './input-device-type';
+import {SerializedGamepad} from './gamepad/serialized-gamepad.js';
+import {GamepadInputDeviceKey, InputDeviceKey} from './input-device-key.js';
+import {InputDeviceType} from './input-device-type.js';
 import {
     DeviceInputValue,
     GamepadInputValue,
     KeyboardInputValue,
     MouseInputValue,
-} from './input-value';
+} from './input-value.js';
 
 /**
  * Extra device details supported by some input devices.

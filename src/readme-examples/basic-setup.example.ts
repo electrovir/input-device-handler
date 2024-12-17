@@ -1,4 +1,4 @@
-import {CurrentInputsChangedEvent, InputDeviceHandler, NewDevicesAddedEvent} from '..';
+import {CurrentInputsChangedEvent, InputDeviceHandler, NewDevicesAddedEvent} from '../index.js';
 
 const deviceHandler = new InputDeviceHandler({startLoopImmediately: true});
 

@@ -1,4 +1,4 @@
-import {InputDeviceHandler} from '..';
+import {InputDeviceHandler} from '../index.js';
 
 const deviceHandler = new InputDeviceHandler();
 

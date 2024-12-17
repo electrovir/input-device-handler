@@ -1,9 +1,9 @@
 import {ArrayElement, typedObjectFromEntries} from '@augment-vir/common';
 import {ExtractEventByType} from 'typed-event-target';
-import {AllDevicesUpdatedEvent} from '../events/all-devices-updated.event';
-import {CurrentInputsChangedEvent} from '../events/current-inputs-changed.event';
-import {DevicesRemovedEvent} from '../events/devices-removed.event';
-import {NewDevicesAddedEvent} from '../events/new-devices-added.event';
+import {AllDevicesUpdatedEvent} from '../events/all-devices-updated.event.js';
+import {CurrentInputsChangedEvent} from '../events/current-inputs-changed.event.js';
+import {DevicesRemovedEvent} from '../events/devices-removed.event.js';
+import {NewDevicesAddedEvent} from '../events/new-devices-added.event.js';
 
 /**
  * All possible `InputDeviceHandler` events.

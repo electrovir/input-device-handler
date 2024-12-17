@@ -1,8 +1,9 @@
-import {AllDevices} from '../../device/all-input-devices';
-import {ConstructEventIfDataIsNew, defineTimedEvent} from '../event-util/timed-event';
+import {AllDevices} from '../../device/all-input-devices.js';
+import {ConstructEventIfDataIsNew, defineTimedEvent} from '../event-util/timed-event.js';
 
 function allDevicesUpdatedDataCheckCallback(
     ...[
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         previousInputDevices,
         newInputDevices,
     ]: Parameters<ConstructEventIfDataIsNew<AllDevices>>

@@ -1,6 +1,6 @@
-import {typedHasProperty} from '@augment-vir/common';
-import {AllGamepadDeadZoneSettings} from './dead-zone-settings';
-import {SerializedGamepad, serializeGamepad} from './serialized-gamepad';
+import {check} from '@augment-vir/assert';
+import {AllGamepadDeadZoneSettings} from './dead-zone-settings.js';
+import {SerializedGamepad, serializeGamepad} from './serialized-gamepad.js';
 /** Wrapper for the global navigator object that takes into account browser discrepancies. */
 
 /**
@@ -52,9 +52,9 @@ export function getSerializedGamepads({
     globalDeadZone: number;
 }>): SerializedGamepad[] {
     return Array.from(
-        typedHasProperty(globalNavigator, 'webkitGetGamepads')
+        check.hasKey(globalNavigator, 'webkitGetGamepads')
             ? globalNavigator.webkitGetGamepads()
-            : typedHasProperty(globalNavigator, 'getGamepads')
+            : check.hasKey(globalNavigator, 'getGamepads')
               ? globalNavigator.getGamepads()
               : [],
     )

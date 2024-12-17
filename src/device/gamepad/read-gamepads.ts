@@ -1,9 +1,9 @@
-import {isGamepadDeviceKey} from '../input-device-key';
-import {InputDeviceType} from '../input-device-type';
-import {DeviceInputValue, GamepadInputValue} from '../input-value';
-import {AllGamepadDeadZoneSettings} from './dead-zone-settings';
-import {getSerializedGamepads} from './navigator';
-import {GamepadMap, SerializedGamepad} from './serialized-gamepad';
+import {isGamepadDeviceKey} from '../input-device-key.js';
+import {InputDeviceType} from '../input-device-type.js';
+import {DeviceInputValue, GamepadInputValue} from '../input-value.js';
+import {AllGamepadDeadZoneSettings} from './dead-zone-settings.js';
+import {getSerializedGamepads} from './navigator.js';
+import {GamepadMap, SerializedGamepad} from './serialized-gamepad.js';
 
 /**
  * Read and serialize all gamepads.
@@ -23,7 +23,7 @@ export function readCurrentGamepads({
         const gamepadKey = gamepad.deviceKey;
 
         if (!isGamepadDeviceKey(gamepadKey)) {
-            console.warn(`ignoring gamepad index '${gamepadKey}'`);
+            console.warn(`ignoring gamepad index '${String(gamepadKey)}'`);
             return mapping;
         }
 

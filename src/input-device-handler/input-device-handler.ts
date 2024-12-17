@@ -1,28 +1,28 @@
-import {Writeable} from '@augment-vir/common';
+import type {Writable} from '@augment-vir/common';
 import {TypedListenTarget, listenToGlobal} from 'typed-event-target';
 import {
     AllDevices,
     GamepadInputDevices,
     gamepadMapToInputDevices,
-} from '../device/all-input-devices';
-import {AllGamepadDeadZoneSettings} from '../device/gamepad/dead-zone-settings';
-import {readCurrentGamepads} from '../device/gamepad/read-gamepads';
+} from '../device/all-input-devices.js';
+import {AllGamepadDeadZoneSettings} from '../device/gamepad/dead-zone-settings.js';
+import {readCurrentGamepads} from '../device/gamepad/read-gamepads.js';
+import {InputDeviceKey} from '../device/input-device-key.js';
+import {InputDeviceType} from '../device/input-device-type.js';
 import {
     KeyboardDevice,
     MouseDevice,
     keyboardBaseDevice,
     mouseBaseDevice,
-} from '../device/input-device';
-import {InputDeviceKey} from '../device/input-device-key';
-import {InputDeviceType} from '../device/input-device-type';
-import {createAxeName, createButtonName} from '../device/input-names';
-import {KeyboardInputValue} from '../device/input-value';
+} from '../device/input-device.js';
+import {createAxeName, createButtonName} from '../device/input-names.js';
+import {KeyboardInputValue} from '../device/input-value.js';
 import {
     DeviceHandlerEvent,
     DeviceHandlerEventConstructor,
     DeviceHandlerEventType,
     allEvents,
-} from './event-util/all-events';
+} from './event-util/all-events.js';
 
 const keyReadProperty = 'code' as const satisfies keyof KeyboardEvent;
 
@@ -55,8 +55,8 @@ export type InputDeviceHandlerOptions = Partial<{
  * @category Main
  */
 export class InputDeviceHandler extends TypedListenTarget<DeviceHandlerEvent> {
-    private currentKeyboardInputs: Writeable<KeyboardDevice['currentInputs']> = {};
-    private currentMouseInputs: Writeable<MouseDevice['currentInputs']> = {};
+    private currentKeyboardInputs: Writable<KeyboardDevice['currentInputs']> = {};
+    private currentMouseInputs: Writable<MouseDevice['currentInputs']> = {};
     private gamepadDeadZoneSettings: AllGamepadDeadZoneSettings = {};
 
     /**

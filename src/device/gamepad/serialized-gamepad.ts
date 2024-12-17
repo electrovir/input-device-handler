@@ -1,8 +1,8 @@
+import {check} from '@augment-vir/assert';
 import {typedObjectFromEntries} from '@augment-vir/common';
-import {isRunTimeType} from 'run-time-assertions';
-import {GamepadInputDeviceKey, isGamepadDeviceKey} from '../input-device-key';
-import {DeviceInputType, createAxeName, createButtonName} from '../input-names';
-import {AllGamepadDeadZoneSettings, GamepadDeadZones, applyDeadZone} from './dead-zone-settings';
+import {GamepadInputDeviceKey, isGamepadDeviceKey} from '../input-device-key.js';
+import {DeviceInputType, createAxeName, createButtonName} from '../input-names.js';
+import {AllGamepadDeadZoneSettings, GamepadDeadZones, applyDeadZone} from './dead-zone-settings.js';
 
 /**
  * A single input from a gamepad.
@@ -63,7 +63,7 @@ export function serializeGamepadInput({
     deadZones: Readonly<GamepadDeadZones>;
     globalDeadZone: number;
 }>): SerializedGamepadInput {
-    const isAxe = isRunTimeType(gamepadInput, 'number');
+    const isAxe = check.isNumber(gamepadInput);
     const inputName = isAxe ? createAxeName(inputIndex) : createButtonName(inputIndex);
     const value: number = isAxe ? gamepadInput : gamepadInput.value;
 

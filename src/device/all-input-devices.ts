@@ -1,10 +1,11 @@
-import {getObjectTypedValues, isTruthy, mapObjectValues} from '@augment-vir/common';
-import {gamepadToCurrentInputs} from './gamepad/read-gamepads';
-import {GamepadMap} from './gamepad/serialized-gamepad';
-import {GamepadDevice, KeyboardDevice, MouseDevice} from './input-device';
-import {GamepadInputDeviceKey, InputDeviceKey} from './input-device-key';
-import {InputDeviceType} from './input-device-type';
-import {DeviceInputValue} from './input-value';
+import {check} from '@augment-vir/assert';
+import {getObjectTypedValues, mapObjectValues} from '@augment-vir/common';
+import {gamepadToCurrentInputs} from './gamepad/read-gamepads.js';
+import {GamepadMap} from './gamepad/serialized-gamepad.js';
+import {GamepadInputDeviceKey, InputDeviceKey} from './input-device-key.js';
+import {InputDeviceType} from './input-device-type.js';
+import {GamepadDevice, KeyboardDevice, MouseDevice} from './input-device.js';
+import {DeviceInputValue} from './input-value.js';
 
 /**
  * All Gamepad Input Devices.
@@ -53,8 +54,8 @@ export function allInputDevicesToAllInputs(
     const allInputValueMaps: Record<string, DeviceInputValue>[] = getObjectTypedValues(
         allInputDevices,
     )
-        .map((inputDevice) => inputDevice?.currentInputs)
-        .filter(isTruthy);
+        .map((inputDevice) => inputDevice.currentInputs)
+        .filter(check.isTruthy);
     const allInputValues: DeviceInputValue[][] = allInputValueMaps.map((inputValueMap) =>
         getObjectTypedValues(inputValueMap),
     );

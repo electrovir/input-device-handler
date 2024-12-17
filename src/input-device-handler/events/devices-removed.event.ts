@@ -1,6 +1,7 @@
-import {getObjectTypedKeys, isTruthy, typedHasProperty} from '@augment-vir/common';
-import {InputDevice} from '../../device/input-device';
-import {ConstructEventIfDataIsNew, defineTimedEvent} from '../event-util/timed-event';
+import {check} from '@augment-vir/assert';
+import {getObjectTypedKeys} from '@augment-vir/common';
+import {InputDevice} from '../../device/input-device.js';
+import {ConstructEventIfDataIsNew, defineTimedEvent} from '../event-util/timed-event.js';
 
 /**
  * The data contained within a `DevicesRemovedEvent` event.
@@ -20,11 +21,13 @@ function wereDevicesRemoved(
     }
 
     const removedDeviceKeys = getObjectTypedKeys(previousInputDevices).filter((newKey) => {
-        return !typedHasProperty(newInputDevices, newKey);
+        return !check.hasKey(newInputDevices, newKey);
     });
 
     if (removedDeviceKeys.length) {
-        return removedDeviceKeys.map((newKey) => previousInputDevices[newKey]).filter(isTruthy);
+        return removedDeviceKeys
+            .map((newKey) => previousInputDevices[newKey])
+            .filter(check.isTruthy);
     } else {
         return undefined;
     }
