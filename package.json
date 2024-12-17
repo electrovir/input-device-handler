@@ -21,7 +21,7 @@
     "module": "src/index.ts",
     "types": "src/index.ts",
     "scripts": {
-        "build": "virmator frontend build && npm run docs && cp -r ./dist-docs ./dist-build/docs/",
+        "build": "virmator frontend build && npm run docs && cp -r ./dist-docs ./dist-pages/docs/",
         "compile": "virmator compile",
         "docs": "virmator docs",
         "format": "virmator format",
@@ -79,7 +79,8 @@
         "typedoc": "^0.27.5",
         "typescript": "^5.7.2",
         "typescript-eslint": "^8.18.0",
-        "virmator": "^13.11.0"
+        "virmator": "^13.11.0",
+        "vite": "^6.0.3"
     },
     "engines": {
         "node": ">=22"
