@@ -1,3 +1,5 @@
+/* eslint-disable sonarjs/no-commented-code */
+
 import {CurrentInputsChangedEvent} from '../input-device-handler/events/current-inputs-changed.event.js';
 import {DevicesRemovedEvent} from '../input-device-handler/events/devices-removed.event.js';
 import {NewDevicesAddedEvent} from '../input-device-handler/events/new-devices-added.event.js';
