@@ -1,6 +1,6 @@
 import {check} from '@augment-vir/assert';
-import {AllGamepadDeadZoneSettings} from './dead-zone-settings.js';
-import {SerializedGamepad, serializeGamepad} from './serialized-gamepad.js';
+import {arrayToObject} from '@augment-vir/common';
+import type {GamepadInputDeviceKey} from '../input-device-key.js';
 /** Wrapper for the global navigator object that takes into account browser discrepancies. */
 
 /**
@@ -8,7 +8,7 @@ import {SerializedGamepad, serializeGamepad} from './serialized-gamepad.js';
  *
  * @category Internal
  */
-export interface GamepadList extends Iterable<Gamepad> {
+interface GamepadList extends Iterable<Gamepad> {
     0: Gamepad | null;
     1: Gamepad | null;
     2: Gamepad | null;
@@ -16,48 +16,43 @@ export interface GamepadList extends Iterable<Gamepad> {
     length: 4;
 }
 
-/**
- * Chrome's specific implementation of the navigator's `getGamepads()`.
- *
- * @category Internal
- */
-export interface ChromeNavigator extends Omit<Navigator, 'getGamepads'> {
+interface StandardNavigator extends Omit<Navigator, 'getGamepads'> {
     /** Gets the current gamepads. */
     getGamepads(): GamepadList;
 }
 
-/**
- * Webkit's old implementation of the navigator's `getGamepads()`.
- *
- * @category Internal
- */
-export interface OldWebkitNavigator extends Omit<Navigator, 'getGamepads'> {
+interface OldWebkitNavigator extends Omit<Navigator, 'getGamepads'> {
     /** Gets the current gamepads. */
     webkitGetGamepads(): GamepadList;
 }
 
 /** Includes different navigator types to support different browsers */
-const globalNavigator: OldWebkitNavigator | ChromeNavigator | Navigator = window.navigator;
+const globalNavigator: OldWebkitNavigator | StandardNavigator | Navigator = window.navigator;
 
 /**
- * Read all serialized gamepads from the browser's built-in Gamepad API.
+ * Read all gamepads straight from the browser's built-in gamepad API, accounting for different
+ * implementations of `window.navigator.getGamepads()`.
  *
  * @category Internal
  */
-export function getSerializedGamepads({
-    deadZoneSettings,
-    globalDeadZone,
-}: Readonly<{
-    deadZoneSettings: Readonly<AllGamepadDeadZoneSettings>;
-    globalDeadZone: number;
-}>): SerializedGamepad[] {
-    return Array.from(
-        check.hasKey(globalNavigator, 'webkitGetGamepads')
-            ? globalNavigator.webkitGetGamepads()
-            : check.hasKey(globalNavigator, 'getGamepads')
-              ? globalNavigator.getGamepads()
-              : [],
-    )
-        .filter((gamepad): gamepad is Gamepad => !!gamepad)
-        .map((gamepad) => serializeGamepad({gamepad, deadZoneSettings, globalDeadZone}));
+export function getGamepads(): Partial<Record<GamepadInputDeviceKey, Gamepad>> {
+    return arrayToObject(
+        Array.from(
+            check.hasKey(globalNavigator, 'webkitGetGamepads')
+                ? globalNavigator.webkitGetGamepads()
+                : check.hasKey(globalNavigator, 'getGamepads')
+                  ? globalNavigator.getGamepads()
+                  : [],
+        ),
+        (value) => {
+            if (!value) {
+                return undefined;
+            }
+
+            return {
+                key: value.index,
+                value,
+            };
+        },
+    );
 }

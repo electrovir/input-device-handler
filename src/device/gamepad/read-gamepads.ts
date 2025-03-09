@@ -1,37 +1,24 @@
-import {isGamepadDeviceKey} from '../input-device-key.js';
+import {mapObjectValues} from '@augment-vir/common';
 import {InputDeviceType} from '../input-device-type.js';
 import {DeviceInputValue, GamepadInputValue} from '../input-value.js';
 import {AllGamepadDeadZoneSettings} from './dead-zone-settings.js';
-import {getSerializedGamepads} from './navigator.js';
-import {GamepadMap, SerializedGamepad} from './serialized-gamepad.js';
+import {getGamepads} from './navigator.js';
+import {GamepadMap, SerializedGamepad, serializeGamepad} from './serialized-gamepad.js';
 
 /**
  * Read and serialize all gamepads.
  *
  * @category Internal
  */
-export function readCurrentGamepads({
-    deadZoneSettings,
-    globalDeadZone,
-}: Readonly<{
-    deadZoneSettings: Readonly<AllGamepadDeadZoneSettings>;
-    globalDeadZone: number;
-}>): GamepadMap {
-    const gamepads = getSerializedGamepads({deadZoneSettings, globalDeadZone});
-
-    const gamepadMap: GamepadMap = gamepads.reduce((mapping, gamepad) => {
-        const gamepadKey = gamepad.deviceKey;
-
-        if (!isGamepadDeviceKey(gamepadKey)) {
-            console.warn(`ignoring gamepad index '${String(gamepadKey)}'`);
-            return mapping;
-        }
-
-        mapping[gamepadKey] = gamepad;
-        return mapping;
-    }, {} as GamepadMap);
-
-    return gamepadMap;
+export function readCurrentGamepads(
+    inputReadingSettings: Readonly<{
+        deadZoneSettings: Readonly<AllGamepadDeadZoneSettings>;
+        globalDeadZone: number;
+    }>,
+): GamepadMap {
+    return mapObjectValues(getGamepads(), (key, rawGamepad) => {
+        return serializeGamepad({gamepad: rawGamepad, ...inputReadingSettings});
+    });
 }
 
 /**
