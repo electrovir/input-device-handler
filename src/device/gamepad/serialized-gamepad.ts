@@ -79,7 +79,7 @@ export function serializeGamepadInput({
  *
  * @category Internal
  */
-export type GamepadMap = Record<GamepadInputDeviceKey, SerializedGamepad>;
+export type GamepadMap = Partial<Record<GamepadInputDeviceKey, SerializedGamepad>>;
 
 /**
  * Serialize a gamepad from a Gamepad API.

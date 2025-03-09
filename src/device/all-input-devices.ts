@@ -12,7 +12,7 @@ import {DeviceInputValue} from './input-value.js';
  *
  * @category Internal
  */
-export type GamepadInputDevices = Record<GamepadInputDeviceKey, GamepadDevice>;
+export type GamepadInputDevices = Partial<Record<GamepadInputDeviceKey, GamepadDevice>>;
 
 /**
  * All Input Devices handled by `InputDeviceHandler`.
