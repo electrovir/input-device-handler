@@ -1,5 +1,5 @@
 import {check} from '@augment-vir/assert';
-import type {Values} from '@augment-vir/common';
+import {type Values} from '@augment-vir/common';
 
 /**
  * Only 4 gamepad keys because some browsers only support 4.

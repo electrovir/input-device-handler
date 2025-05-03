@@ -1,6 +1,6 @@
-import {SerializedGamepadInput} from './gamepad/serialized-gamepad.js';
-import {GamepadInputDeviceKey, InputDeviceKey} from './input-device-key.js';
-import {InputDeviceType} from './input-device-type.js';
+import {type SerializedGamepadInput} from './gamepad/serialized-gamepad.js';
+import {type GamepadInputDeviceKey, type InputDeviceKey} from './input-device-key.js';
+import {type InputDeviceType} from './input-device-type.js';
 
 /**
  * Extra, non-serializable, details for a mouse device's input value.

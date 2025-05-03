@@ -1,6 +1,6 @@
 import {check} from '@augment-vir/assert';
 import {arrayToObject} from '@augment-vir/common';
-import type {GamepadInputDeviceKey} from '../input-device-key.js';
+import {type GamepadInputDeviceKey} from '../input-device-key.js';
 /** Wrapper for the global navigator object that takes into account browser discrepancies. */
 
 /**

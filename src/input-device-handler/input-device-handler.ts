@@ -1,26 +1,26 @@
-import type {Writable} from '@augment-vir/common';
+import {type Writable} from '@augment-vir/common';
 import {TypedListenTarget, listenToGlobal} from 'typed-event-target';
 import {
-    AllDevices,
-    GamepadInputDevices,
+    type AllDevices,
+    type GamepadInputDevices,
     gamepadMapToInputDevices,
 } from '../device/all-input-devices.js';
-import {AllGamepadDeadZoneSettings} from '../device/gamepad/dead-zone-settings.js';
+import {type AllGamepadDeadZoneSettings} from '../device/gamepad/dead-zone-settings.js';
 import {readCurrentGamepads} from '../device/gamepad/read-gamepads.js';
 import {InputDeviceKey} from '../device/input-device-key.js';
 import {InputDeviceType} from '../device/input-device-type.js';
 import {
-    KeyboardDevice,
-    MouseDevice,
+    type KeyboardDevice,
+    type MouseDevice,
     keyboardBaseDevice,
     mouseBaseDevice,
 } from '../device/input-device.js';
 import {createAxeName, createButtonName} from '../device/input-names.js';
-import {KeyboardInputValue} from '../device/input-value.js';
+import {type KeyboardInputValue} from '../device/input-value.js';
 import {
-    DeviceHandlerEvent,
-    DeviceHandlerEventConstructor,
-    DeviceHandlerEventType,
+    type DeviceHandlerEvent,
+    type DeviceHandlerEventConstructor,
+    type DeviceHandlerEventType,
     allEvents,
 } from './event-util/all-events.js';
 

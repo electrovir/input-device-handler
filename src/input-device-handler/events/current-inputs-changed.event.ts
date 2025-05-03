@@ -1,7 +1,7 @@
 import {check} from '@augment-vir/assert';
 import {allInputDevicesToAllInputs} from '../../device/all-input-devices.js';
-import {DeviceInputValue} from '../../device/input-value.js';
-import {ConstructEventIfDataIsNew, defineTimedEvent} from '../event-util/timed-event.js';
+import {type DeviceInputValue} from '../../device/input-value.js';
+import {type ConstructEventIfDataIsNew, defineTimedEvent} from '../event-util/timed-event.js';
 
 /**
  * The data contained within a `CurrentInputsChangedEvent` event.

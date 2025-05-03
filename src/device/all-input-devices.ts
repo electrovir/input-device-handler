@@ -1,11 +1,11 @@
 import {check} from '@augment-vir/assert';
 import {getObjectTypedValues, mapObjectValues} from '@augment-vir/common';
 import {gamepadToCurrentInputs} from './gamepad/read-gamepads.js';
-import {GamepadMap} from './gamepad/serialized-gamepad.js';
-import {GamepadInputDeviceKey, InputDeviceKey} from './input-device-key.js';
+import {type GamepadMap} from './gamepad/serialized-gamepad.js';
+import {type GamepadInputDeviceKey, type InputDeviceKey} from './input-device-key.js';
 import {InputDeviceType} from './input-device-type.js';
-import {GamepadDevice, KeyboardDevice, MouseDevice} from './input-device.js';
-import {DeviceInputValue} from './input-value.js';
+import {type GamepadDevice, type KeyboardDevice, type MouseDevice} from './input-device.js';
+import {type DeviceInputValue} from './input-value.js';
 
 /**
  * All Gamepad Input Devices.

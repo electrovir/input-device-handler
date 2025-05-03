@@ -4,8 +4,8 @@ import {describe, it} from '@augment-vir/test';
 import {sendKeys} from '@web/test-runner-commands';
 import {createButtonName} from '../device/input-names.js';
 import {
-    DeviceHandlerEvent,
-    DeviceHandlerEventsMap,
+    type DeviceHandlerEvent,
+    type DeviceHandlerEventsMap,
     createEmptyDeviceHandlerEventsMap,
     deviceHandlerEventConstructorsByType,
 } from './event-util/all-events.js';

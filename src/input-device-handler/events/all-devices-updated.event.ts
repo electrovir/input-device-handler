@@ -1,5 +1,5 @@
-import {AllDevices} from '../../device/all-input-devices.js';
-import {ConstructEventIfDataIsNew, defineTimedEvent} from '../event-util/timed-event.js';
+import {type AllDevices} from '../../device/all-input-devices.js';
+import {type ConstructEventIfDataIsNew, defineTimedEvent} from '../event-util/timed-event.js';
 
 function allDevicesUpdatedDataCheckCallback(
     ...[

@@ -1,7 +1,7 @@
 import {check} from '@augment-vir/assert';
 import {getObjectTypedKeys, getObjectTypedValues} from '@augment-vir/common';
-import {InputDevice} from '../../device/input-device.js';
-import {ConstructEventIfDataIsNew, defineTimedEvent} from '../event-util/timed-event.js';
+import {type InputDevice} from '../../device/input-device.js';
+import {type ConstructEventIfDataIsNew, defineTimedEvent} from '../event-util/timed-event.js';
 
 /**
  * The data contained within a `NewDevicesAddedEvent` event.

@@ -1,5 +1,5 @@
-import {ArrayElement, typedObjectFromEntries} from '@augment-vir/common';
-import {ExtractEventByType} from 'typed-event-target';
+import {type ArrayElement, typedObjectFromEntries} from '@augment-vir/common';
+import {type ExtractEventByType} from 'typed-event-target';
 import {AllDevicesUpdatedEvent} from '../events/all-devices-updated.event.js';
 import {CurrentInputsChangedEvent} from '../events/current-inputs-changed.event.js';
 import {DevicesRemovedEvent} from '../events/devices-removed.event.js';

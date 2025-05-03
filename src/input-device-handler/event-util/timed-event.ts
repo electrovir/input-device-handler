@@ -1,6 +1,10 @@
-import {kebabCaseToCamelCase, Overwrite} from '@augment-vir/common';
-import {defineTypedCustomEvent, TypedCustomEvent, TypedCustomEventInit} from 'typed-event-target';
-import {AllDevices} from '../../device/all-input-devices.js';
+import {kebabCaseToCamelCase, type Overwrite} from '@augment-vir/common';
+import {
+    defineTypedCustomEvent,
+    type TypedCustomEvent,
+    type TypedCustomEventInit,
+} from 'typed-event-target';
+import {type AllDevices} from '../../device/all-input-devices.js';
 
 /**
  * Details for a timed event, which includes a timestamp.
@@ -66,13 +70,13 @@ export function defineTimedEvent<const DataTypeGeneric>() {
             capitalizeFirstLetter: true,
         });
         const TimedEventConstructor = class extends defineTypedCustomEvent<DetailType>()(type) {
-            public readonly eventType = type;
-            static readonly getNewData = isDataNewCallback;
+            public static readonly getNewData = isDataNewCallback;
+
             /**
              * Determines if the event should be constructed or not. If so, it returns the
              * constructed event.
              */
-            static constructIfDataIsNew(
+            public static constructIfDataIsNew(
                 timestamp: number,
                 ...inputs: Parameters<ConstructEventIfDataIsNew<DataTypeGeneric>>
             ) {
@@ -86,6 +90,8 @@ export function defineTimedEvent<const DataTypeGeneric>() {
                     return undefined;
                 }
             }
+
+            public readonly eventType = type;
         };
 
         Object.defineProperty(TimedEventConstructor, 'name', {

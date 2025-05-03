@@ -1,8 +1,12 @@
 import {check} from '@augment-vir/assert';
 import {typedObjectFromEntries} from '@augment-vir/common';
-import {GamepadInputDeviceKey, isGamepadDeviceKey} from '../input-device-key.js';
+import {type GamepadInputDeviceKey, isGamepadDeviceKey} from '../input-device-key.js';
 import {DeviceInputType, createAxeName, createButtonName} from '../input-names.js';
-import {AllGamepadDeadZoneSettings, GamepadDeadZones, applyDeadZone} from './dead-zone-settings.js';
+import {
+    type AllGamepadDeadZoneSettings,
+    type GamepadDeadZones,
+    applyDeadZone,
+} from './dead-zone-settings.js';
 
 /**
  * A single input from a gamepad.

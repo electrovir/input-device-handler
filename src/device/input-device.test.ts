@@ -1,7 +1,7 @@
 import {assert} from '@augment-vir/assert';
 import {describe, it} from '@augment-vir/test';
 import {InputDeviceType} from './input-device-type.js';
-import {GamepadDevice, InputDevice, isOfInputDeviceType} from './input-device.js';
+import {type GamepadDevice, type InputDevice, isOfInputDeviceType} from './input-device.js';
 
 describe('InputDevice types', () => {
     it('should allow generic types as well as specific types', () => {

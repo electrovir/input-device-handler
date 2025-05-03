@@ -1,9 +1,9 @@
 import {mapObjectValues} from '@augment-vir/common';
 import {InputDeviceType} from '../input-device-type.js';
-import {DeviceInputValue, GamepadInputValue} from '../input-value.js';
-import {AllGamepadDeadZoneSettings} from './dead-zone-settings.js';
+import {type DeviceInputValue, type GamepadInputValue} from '../input-value.js';
+import {type AllGamepadDeadZoneSettings} from './dead-zone-settings.js';
 import {getGamepads} from './navigator.js';
-import {GamepadMap, SerializedGamepad, serializeGamepad} from './serialized-gamepad.js';
+import {type GamepadMap, type SerializedGamepad, serializeGamepad} from './serialized-gamepad.js';
 
 /**
  * Read and serialize all gamepads.
