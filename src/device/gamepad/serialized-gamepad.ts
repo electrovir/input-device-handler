@@ -11,7 +11,7 @@ import {
 /**
  * A single input from a gamepad.
  *
- * @category Types
+ * @category Internal
  */
 export type SerializedGamepadInput = Readonly<{
     /** The standardized name of the input, which includes the input type. */
@@ -24,7 +24,7 @@ export type SerializedGamepadInput = Readonly<{
 /**
  * All current serialized gamepad inputs grouped by their input type.
  *
- * @category Types
+ * @category Internal
  */
 export type SerializedGamepadInputs = Readonly<{
     axes: ReadonlyArray<Readonly<SerializedGamepadInput>>;
@@ -37,7 +37,7 @@ export type SerializedGamepadInputs = Readonly<{
  * Basically this includes everything except the haptic interfaces since those include methods
  * (which are not serializable).
  *
- * @category Types
+ * @category Internal
  */
 export type SerializedGamepad = Readonly<{
     isConnected: boolean;
@@ -73,7 +73,11 @@ export function serializeGamepadInput({
 
     return {
         inputName,
-        value: applyDeadZone({value, gamepadDeadZone: deadZones[inputName], globalDeadZone}),
+        value: applyDeadZone({
+            value,
+            gamepadDeadZone: deadZones[inputName],
+            globalDeadZone,
+        }),
         inputType: isAxe ? DeviceInputType.Axe : DeviceInputType.Button,
     };
 }

@@ -48,7 +48,7 @@ export type NonGamepadInputDeviceKey = Values<typeof NonGamepadInputDeviceKey>;
 /**
  * All possible input device keys: both gamepad and non-gamepad keys.
  *
- * @category Types
+ * @category Internal
  */
 export const InputDeviceKey = {
     ...NonGamepadInputDeviceKey,
@@ -57,6 +57,6 @@ export const InputDeviceKey = {
 /**
  * All possible input device keys as a type.
  *
- * @category Types
+ * @category Internal
  */
 export type InputDeviceKey = Values<typeof InputDeviceKey>;

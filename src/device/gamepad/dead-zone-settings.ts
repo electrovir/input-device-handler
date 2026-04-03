@@ -1,7 +1,7 @@
 /**
  * Settings for dead zones by input name.
  *
- * @category Types
+ * @category Internal
  */
 export type GamepadDeadZones = Readonly<{
     [
@@ -13,7 +13,7 @@ export type GamepadDeadZones = Readonly<{
 /**
  * Settings for dead zones by gamepad key.
  *
- * @category Types
+ * @category Internal
  */
 export type AllGamepadDeadZoneSettings = Readonly<{
     [gamepadKey in string]: GamepadDeadZones;

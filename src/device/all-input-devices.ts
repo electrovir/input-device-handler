@@ -17,7 +17,7 @@ export type GamepadInputDevices = Partial<Record<GamepadInputDeviceKey, GamepadD
 /**
  * All Input Devices handled by `InputDeviceHandler`.
  *
- * @category Types
+ * @category Internal
  */
 export type AllDevices = Partial<
     {

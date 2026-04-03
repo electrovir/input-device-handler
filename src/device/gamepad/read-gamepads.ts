@@ -17,7 +17,10 @@ export function readCurrentGamepads(
     }>,
 ): GamepadMap {
     return mapObjectValues(getGamepads(), (key, rawGamepad) => {
-        return serializeGamepad({gamepad: rawGamepad, ...inputReadingSettings});
+        return serializeGamepad({
+            gamepad: rawGamepad,
+            ...inputReadingSettings,
+        });
     });
 }
 

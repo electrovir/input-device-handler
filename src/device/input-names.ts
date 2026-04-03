@@ -9,7 +9,7 @@ import {safeSplit} from '@augment-vir/common';
  * - Axes are sliding scales like joysticks or triggers that intentionally support values between 0
  *   and 1.
  *
- * @category Types
+ * @category Internal
  */
 export enum DeviceInputType {
     Button = 'button',

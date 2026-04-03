@@ -24,7 +24,9 @@ Since the gamepad api is [poll based](<https://en.wikipedia.org/wiki/Polling_(co
 ```TypeScript
 import {CurrentInputsChangedEvent, InputDeviceHandler, NewDevicesAddedEvent} from 'input-device-handler';
 
-const deviceHandler = new InputDeviceHandler({startLoopImmediately: true});
+const deviceHandler = new InputDeviceHandler({
+    startLoopImmediately: true,
+});
 
 // listen to new devices connecting (such as gamepads)
 deviceHandler.listen(NewDevicesAddedEvent, (event) => {

@@ -1,6 +1,8 @@
 import {CurrentInputsChangedEvent, InputDeviceHandler, NewDevicesAddedEvent} from '../index.js';
 
-const deviceHandler = new InputDeviceHandler({startLoopImmediately: true});
+const deviceHandler = new InputDeviceHandler({
+    startLoopImmediately: true,
+});
 
 // listen to new devices connecting (such as gamepads)
 deviceHandler.listen(NewDevicesAddedEvent, (event) => {

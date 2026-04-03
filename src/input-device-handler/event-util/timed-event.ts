@@ -1,4 +1,4 @@
-import {kebabCaseToCamelCase, type Overwrite} from '@augment-vir/common';
+import {kebabCaseToCamelCase, StringCase, type Overwrite} from '@augment-vir/common';
 import {
     defineTypedCustomEvent,
     type TypedCustomEvent,
@@ -67,7 +67,7 @@ export function defineTimedEvent<const DataTypeGeneric>() {
     ) => {
         type DetailType = TimedEventDetail<DataTypeGeneric>;
         const className = kebabCaseToCamelCase(type, {
-            capitalizeFirstLetter: true,
+            firstLetterCase: StringCase.Upper,
         });
         const TimedEventConstructor = class extends defineTypedCustomEvent<DetailType>()(type) {
             public static readonly getNewData = isDataNewCallback;
@@ -83,7 +83,10 @@ export function defineTimedEvent<const DataTypeGeneric>() {
                 const newDataOutput = TimedEventConstructor.getNewData(...inputs);
                 if (newDataOutput) {
                     const newEvent = new TimedEventConstructor({
-                        detail: {timestamp, inputs: newDataOutput},
+                        detail: {
+                            timestamp,
+                            inputs: newDataOutput,
+                        },
                     });
                     return newEvent;
                 } else {

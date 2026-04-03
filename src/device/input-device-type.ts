@@ -1,7 +1,7 @@
 /**
  * All possible input device types.
  *
- * @category Types
+ * @category Internal
  */
 export enum InputDeviceType {
     Keyboard = 'keyboard',

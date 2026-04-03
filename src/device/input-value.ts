@@ -61,7 +61,7 @@ export type InputValueWrapper<
 /**
  * Input values from keyboard devices.
  *
- * @category Types
+ * @category Internal
  */
 export type KeyboardInputValue = InputValueWrapper<
     typeof InputDeviceKey.Keyboard,
@@ -71,20 +71,20 @@ export type KeyboardInputValue = InputValueWrapper<
 /**
  * Input values from mouse devices.
  *
- * @category Types
+ * @category Internal
  */
 export type MouseInputValue = InputValueWrapper<typeof InputDeviceKey.Mouse, MouseInputDetails>;
 
 /**
  * Input values from gamepad devices.
  *
- * @category Types
+ * @category Internal
  */
 export type GamepadInputValue = InputValueWrapper<GamepadInputDeviceKey, GamepadInputDetails>;
 
 /**
  * Input values from any supported device.
  *
- * @category Types
+ * @category Internal
  */
 export type DeviceInputValue = KeyboardInputValue | MouseInputValue | GamepadInputValue;

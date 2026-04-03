@@ -28,7 +28,10 @@ function setupInstanceForTesting() {
         });
     });
 
-    return {instance, events};
+    return {
+        instance,
+        events,
+    };
 }
 
 async function pressDownRandomKey(): Promise<string> {

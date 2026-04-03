@@ -36,7 +36,7 @@ export type DeviceWrapper<
 /**
  * A gamepad device.
  *
- * @category Types
+ * @category Internal
  */
 export type GamepadDevice = DeviceWrapper<
     InputDeviceType.Gamepad,
@@ -48,7 +48,7 @@ export type GamepadDevice = DeviceWrapper<
 /**
  * A keyboard device.
  *
- * @category Types
+ * @category Internal
  */
 export type KeyboardDevice = DeviceWrapper<
     InputDeviceType.Keyboard,
@@ -60,7 +60,7 @@ export type KeyboardDevice = DeviceWrapper<
 /**
  * A mouse device.
  *
- * @category Types
+ * @category Internal
  */
 export type MouseDevice = DeviceWrapper<
     InputDeviceType.Mouse,
@@ -72,7 +72,7 @@ export type MouseDevice = DeviceWrapper<
 /**
  * Any supported device.
  *
- * @category Types
+ * @category Internal
  */
 export type InputDevice = GamepadDevice | KeyboardDevice | MouseDevice;
 
