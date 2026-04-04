@@ -57,7 +57,7 @@ export type InputDeviceHandlerOptions = Partial<{
 export class InputDeviceHandler extends TypedListenTarget<DeviceHandlerEvent> {
     private currentKeyboardInputs: Writable<KeyboardDevice['currentInputs']> = {};
     private currentMouseInputs: Writable<MouseDevice['currentInputs']> = {};
-    private gamepadDeadZoneSettings: AllGamepadDeadZoneSettings = {};
+    public gamepadDeadZoneSettings: AllGamepadDeadZoneSettings = {};
 
     /**
      * Make sure this is set after the other member variables.
@@ -67,7 +67,7 @@ export class InputDeviceHandler extends TypedListenTarget<DeviceHandlerEvent> {
      */
     private lastReadInputDevices!: AllDevices;
     private loopIsRunning = false;
-    private globalDeadZone = 0;
+    public globalDeadZone = 0;
     private removeGlobalListeners = () => {};
     // prevents multiple polling loops from running
     private currentLoopIndex = -1;
@@ -86,7 +86,7 @@ export class InputDeviceHandler extends TypedListenTarget<DeviceHandlerEvent> {
     constructor(options: InputDeviceHandlerOptions = {}) {
         super();
         if (options.gamepadDeadZoneSettings) {
-            this.updateGamepadDeadZoneSettings(options.gamepadDeadZoneSettings);
+            this.gamepadDeadZoneSettings = options.gamepadDeadZoneSettings;
         }
         if (options.globalDeadZone) {
             this.globalDeadZone = options.globalDeadZone;
@@ -297,10 +297,5 @@ export class InputDeviceHandler extends TypedListenTarget<DeviceHandlerEvent> {
         this.fireEvents(timestamp, oldValues, newValues);
 
         return newValues;
-    }
-
-    /** Supply new gamepad dead zone settings. */
-    public updateGamepadDeadZoneSettings(newValue: AllGamepadDeadZoneSettings) {
-        this.gamepadDeadZoneSettings = newValue;
     }
 }
