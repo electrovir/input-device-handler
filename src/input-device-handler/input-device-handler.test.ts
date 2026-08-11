@@ -60,7 +60,7 @@ function getInputChangedEventAt(
 }
 
 describe(InputDeviceHandler.constructor.name, () => {
-    it('should be constructable', () => {
+    it('constructs instances', () => {
         const instances = [
             new InputDeviceHandler({}),
             new InputDeviceHandler(),
@@ -75,7 +75,7 @@ describe(InputDeviceHandler.constructor.name, () => {
         instances.forEach((instance) => assert.instanceOf(instance, InputDeviceHandler));
     });
 
-    it('should not fire events before running an update', async () => {
+    it('does not fire events before running an update', async () => {
         const {events} = setupInstanceForTesting();
 
         await pressDownRandomKey();
@@ -83,7 +83,7 @@ describe(InputDeviceHandler.constructor.name, () => {
         assert.isEmpty(getFlattenedEvents(events), 'events should not have fired yet');
     });
 
-    it('should fire events after running an update', () => {
+    it('fires events after running an update', () => {
         const {events, instance} = setupInstanceForTesting();
 
         assert.isEmpty(
@@ -106,7 +106,7 @@ describe(InputDeviceHandler.constructor.name, () => {
         });
     });
 
-    it('should fire an input changed event after pressing a key', async () => {
+    it('fires an input changed event after pressing a key', async () => {
         const {events, instance} = setupInstanceForTesting();
 
         await sendKeys({
@@ -127,7 +127,7 @@ describe(InputDeviceHandler.constructor.name, () => {
         assert.strictEquals(newInput.inputName, createButtonName('KeyH'));
     });
 
-    it('should fire an input changed event after releasing key', async () => {
+    it('fires an input changed event after releasing key', async () => {
         const {events, instance} = setupInstanceForTesting();
 
         await sendKeys({

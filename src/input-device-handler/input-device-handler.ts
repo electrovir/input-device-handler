@@ -55,8 +55,8 @@ export type InputDeviceHandlerOptions = Partial<{
  * @category Main
  */
 export class InputDeviceHandler extends TypedListenTarget<DeviceHandlerEvent> {
-    private currentKeyboardInputs: Writable<KeyboardDevice['currentInputs']> = {};
-    private currentMouseInputs: Writable<MouseDevice['currentInputs']> = {};
+    protected currentKeyboardInputs: Writable<KeyboardDevice['currentInputs']> = {};
+    protected currentMouseInputs: Writable<MouseDevice['currentInputs']> = {};
     public gamepadDeadZoneSettings: AllGamepadDeadZoneSettings = {};
 
     /**
@@ -65,13 +65,14 @@ export class InputDeviceHandler extends TypedListenTarget<DeviceHandlerEvent> {
      * This is not-null asserted because updateInputDevices, which sets it, is called in the
      * constructor.
      */
-    private lastReadInputDevices!: AllDevices;
-    private loopIsRunning = false;
+    protected lastReadInputDevices!: AllDevices;
+    protected loopIsRunning = false;
     public globalDeadZone = 0;
-    private removeGlobalListeners = () => {};
+    /** Removes all global event listeners attached by this handler. */
+    protected removeGlobalListeners = () => {};
     // prevents multiple polling loops from running
-    private currentLoopIndex = -1;
-    private lastEventDetails: Partial<
+    protected currentLoopIndex = -1;
+    protected lastEventDetails: Partial<
         Record<
             DeviceHandlerEventType,
             {
@@ -99,7 +100,8 @@ export class InputDeviceHandler extends TypedListenTarget<DeviceHandlerEvent> {
         }
     }
 
-    private attachWindowListeners(
+    /** Attaches global event listeners for keyboard and mouse input. */
+    protected attachWindowListeners(
         options: Pick<InputDeviceHandlerOptions, 'disableMouseMovement'>,
     ) {
         const listenerRemovers = [
@@ -180,16 +182,28 @@ export class InputDeviceHandler extends TypedListenTarget<DeviceHandlerEvent> {
         };
     }
 
-    private runPollingLoop(loopIndex: number, timestamp: number) {
+    /** Reads device values continuously while the polling loop is active. */
+    protected runPollingLoop({
+        loopIndex,
+        timestamp,
+    }: Readonly<{loopIndex: number; timestamp: number}>) {
         if (this.loopIsRunning && this.currentLoopIndex === loopIndex) {
             this.readAllDevices(this.gamepadDeadZoneSettings, timestamp);
             requestAnimationFrame((timestamp) => {
-                this.runPollingLoop(loopIndex, timestamp);
+                this.runPollingLoop({
+                    loopIndex,
+                    timestamp,
+                });
             });
         }
     }
 
-    private fireEvents(timestamp: number, lastValues: AllDevices, newValues: AllDevices) {
+    /** Constructs and dispatches events for changes between device reads. */
+    protected fireEvents({
+        timestamp,
+        lastValues,
+        newValues,
+    }: Readonly<{timestamp: number; lastValues: AllDevices; newValues: AllDevices}>) {
         allEvents.forEach((currentEventConstructor) => {
             const maybeEventInstance = currentEventConstructor.constructIfDataIsNew(
                 timestamp,
@@ -217,7 +231,7 @@ export class InputDeviceHandler extends TypedListenTarget<DeviceHandlerEvent> {
      * Does not update any internal state or fire any event listeners that have been attached to the
      * input handler. Thus, this is not public.
      */
-    private getCurrentDeviceValues(
+    protected getCurrentDeviceValues(
         deadZoneSettings: AllGamepadDeadZoneSettings,
         globalDeadZone: number,
     ): AllDevices {
@@ -255,7 +269,10 @@ export class InputDeviceHandler extends TypedListenTarget<DeviceHandlerEvent> {
         this.currentLoopIndex++;
 
         requestAnimationFrame((timestamp) => {
-            this.runPollingLoop(this.currentLoopIndex, timestamp);
+            this.runPollingLoop({
+                loopIndex: this.currentLoopIndex,
+                timestamp,
+            });
         });
     }
 
@@ -294,7 +311,11 @@ export class InputDeviceHandler extends TypedListenTarget<DeviceHandlerEvent> {
         const newValues = this.getCurrentDeviceValues(deadZoneSettings, globalDeadZone);
         const oldValues = this.lastReadInputDevices;
         this.lastReadInputDevices = newValues;
-        this.fireEvents(timestamp, oldValues, newValues);
+        this.fireEvents({
+            timestamp,
+            lastValues: oldValues,
+            newValues,
+        });
 
         return newValues;
     }

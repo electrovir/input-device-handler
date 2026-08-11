@@ -56,8 +56,8 @@ export function allInputDevicesToAllInputs(
     )
         .map((inputDevice) => inputDevice.currentInputs)
         .filter(check.isTruthy);
-    const allInputValues: DeviceInputValue[][] = allInputValueMaps.map((inputValueMap) =>
-        getObjectTypedValues(inputValueMap),
-    );
+    const allInputValues: DeviceInputValue[][] = allInputValueMaps.map((inputValueMap) => {
+        return getObjectTypedValues(inputValueMap);
+    });
     return allInputValues.flat();
 }

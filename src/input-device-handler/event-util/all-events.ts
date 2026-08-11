@@ -57,10 +57,12 @@ export type DeviceHandlerEventsMap = {
  */
 export function createEmptyDeviceHandlerEventsMap(): DeviceHandlerEventsMap {
     return typedObjectFromEntries(
-        allEvents.map((eventConstructor) => [
-            eventConstructor.type,
-            [],
-        ]),
+        allEvents.map((eventConstructor) => {
+            return [
+                eventConstructor.type,
+                [],
+            ];
+        }),
     );
 }
 
@@ -71,10 +73,12 @@ export function createEmptyDeviceHandlerEventsMap(): DeviceHandlerEventsMap {
  * @category Internal
  */
 export const deviceHandlerEventConstructorsByType = Object.fromEntries(
-    allEvents.map((eventConstructor) => [
-        eventConstructor.type,
-        eventConstructor,
-    ]),
+    allEvents.map((eventConstructor) => {
+        return [
+            eventConstructor.type,
+            eventConstructor,
+        ];
+    }),
 ) as {
     [PropKey in DeviceHandlerEventType]: Extract<ArrayElement<typeof allEvents>, {type: PropKey}>;
 };

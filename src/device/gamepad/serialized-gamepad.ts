@@ -108,22 +108,22 @@ export function serializeGamepad({
         throw new Error(`Tried to serialize gamepad with out-of-bounds index: '${gamepad.index}'`);
     }
     const gamepadDeadZones = deadZoneSettings[gamepad.id] || {};
-    const axes = gamepad.axes.map((value, index) =>
-        serializeGamepadInput({
+    const axes = gamepad.axes.map((value, index) => {
+        return serializeGamepadInput({
             gamepadInput: value,
             inputIndex: index,
             deadZones: gamepadDeadZones,
             globalDeadZone,
-        }),
-    );
-    const buttons = gamepad.buttons.map((gamepadButton, buttonIndex) =>
-        serializeGamepadInput({
+        });
+    });
+    const buttons = gamepad.buttons.map((gamepadButton, buttonIndex) => {
+        return serializeGamepadInput({
             deadZones: gamepadDeadZones,
             gamepadInput: gamepadButton,
             globalDeadZone,
             inputIndex: buttonIndex,
-        }),
-    );
+        });
+    });
     const inputsByName = typedObjectFromEntries(
         [
             ...buttons,

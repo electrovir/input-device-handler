@@ -3,7 +3,7 @@ import {describe, it} from '@augment-vir/test';
 import {createAxeName, createButtonName} from './input-names.js';
 
 describe(createButtonName.name, () => {
-    it('should produce correct button names', () => {
+    it('produces correct button names', () => {
         /**
          * These test inputs are strange and will theoretically never actually happen where this
          * function is used. However, we are testing them here just to see what happens.
@@ -45,7 +45,7 @@ describe(createButtonName.name, () => {
 });
 
 describe(createAxeName.name, () => {
-    it('should produce correct axe names', () => {
+    it('produces correct axe names', () => {
         /**
          * These test inputs are strange and will theoretically never actually happen where this
          * function is used. However, we are testing them here just to see what happens.

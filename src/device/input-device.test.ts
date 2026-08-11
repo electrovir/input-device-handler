@@ -4,7 +4,7 @@ import {InputDeviceType} from './input-device-type.js';
 import {type GamepadDevice, type InputDevice, isOfInputDeviceType} from './input-device.js';
 
 describe('InputDevice types', () => {
-    it('should allow generic types as well as specific types', () => {
+    it('allows generic types as well as specific types', () => {
         const genericInputDevice: InputDevice = {
             deviceType: InputDeviceType.Gamepad,
             deviceKey: '0',

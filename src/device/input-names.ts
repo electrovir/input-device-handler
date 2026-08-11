@@ -40,7 +40,10 @@ export function createAxeName(axeNameOrIndex: number | string): string {
  * @category Util
  */
 export function parseInputTypeFromInputName(inputName: string): DeviceInputType {
-    const [deviceType] = safeSplit(inputName, '-');
+    const [deviceType] = safeSplit({
+        value: inputName,
+        splitter: '-',
+    });
 
     if (check.isEnumValue(deviceType, DeviceInputType)) {
         return deviceType;

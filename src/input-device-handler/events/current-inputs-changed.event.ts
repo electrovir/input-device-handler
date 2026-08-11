@@ -14,7 +14,7 @@ export type CurrentInputsChangedOutput = {
     allCurrentInputs: DeviceInputValue[];
 };
 
-function areInputsEqual(a: DeviceInputValue, b: DeviceInputValue) {
+function areInputsEqual({a, b}: Readonly<{a: DeviceInputValue; b: DeviceInputValue}>) {
     return (
         a.deviceKey === b.deviceKey &&
         a.inputName === b.inputName &&
@@ -40,12 +40,18 @@ function didCurrentInputsChange(
     } else {
         const newInputs = allLatestInputs.filter((latestInput) => {
             return !allPreviousInputs.some((previousInput) => {
-                return areInputsEqual(previousInput, latestInput);
+                return areInputsEqual({
+                    a: previousInput,
+                    b: latestInput,
+                });
             });
         });
         const removedInputs = allPreviousInputs.filter((latestInput) => {
             return !allLatestInputs.some((previousInput) => {
-                return areInputsEqual(previousInput, latestInput);
+                return areInputsEqual({
+                    a: previousInput,
+                    b: latestInput,
+                });
             });
         });
 
