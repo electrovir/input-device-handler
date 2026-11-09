@@ -2,7 +2,8 @@ import {assert} from '@augment-vir/assert';
 import {getObjectTypedKeys, getObjectTypedValues, randomString} from '@augment-vir/common';
 import {describe, it} from '@augment-vir/test';
 import {sendKeys} from '@web/test-runner-commands';
-import {createButtonName} from '../device/input-names.js';
+import {InputDeviceKey} from '../device/input-device-key.js';
+import {createAxeName, createButtonName} from '../device/input-names.js';
 import {
     type DeviceHandlerEvent,
     type DeviceHandlerEventsMap,
@@ -154,5 +155,54 @@ describe(InputDeviceHandler.constructor.name, () => {
         const removedInput = inputChangedEvent.detail.inputs.removedInputs[0];
         assert.isDefined(removedInput);
         assert.strictEquals(removedInput.inputName, createButtonName('KeyJ'));
+    });
+
+    it('releases held keys and mouse buttons when the page becomes inactive', () => {
+        const instance = new InputDeviceHandler();
+
+        function pressAndRelease(releaseEvent: () => void) {
+            globalThis.dispatchEvent(
+                new KeyboardEvent('keydown', {
+                    code: 'KeyK',
+                }),
+            );
+            globalThis.dispatchEvent(new MouseEvent('mousedown'));
+            globalThis.dispatchEvent(
+                new MouseEvent('mousemove', {
+                    clientX: 4,
+                }),
+            );
+            releaseEvent();
+
+            const devices = instance.readAllDevices();
+
+            return [
+                ...getObjectTypedValues(devices[InputDeviceKey.Keyboard]?.currentInputs || {}),
+                ...getObjectTypedValues(devices[InputDeviceKey.Mouse]?.currentInputs || {}),
+            ].map((input) => `${input.inputName}:${input.inputValue}`);
+        }
+
+        const afterBlur = pressAndRelease(() => globalThis.dispatchEvent(new Event('blur')));
+        const afterFocus = pressAndRelease(() => globalThis.dispatchEvent(new Event('focus')));
+        const afterPageHide = pressAndRelease(() => {
+            return globalThis.dispatchEvent(new Event('pagehide'));
+        });
+        const heldMouseAxes = [
+            `${createAxeName('x')}:4`,
+            `${createAxeName('y')}:0`,
+        ];
+
+        assert.deepEquals(
+            {
+                afterBlur,
+                afterFocus: afterFocus.length,
+                afterPageHide,
+            },
+            {
+                afterBlur: heldMouseAxes,
+                afterFocus: 4,
+                afterPageHide: heldMouseAxes,
+            },
+        );
     });
 });

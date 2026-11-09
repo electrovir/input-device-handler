@@ -1,4 +1,5 @@
-import {type Writable} from '@augment-vir/common';
+import {type Writable, pickObjectKeys} from '@augment-vir/common';
+import {listenToPageActivation} from 'page-active';
 import {TypedListenTarget, listenToGlobal} from 'typed-event-target';
 import {
     type AllDevices,
@@ -148,6 +149,11 @@ export class InputDeviceHandler extends TypedListenTarget<DeviceHandlerEvent> {
             listenToGlobal('mouseup', (event) => {
                 delete this.currentMouseInputs[createButtonName(event.button)];
             }),
+            listenToPageActivation(false, (isPageActive) => {
+                if (!isPageActive) {
+                    this.releaseHeldInputs();
+                }
+            }),
             options.disableMouseMovement
                 ? undefined
                 : listenToGlobal('mousemove', (event) => {
@@ -180,6 +186,19 @@ export class InputDeviceHandler extends TypedListenTarget<DeviceHandlerEvent> {
         this.removeGlobalListeners = () => {
             listenerRemovers.forEach((listenerRemover) => listenerRemover?.());
         };
+    }
+
+    /**
+     * The page gets no `keyup` or `mouseup` for a release that happens while it doesn't have focus,
+     * such as after Alt+Tab, so held keys and mouse buttons are released whenever the page becomes
+     * inactive.
+     */
+    protected releaseHeldInputs() {
+        this.currentKeyboardInputs = {};
+        this.currentMouseInputs = pickObjectKeys(this.currentMouseInputs, [
+            createAxeName('x'),
+            createAxeName('y'),
+        ]);
     }
 
     /** Reads device values continuously while the polling loop is active. */
