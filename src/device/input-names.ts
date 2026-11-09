@@ -25,6 +25,37 @@ export function createButtonName(buttonIndexOrName: number | string): string {
     return `button-${buttonIndexOrName}`;
 }
 
+/** The `KeyboardEvent.code` prefix of each modifier key, by its `KeyboardEvent.key`. */
+const modifierCodePrefixes: Readonly<Record<string, string>> = {
+    Alt: 'Alt',
+    AltGraph: 'Alt',
+    Control: 'Control',
+    Meta: 'Meta',
+    Shift: 'Shift',
+};
+
+/**
+ * Same as `KeyboardEvent.code` but filled in for modifier keys when the browser leaves it blank,
+ * which Firefox's fingerprinting protection does for some of them. The side comes from
+ * `KeyboardEvent.location`, so a blank right Shift still reads as `'ShiftRight'`.
+ *
+ * @category Util
+ */
+export function getKeyCode(event: Readonly<Pick<KeyboardEvent, 'code' | 'key' | 'location'>>) {
+    const modifierCodePrefix = modifierCodePrefixes[event.key];
+
+    if ((event.code && event.code !== 'Unidentified') || !modifierCodePrefix) {
+        return event.code;
+    }
+
+    return [
+        modifierCodePrefix,
+        event.location === KeyboardEvent.DOM_KEY_LOCATION_RIGHT || event.key === 'AltGraph'
+            ? 'Right'
+            : 'Left',
+    ].join('');
+}
+
 /**
  * Convert the given axe name or index into a standardized `InputDeviceHandler` axe name.
  *

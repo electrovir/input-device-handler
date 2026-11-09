@@ -16,7 +16,7 @@ import {
     keyboardBaseDevice,
     mouseBaseDevice,
 } from '../device/input-device.js';
-import {createAxeName, createButtonName} from '../device/input-names.js';
+import {createAxeName, createButtonName, getKeyCode} from '../device/input-names.js';
 import {type KeyboardInputValue} from '../device/input-value.js';
 import {
     type DeviceHandlerEvent,
@@ -24,8 +24,6 @@ import {
     type DeviceHandlerEventType,
     allEvents,
 } from './event-util/all-events.js';
-
-const keyReadProperty = 'code' as const satisfies keyof KeyboardEvent;
 
 /**
  * Options for constructing a `InputDeviceHandler` instance.
@@ -115,7 +113,7 @@ export class InputDeviceHandler extends TypedListenTarget<DeviceHandlerEvent> {
                     this.currentKeyboardInputs = {};
                 }
 
-                const eventKey = createButtonName(event[keyReadProperty]);
+                const eventKey = createButtonName(getKeyCode(event));
                 // ignore keydown repeated events
                 if (this.currentKeyboardInputs.hasOwnProperty(eventKey)) {
                     return;
@@ -138,7 +136,7 @@ export class InputDeviceHandler extends TypedListenTarget<DeviceHandlerEvent> {
                 if (event.key === 'Meta') {
                     this.currentKeyboardInputs = {};
                 } else {
-                    delete this.currentKeyboardInputs[createButtonName(event[keyReadProperty])];
+                    delete this.currentKeyboardInputs[createButtonName(getKeyCode(event))];
                 }
             }),
             listenToGlobal('mousedown', (event) => {

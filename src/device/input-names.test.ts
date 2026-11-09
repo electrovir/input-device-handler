@@ -1,6 +1,6 @@
 import {assert} from '@augment-vir/assert';
 import {describe, it} from '@augment-vir/test';
-import {createAxeName, createButtonName} from './input-names.js';
+import {createAxeName, createButtonName, getKeyCode} from './input-names.js';
 
 describe(createButtonName.name, () => {
     it('produces correct button names', () => {
@@ -83,5 +83,48 @@ describe(createAxeName.name, () => {
         axeIndexTestCases.forEach((testCase) => {
             assert.strictEquals(createAxeName(testCase.input), testCase.expect);
         });
+    });
+});
+
+describe(getKeyCode.name, () => {
+    it('fills in blank modifier codes from the key and its side', () => {
+        const keys = [
+            {
+                code: 'KeyA',
+                key: 'a',
+                location: KeyboardEvent.DOM_KEY_LOCATION_STANDARD,
+            },
+            {
+                code: '',
+                key: 'Shift',
+                location: KeyboardEvent.DOM_KEY_LOCATION_RIGHT,
+            },
+            {
+                code: 'Unidentified',
+                key: 'Control',
+                location: KeyboardEvent.DOM_KEY_LOCATION_LEFT,
+            },
+            {
+                code: '',
+                key: 'AltGraph',
+                location: KeyboardEvent.DOM_KEY_LOCATION_STANDARD,
+            },
+            {
+                code: '',
+                key: 'a',
+                location: KeyboardEvent.DOM_KEY_LOCATION_STANDARD,
+            },
+        ];
+
+        assert.deepEquals(
+            keys.map((key) => getKeyCode(key)),
+            [
+                'KeyA',
+                'ShiftRight',
+                'ControlLeft',
+                'AltRight',
+                '',
+            ],
+        );
     });
 });
