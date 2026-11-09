@@ -107,6 +107,14 @@ export class InputDeviceHandler extends TypedListenTarget<DeviceHandlerEvent> {
     ) {
         const listenerRemovers = [
             listenToGlobal('keydown', (event) => {
+                /**
+                 * MacOS browsers send no `keyup` for keys released while Cmd is held, so every held
+                 * key is released when Cmd goes down and again when it comes up.
+                 */
+                if (event.key === 'Meta' && !event.repeat) {
+                    this.currentKeyboardInputs = {};
+                }
+
                 const eventKey = createButtonName(event[keyReadProperty]);
                 // ignore keydown repeated events
                 if (this.currentKeyboardInputs.hasOwnProperty(eventKey)) {
@@ -127,7 +135,11 @@ export class InputDeviceHandler extends TypedListenTarget<DeviceHandlerEvent> {
                 this.currentKeyboardInputs[eventKey] = newKeyboardInput;
             }),
             listenToGlobal('keyup', (event) => {
-                delete this.currentKeyboardInputs[createButtonName(event[keyReadProperty])];
+                if (event.key === 'Meta') {
+                    this.currentKeyboardInputs = {};
+                } else {
+                    delete this.currentKeyboardInputs[createButtonName(event[keyReadProperty])];
+                }
             }),
             listenToGlobal('mousedown', (event) => {
                 const eventButton = createButtonName(event.button);

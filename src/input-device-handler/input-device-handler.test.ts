@@ -205,4 +205,63 @@ describe(InputDeviceHandler.constructor.name, () => {
             },
         );
     });
+
+    it('releases held keys when Cmd goes down and when it comes up', () => {
+        const instance = new InputDeviceHandler();
+
+        function dispatchKey({
+            type,
+            key,
+            code,
+        }: Readonly<{type: 'keydown' | 'keyup'; key: string; code: string}>) {
+            globalThis.dispatchEvent(
+                new KeyboardEvent(type, {
+                    key,
+                    code,
+                }),
+            );
+        }
+
+        function readHeldKeys() {
+            return getObjectTypedKeys(
+                instance.readAllDevices()[InputDeviceKey.Keyboard]?.currentInputs || {},
+            );
+        }
+
+        dispatchKey({
+            type: 'keydown',
+            key: 'a',
+            code: 'KeyA',
+        });
+        dispatchKey({
+            type: 'keydown',
+            key: 'Meta',
+            code: 'MetaLeft',
+        });
+        const whileCmdDown = readHeldKeys();
+        dispatchKey({
+            type: 'keydown',
+            key: 's',
+            code: 'KeyS',
+        });
+        dispatchKey({
+            type: 'keyup',
+            key: 'Meta',
+            code: 'MetaLeft',
+        });
+        const afterCmdUp = readHeldKeys();
+
+        assert.deepEquals(
+            {
+                whileCmdDown,
+                afterCmdUp,
+            },
+            {
+                whileCmdDown: [
+                    createButtonName('MetaLeft'),
+                ],
+                afterCmdUp: [],
+            },
+        );
+    });
 });
